@@ -307,14 +307,16 @@ SexyAppBase::SexyAppBase()
 		mAdd8BitMaxTable[i] = 255;
 	
 	// Set default strings.  Init could read in overrides from partner.xml
-	SetString("DIALOG_BUTTON_OK",		"OK");
-	SetString("DIALOG_BUTTON_CANCEL","CANCEL");
+	SetString("DIALOG_BUTTON_YES",     "YES");
+	SetString("DIALOG_BUTTON_NO",      "NO");
+	SetString("DIALOG_BUTTON_OK",      "OK");
+	SetString("DIALOG_BUTTON_CANCEL",  "CANCEL");
 
 	SetString("UPDATE_CHECK_TITLE",		"Update Check");
 	SetString("UPDATE_CHECK_BODY",		"Checking if there are any updates available for this product ...");
 
 	SetString("UP_TO_DATE_TITLE",		"Up to Date");
-	SetString("UP_TO_DATE_BODY",		"There are no updates available for this product at this time.");
+	SetString("UP_TO_DATE_BODY",			"There are no updates available for this product at this time.");
 	SetString("NEW_VERSION_TITLE",		"New Version");
 	SetString("NEW_VERSION_BODY",		"There is an update available for this product.  Would you like to visit the web site to download it?");
 
