@@ -365,14 +365,17 @@ CreditScreen::CreditScreen(LawnApp* theApp)
 	mOverlayWidget->Resize(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 	
 	mOriginalMusicVolume = mApp->mMusicVolume;
-	if (mApp->mMusicVolume < 0.1)
+	mOriginalMuteCount = mApp->mMuteCount;
+	if (mApp->mMusicVolume < 0.1 || mApp->mMuteCount > 0)
 	{
+		mApp->mMuteCount = 0;
 		mApp->SetMusicVolume(0.85);
 	}
 }
 
 CreditScreen::~CreditScreen()
 {
+	mApp->mMuteCount = mOriginalMuteCount;
 	mApp->SetMusicVolume(mOriginalMusicVolume);
 	delete mReplayButton;
 	delete mMainMenuButton;

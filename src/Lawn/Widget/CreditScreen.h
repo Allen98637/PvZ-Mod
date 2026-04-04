@@ -109,6 +109,7 @@ public:
 	double					mOriginalMusicVolume;
 	bool					mPreloaded;
 	int						mLastDrawCount;
+	int						mOriginalMuteCount;
 
 public:
 	CreditScreen(LawnApp* theApp);
