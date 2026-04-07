@@ -24,6 +24,9 @@
 
 #include <SDL.h>
 
+#include <cstdint>
+#include <vector>
+
 #include "SexyAppBase.h"
 #include "graphics/GLInterface.h"
 #include "graphics/GLImage.h"
@@ -55,11 +58,11 @@ EM_JS(void, WasmStartSoftKeyboard, (), {
 				prefixLen++;
 			}
 
-			for (var i = state.lastValue.length; i > prefixLen; --i) {
+			for (var i = state.lastValue.length; i > prefixLen; i--) {
 				state.pendingKeys.push(8);
 			}
 
-			for (var j = prefixLen; j < nextValue.length; ++j) {
+			for (var j = prefixLen; j < nextValue.length; j++) {
 				var charCode = nextValue.charCodeAt(j);
 				if (charCode > 0 && charCode <= 0x7f) {
 					state.pendingChars.push(charCode);
@@ -166,6 +169,79 @@ EM_JS(int, WasmHasSoftKeyboardEvents, (), {
 #endif
 
 using namespace Sexy;
+
+struct TouchPointState
+{
+	SDL_TouchID mTouchId;
+	SDL_FingerID mFingerId;
+	int mX;
+	int mY;
+	uint64_t mPressOrder;
+};
+
+static TouchPointState* FindTouchPoint(std::vector<TouchPointState>& theTouchPoints, SDL_TouchID theTouchId, SDL_FingerID theFingerId)
+{
+	for (TouchPointState& aTouchPoint : theTouchPoints)
+	{
+		if (aTouchPoint.mTouchId == theTouchId && aTouchPoint.mFingerId == theFingerId)
+			return &aTouchPoint;
+	}
+
+	return nullptr;
+}
+
+static const TouchPointState* FindTouchPoint(const std::vector<TouchPointState>& theTouchPoints, SDL_TouchID theTouchId, SDL_FingerID theFingerId)
+{
+	for (const TouchPointState& aTouchPoint : theTouchPoints)
+	{
+		if (aTouchPoint.mTouchId == theTouchId && aTouchPoint.mFingerId == theFingerId)
+			return &aTouchPoint;
+	}
+
+	return nullptr;
+}
+
+static TouchPointState* FindLatestTouchPoint(std::vector<TouchPointState>& theTouchPoints)
+{
+	TouchPointState* aLatestTouchPoint = nullptr;
+	for (TouchPointState& aTouchPoint : theTouchPoints)
+	{
+		if (aLatestTouchPoint == nullptr || aTouchPoint.mPressOrder > aLatestTouchPoint->mPressOrder)
+			aLatestTouchPoint = &aTouchPoint;
+	}
+
+	return aLatestTouchPoint;
+}
+
+static int TouchAxisToPixels(float theAxis, int theSize)
+{
+	if (theSize <= 1)
+		return 0;
+
+	int aPixel = static_cast<int>(theAxis * static_cast<float>(theSize));
+	if (aPixel < 0)
+		aPixel = 0;
+	else if (aPixel >= theSize)
+		aPixel = theSize - 1;
+
+	return aPixel;
+}
+
+static void FingerEventToWindowPixels(const SDL_TouchFingerEvent& theEvent, SDL_Window* theWindow, int& theX, int& theY)
+{
+	int aWindowWidth = 1;
+	int aWindowHeight = 1;
+	if (theWindow != nullptr)
+		SDL_GetWindowSize(theWindow, &aWindowWidth, &aWindowHeight);
+
+	if (aWindowWidth < 1)
+		aWindowWidth = 1;
+	if (aWindowHeight < 1)
+		aWindowHeight = 1;
+
+	theX = TouchAxisToPixels(theEvent.x, aWindowWidth);
+	theY = TouchAxisToPixels(theEvent.y, aWindowHeight);
+}
 
 // Map SDL_Keycode to internal KeyCode (Windows VK-compatible).
 static KeyCode SDLKeyToKeyCode(SDL_Keycode theSDLKey)
@@ -361,6 +437,13 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 	}
 #endif
 
+	static std::vector<TouchPointState> aTouchPoints;
+	static uint64_t aTouchPressOrder = 0;
+	static bool aHasPrimaryTouch = false;
+	static SDL_TouchID aPrimaryTouchId = 0;
+	static SDL_FingerID aPrimaryFingerId = 0;
+	static bool aSawFingerEvents = false;
+
 	SDL_Event event;
 	if (SDL_PollEvent(&event))
 	{
@@ -422,6 +505,9 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 
 			case SDL_MOUSEMOTION:
 			{
+				if (aSawFingerEvents && event.motion.which == SDL_TOUCH_MOUSEID)
+					break;
+
 				if (!mMouseIn)
 					mMouseIn = true;
 
@@ -437,6 +523,9 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 
 			case SDL_MOUSEBUTTONDOWN:
 			{
+				if (aSawFingerEvents && event.button.which == SDL_TOUCH_MOUSEID)
+					break;
+
 				if (!mMouseIn)
 					mMouseIn = true;
 
@@ -460,6 +549,9 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 
 			case SDL_MOUSEBUTTONUP:
 			{
+				if (aSawFingerEvents && event.button.which == SDL_TOUCH_MOUSEID)
+					break;
+
 				if (!mMouseIn)
 					mMouseIn = true;
 
@@ -476,6 +568,170 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					3;
 
 				mWidgetManager->MouseUp(x, y, btn);
+				break;
+			}
+
+			case SDL_FINGERDOWN:
+			{
+				aSawFingerEvents = true;
+
+				if (!mMouseIn)
+					mMouseIn = true;
+
+				int x = 0;
+				int y = 0;
+				FingerEventToWindowPixels(event.tfinger, (SDL_Window*)mWindow, x, y);
+				mWidgetManager->RemapMouse(x, y);
+
+				mLastUserInputTick = mLastTimerTime;
+
+				TouchPointState* aTouchPoint = FindTouchPoint(aTouchPoints, event.tfinger.touchId, event.tfinger.fingerId);
+				if (aTouchPoint == nullptr)
+				{
+					aTouchPoints.push_back({
+						event.tfinger.touchId,
+						event.tfinger.fingerId,
+						x,
+						y,
+						++aTouchPressOrder,
+					});
+				}
+				else
+				{
+					aTouchPoint->mX = x;
+					aTouchPoint->mY = y;
+					aTouchPoint->mPressOrder = ++aTouchPressOrder;
+				}
+
+				const bool aIsPrimaryTouch =
+					aHasPrimaryTouch &&
+					aPrimaryTouchId == event.tfinger.touchId &&
+					aPrimaryFingerId == event.tfinger.fingerId;
+
+				if (!aIsPrimaryTouch && aHasPrimaryTouch)
+				{
+					const TouchPointState* aPrevPrimaryTouch = FindTouchPoint(aTouchPoints, aPrimaryTouchId, aPrimaryFingerId);
+					int aPrevX = (aPrevPrimaryTouch != nullptr) ? aPrevPrimaryTouch->mX : x;
+					int aPrevY = (aPrevPrimaryTouch != nullptr) ? aPrevPrimaryTouch->mY : y;
+					mWidgetManager->MouseMove(aPrevX, aPrevY);
+					mWidgetManager->MouseUp(aPrevX, aPrevY, 1);
+				}
+
+				if (!aIsPrimaryTouch)
+				{
+					aHasPrimaryTouch = true;
+					aPrimaryTouchId = event.tfinger.touchId;
+					aPrimaryFingerId = event.tfinger.fingerId;
+					mWidgetManager->MouseMove(x, y);
+					mWidgetManager->MouseDown(x, y, 1);
+				}
+				else
+				{
+					mWidgetManager->MouseMove(x, y);
+				}
+
+				break;
+			}
+
+			case SDL_FINGERMOTION:
+			{
+				aSawFingerEvents = true;
+
+				if (!mMouseIn)
+					mMouseIn = true;
+
+				int x = 0;
+				int y = 0;
+				FingerEventToWindowPixels(event.tfinger, (SDL_Window*)mWindow, x, y);
+				mWidgetManager->RemapMouse(x, y);
+
+				mLastUserInputTick = mLastTimerTime;
+
+				TouchPointState* aTouchPoint = FindTouchPoint(aTouchPoints, event.tfinger.touchId, event.tfinger.fingerId);
+				if (aTouchPoint != nullptr)
+				{
+					aTouchPoint->mX = x;
+					aTouchPoint->mY = y;
+				}
+				else
+				{
+					aTouchPoints.push_back({
+						event.tfinger.touchId,
+						event.tfinger.fingerId,
+						x,
+						y,
+						++aTouchPressOrder,
+					});
+				}
+
+				if (aHasPrimaryTouch &&
+					aPrimaryTouchId == event.tfinger.touchId &&
+					aPrimaryFingerId == event.tfinger.fingerId)
+				{
+					mWidgetManager->MouseMove(x, y);
+				}
+
+				break;
+			}
+
+			case SDL_FINGERUP:
+			{
+				aSawFingerEvents = true;
+
+				if (!mMouseIn)
+					mMouseIn = true;
+
+				int x = 0;
+				int y = 0;
+				FingerEventToWindowPixels(event.tfinger, (SDL_Window*)mWindow, x, y);
+				mWidgetManager->RemapMouse(x, y);
+
+				mLastUserInputTick = mLastTimerTime;
+
+				TouchPointState* aTouchPoint = FindTouchPoint(aTouchPoints, event.tfinger.touchId, event.tfinger.fingerId);
+				if (aTouchPoint != nullptr)
+				{
+					x = aTouchPoint->mX;
+					y = aTouchPoint->mY;
+				}
+
+				const bool aWasPrimaryTouch =
+					aHasPrimaryTouch &&
+					aPrimaryTouchId == event.tfinger.touchId &&
+					aPrimaryFingerId == event.tfinger.fingerId;
+
+				if (aWasPrimaryTouch)
+				{
+					mWidgetManager->MouseMove(x, y);
+					mWidgetManager->MouseUp(x, y, 1);
+				}
+
+				for (auto it = aTouchPoints.begin(); it != aTouchPoints.end(); it++)
+				{
+					if (it->mTouchId == event.tfinger.touchId &&
+						it->mFingerId == event.tfinger.fingerId)
+					{
+						aTouchPoints.erase(it);
+						break;
+					}
+				}
+
+				if (aWasPrimaryTouch)
+				{
+					TouchPointState* aFallbackTouch = FindLatestTouchPoint(aTouchPoints);
+					if (aFallbackTouch != nullptr)
+					{
+						aHasPrimaryTouch = true;
+						aPrimaryTouchId = aFallbackTouch->mTouchId;
+						aPrimaryFingerId = aFallbackTouch->mFingerId;
+						mWidgetManager->MouseMove(aFallbackTouch->mX, aFallbackTouch->mY);
+					}
+					else
+					{
+						aHasPrimaryTouch = false;
+					}
+				}
+
 				break;
 			}
 
