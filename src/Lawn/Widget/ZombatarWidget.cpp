@@ -478,11 +478,16 @@ void ZombatarWidget::Draw(Graphics* g)
 	g->SetLinearBlend(true);
 
 	g->DrawImage(IMAGE_ZOMBATAR_MAIN_BG, 0, 0);
+	g->DrawImage(IMAGE_ZOMBATAR_WIDGET_BG, 0, 0);
+	g->DrawImage(IMAGE_ZOMBATAR_WIDGET_INNER_BG, 127, 100);
 
 	DrawPreview(g);
 	DrawCategoryButtons(g);
 	DrawAccessoryGrid(g);
 	DrawActionButtons(g);
+
+	if (IMAGE_ZOMBATAR_DISPLAY_WINDOW)
+		g->DrawImage(IMAGE_ZOMBATAR_DISPLAY_WINDOW, 5, 0);
 
 	if (mState == State::COLOR_PICKER)
 		DrawColorPicker(g);
@@ -540,6 +545,9 @@ void ZombatarWidget::DrawAccessoryGrid(Graphics* theG)
 		bool isSelected = false;
 		switch (mCurrentCategory)
 		{
+		case ZOMBATAR_CATEGORY_SKIN:
+			isSelected = (mCurrentHead.mSkinColor == static_cast<uint32_t>(i));
+			break;
 		case ZOMBATAR_CATEGORY_HAIR:
 			isSelected = (mCurrentHead.mHairType == static_cast<uint32_t>(i));
 			break;
@@ -830,7 +838,7 @@ void ZombatarWidget::ButtonDepress(int theId)
 			mCurrentHead.mBackdropType = aValue;
 		}
 
-		if (isAlreadySelected && gCategoryColorSets[mCurrentCategory] > 0)
+		if (isAlreadySelected && (gCategoryColorSets[mCurrentCategory] > 0 || mCurrentCategory == ZOMBATAR_CATEGORY_SKIN))
 		{
 			mState = State::COLOR_PICKER;
 		}

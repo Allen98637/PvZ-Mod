@@ -20,6 +20,7 @@
  */
 
 #include "ZombatarTOSDialog.h"
+#include "GameButton.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"
 #include "../../GameConstants.h"
@@ -30,9 +31,9 @@
 #include "../../SexyAppFramework/graphics/Image.h"
 #include "../../SexyAppFramework/widget/WidgetManager.h"
 
-static constexpr int TOS_DIALOG_W = 640;
-static constexpr int TOS_MAX_TEXT_H = 370;
-static constexpr int TOS_TEXT_MARGIN = 28;
+static constexpr int TOS_DIALOG_W = 520;
+static constexpr int TOS_TEXT_MARGIN = 24;
+static constexpr int TOS_MIN_TEXT_H = 340;
 
 ZombatarTOSDialog::ZombatarTOSDialog(LawnApp* theApp) :
 	LawnDialog(theApp,
@@ -41,13 +42,16 @@ ZombatarTOSDialog::ZombatarTOSDialog(LawnApp* theApp) :
 		"[ZOMBATAR_TOS_HEADER]",
 		"[ZOMBATAR_TOS]",
 		"",
-		Dialog::BUTTONS_OK_CANCEL)
+		Dialog::BUTTONS_NONE)
 {
+	mBackButton = nullptr;
+	mAcceptButton = nullptr;
 	mSlider = nullptr;
 	mScrollOffset = 0;
 	mTextAreaHeight = 0;
 	mTotalTextHeight = 0;
 	mDrawStandardBack = true;
+	mTallBottom = true;
 
 	Graphics g;
 	g.SetFont(mLinesFont);
@@ -69,9 +73,12 @@ ZombatarTOSDialog::ZombatarTOSDialog(LawnApp* theApp) :
 	if (mDialogHeader.size() > 0)
 		aTextStartY += mHeaderFont->GetHeight() + mSpaceAfterHeader;
 
-	mTextAreaHeight = std::min(mTotalTextHeight, TOS_MAX_TEXT_H);
+	mTextAreaHeight = mTotalTextHeight;
+	bool aNeedsScroll = mTextAreaHeight > TOS_MIN_TEXT_H;
+	if (aNeedsScroll)
+		mTextAreaHeight = TOS_MIN_TEXT_H;
 
-	int aDialogHeight = aTextStartY + mTextAreaHeight + mContentInsets.mBottom + mBackgroundInsets.mBottom + mButtonHeight + 55;
+	int aDialogHeight = aTextStartY + mTextAreaHeight + mContentInsets.mBottom + mBackgroundInsets.mBottom + 60;
 	if (mTallBottom) aDialogHeight += 36;
 
 	int aBottomHeight = (mTallBottom ? Sexy::IMAGE_DIALOG_BIGBOTTOMLEFT : Sexy::IMAGE_DIALOG_BOTTOMLEFT)->mHeight;
@@ -85,10 +92,28 @@ ZombatarTOSDialog::ZombatarTOSDialog(LawnApp* theApp) :
 	}
 
 	Resize((BOARD_WIDTH - aDialogWidth) / 2, (BOARD_HEIGHT - aDialogHeight) / 2, aDialogWidth, aDialogHeight);
+
+	mBackButton = MakeNewButton(Dialog::ID_NO, this, "", nullptr,
+		IMAGE_ZOMBATAR_BACK_BUTTON, IMAGE_ZOMBATAR_BACK_BUTTON_HIGHLIGHT,
+		IMAGE_ZOMBATAR_BACK_BUTTON_HIGHLIGHT);
+	mBackButton->Resize(
+		mBackgroundInsets.mLeft + mContentInsets.mLeft + 10,
+		aTextStartY + mTextAreaHeight + 20,
+		98, 26);
+
+	mAcceptButton = MakeNewButton(Dialog::ID_YES, this, "", nullptr,
+		IMAGE_ZOMBATAR_ACCEPT_BUTTON, IMAGE_ZOMBATAR_ACCEPT_BUTTON_HIGHLIGHT,
+		IMAGE_ZOMBATAR_ACCEPT_BUTTON_HIGHLIGHT);
+	mAcceptButton->Resize(
+		aDialogWidth - mBackgroundInsets.mRight - mContentInsets.mRight - 10 - 98,
+		aTextStartY + mTextAreaHeight + 20,
+		98, 26);
 }
 
 ZombatarTOSDialog::~ZombatarTOSDialog()
 {
+	delete mBackButton;
+	delete mAcceptButton;
 	delete mSlider;
 }
 
@@ -96,35 +121,42 @@ void ZombatarTOSDialog::AddedToManager(WidgetManager* theWidgetManager)
 {
 	LawnDialog::AddedToManager(theWidgetManager);
 
-	int aTextAreaLeft = mBackgroundInsets.mLeft + mContentInsets.mLeft + TOS_TEXT_MARGIN;
-	int aTextAreaWidth = mWidth - TOS_TEXT_MARGIN * 2 - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft - mBackgroundInsets.mRight - 4;
-
-	int aTextStartY = mContentInsets.mTop + mBackgroundInsets.mTop + DIALOG_HEADER_OFFSET;
-	if (mDialogHeader.size() > 0)
-		aTextStartY += mHeaderFont->GetHeight() + mSpaceAfterHeader;
+	if (mBackButton) AddWidget(mBackButton);
+	if (mAcceptButton) AddWidget(mAcceptButton);
 
 	if (mTotalTextHeight > mTextAreaHeight)
 	{
+		int aTextAreaLeft = mBackgroundInsets.mLeft + mContentInsets.mLeft + TOS_TEXT_MARGIN;
+		int aTextWidth = mWidth - TOS_TEXT_MARGIN * 2 - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft - mBackgroundInsets.mRight - 4;
+		int aTextStartY = mContentInsets.mTop + mBackgroundInsets.mTop + DIALOG_HEADER_OFFSET;
+		if (mDialogHeader.size() > 0)
+			aTextStartY += mHeaderFont->GetHeight() + mSpaceAfterHeader;
+
 		mSlider = new Slider(IMAGE_ZOMBATAR_TOS_SLIDER, IMAGE_ZOMBATAR_TOS_SLIDER_THUMB, 0, this);
-		mSlider->Resize(
-			aTextAreaLeft + aTextAreaWidth + 8,
-			aTextStartY,
-			24,
-			mTextAreaHeight);
+		mSlider->Resize(aTextAreaLeft + aTextWidth + 8, aTextStartY, 22, mTextAreaHeight - 2);
 		theWidgetManager->AddWidget(mSlider);
 	}
 }
 
 void ZombatarTOSDialog::RemovedFromManager(WidgetManager* theWidgetManager)
 {
+	if (mBackButton) RemoveWidget(mBackButton);
+	if (mAcceptButton) RemoveWidget(mAcceptButton);
 	if (mSlider)
 	{
 		theWidgetManager->RemoveWidget(mSlider);
 		delete mSlider;
 		mSlider = nullptr;
 	}
-
 	LawnDialog::RemovedFromManager(theWidgetManager);
+}
+
+void ZombatarTOSDialog::ButtonDepress(int theId)
+{
+	mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
+
+	if (mUpdateCnt > mButtonDelay)
+		Dialog::ButtonDepress(theId);
 }
 
 void ZombatarTOSDialog::MouseWheel(int theDelta)

@@ -27,6 +27,7 @@
 #include "../../SexyAppFramework/widget/SliderListener.h"
 
 class LawnApp;
+class NewLawnButton;
 using namespace Sexy;
 
 class ZombatarTOSDialog : public LawnDialog, public SliderListener
@@ -39,13 +40,16 @@ public:
 	virtual void MouseWheel(int theDelta) override;
 	virtual void AddedToManager(WidgetManager* theWidgetManager) override;
 	virtual void RemovedFromManager(WidgetManager* theWidgetManager) override;
+	virtual void ButtonDepress(int theId) override;
 	virtual void SliderVal(int theId, double theVal) override;
 
 private:
-	Slider*	mSlider;
-	int	mScrollOffset;
-	int	mTextAreaHeight;
-	int	mTotalTextHeight;
+	NewLawnButton*	mBackButton;
+	NewLawnButton*	mAcceptButton;
+	Slider*			mSlider;
+	int				mScrollOffset;
+	int				mTextAreaHeight;
+	int				mTotalTextHeight;
 };
 
 #endif
