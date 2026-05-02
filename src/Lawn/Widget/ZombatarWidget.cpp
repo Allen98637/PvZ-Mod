@@ -26,9 +26,11 @@
 #include "GameSelector.h"
 #include "../../Sexy.TodLib/TodDebug.h"
 #include "../../Sexy.TodLib/TodCommon.h"
+#include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/graphics/Graphics.h"
 #include "../../SexyAppFramework/graphics/Image.h"
 #include "../../SexyAppFramework/graphics/MemoryImage.h"
+#include "../../SexyAppFramework/graphics/Font.h"
 #include "../../SexyAppFramework/widget/WidgetManager.h"
 #include "../../SexyAppFramework/widget/DialogButton.h"
 #include "../../SexyAppFramework/widget/Dialog.h"
@@ -414,9 +416,14 @@ ZombatarWidget::ZombatarWidget(LawnApp* theApp)
 		IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT);
 	mNextButton->Resize(NEXT_BTN_X, NEXT_BTN_Y, 33, 38);
 
+	static constexpr int gCategoryButtonOrder[NUM_ZOMBATAR_CATEGORIES] = {
+		0, 5, 4, 2, 6, 1, 3, 7, 8
+	};
+
 	int aCatY = CATEGORY_BTN_Y0;
-	for (int aCategory = 0; aCategory < NUM_ZOMBATAR_CATEGORIES; aCategory++)
+	for (int i = 0; i < NUM_ZOMBATAR_CATEGORIES; i++)
 	{
+		int aCategory = gCategoryButtonOrder[i];
 		Image* aOverImage = GetCategoryButtonOver(aCategory);
 		if (aOverImage == nullptr)
 			aOverImage = GetCategoryButtonHighlight(aCategory);
@@ -426,7 +433,7 @@ ZombatarWidget::ZombatarWidget(LawnApp* theApp)
 			GetCategoryButtonImage(aCategory), GetCategoryButtonHighlight(aCategory), aOverImage);
 		mCategoryButtons[aCategory]->Resize(CATEGORY_BTN_X, aCatY, CATEGORY_BTN_W, CATEGORY_BTN_H);
 
-		if (aCategory == 0)
+		if (i == 0)
 			aCatY += CATEGORY_BTN_H + CATEGORY_FIRST_GAP;
 		else
 			aCatY += CATEGORY_BTN_H - CATEGORY_OVERLAP;
@@ -536,6 +543,40 @@ void ZombatarWidget::DrawAccessoryGrid(Graphics* theG)
 		aOffsetX = TodAnimateCurve(SLIDE_DURATION, 0, mSlideCounter, SLIDE_OFFSET, 0, TodCurves::CURVE_EASE_IN_OUT);
 	}
 
+	if (aItemCount == 0)
+	{
+		int aPanelX = GRID_X;
+		int aPanelY = GRID_Y;
+		int aPanelW = GRID_COLS * GRID_SPACING;
+
+		theG->SetFont(Sexy::FONT_DWARVENTODCRAFT15);
+		theG->SetColor(Color(254, 227, 0, 175));
+		theG->DrawStringWordWrapped(TodStringTranslate("[ZOMBATAR_START_TEXT]"),
+			aPanelX + 20, aPanelY + 30, aPanelW - 40,
+			Sexy::FONT_DWARVENTODCRAFT15->GetLineSpacing() + 1, -1);
+		return;
+	}
+
+	if (mCurrentCategory == ZOMBATAR_CATEGORY_SKIN)
+	{
+		for (int i = aStartIdx; i < aEndIdx; i++)
+		{
+			int aLocalIdx = i - aStartIdx;
+			int aX = GRID_X + (aLocalIdx % GRID_COLS) * GRID_SPACING + aOffsetX;
+			int aY = GRID_Y + (aLocalIdx / GRID_COLS) * GRID_SPACING;
+
+			bool isSelected = (mCurrentHead.mSkinColor == static_cast<uint32_t>(i));
+			Image* aBgImage = isSelected ? IMAGE_ZOMBATAR_ACCESSORY_BG_HIGHLIGHT : IMAGE_ZOMBATAR_ACCESSORY_BG;
+			theG->DrawImage(aBgImage, aX, aY);
+
+			theG->SetColorizeImages(true);
+			theG->SetColor(GetCategoryColor(mCurrentCategory, i));
+			theG->DrawImage(IMAGE_ZOMBATAR_COLORPICKER, aX + 5, aY + 5);
+			theG->SetColorizeImages(false);
+		}
+		return;
+	}
+
 	for (int i = aStartIdx; i < aEndIdx; i++)
 	{
 		int aLocalIdx = i - aStartIdx;
@@ -545,9 +586,6 @@ void ZombatarWidget::DrawAccessoryGrid(Graphics* theG)
 		bool isSelected = false;
 		switch (mCurrentCategory)
 		{
-		case ZOMBATAR_CATEGORY_SKIN:
-			isSelected = (mCurrentHead.mSkinColor == static_cast<uint32_t>(i));
-			break;
 		case ZOMBATAR_CATEGORY_HAIR:
 			isSelected = (mCurrentHead.mHairType == static_cast<uint32_t>(i));
 			break;

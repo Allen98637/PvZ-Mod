@@ -31,9 +31,14 @@
 #include "../../SexyAppFramework/graphics/Image.h"
 #include "../../SexyAppFramework/widget/WidgetManager.h"
 
-static constexpr int TOS_DIALOG_W = 520;
-static constexpr int TOS_TEXT_MARGIN = 24;
-static constexpr int TOS_MIN_TEXT_H = 340;
+static constexpr int TOS_TEXT_AREA_X = 50;
+static constexpr int TOS_TEXT_AREA_Y = 130;
+static constexpr int TOS_TEXT_AREA_W = 435;
+static constexpr int TOS_TEXT_AREA_H = 160;
+
+static constexpr int TOS_BACK_BTN_X = 40;
+static constexpr int TOS_ACCEPT_BTN_X = 450;
+static constexpr int TOS_BTN_Y = 348;
 
 ZombatarTOSDialog::ZombatarTOSDialog(LawnApp* theApp) :
 	LawnDialog(theApp,
@@ -48,17 +53,20 @@ ZombatarTOSDialog::ZombatarTOSDialog(LawnApp* theApp) :
 	mAcceptButton = nullptr;
 	mSlider = nullptr;
 	mScrollOffset = 0;
-	mTextAreaHeight = 0;
+	mTextClipY = TOS_TEXT_AREA_Y;
+	mTextClipHeight = TOS_TEXT_AREA_H;
 	mTotalTextHeight = 0;
 	mDrawStandardBack = true;
 	mTallBottom = true;
 
 	Graphics g;
 	g.SetFont(mLinesFont);
-	int aTextWidth = TOS_DIALOG_W - TOS_TEXT_MARGIN * 2 - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft - mBackgroundInsets.mRight - 4;
-	mTotalTextHeight = GetWordWrappedHeight(&g, aTextWidth, mDialogLines, mLinesFont->GetLineSpacing() + mLineSpacingOffset);
+	mTotalTextHeight = GetWordWrappedHeight(&g, TOS_TEXT_AREA_W, mDialogLines, mLinesFont->GetLineSpacing() + mLineSpacingOffset);
 
-	int aDialogWidth = TOS_DIALOG_W;
+	int aDialogWidth = 560;
+	int aDialogHeight = TOS_BTN_Y + 30 + mContentInsets.mBottom + mBackgroundInsets.mBottom;
+	if (mTallBottom) aDialogHeight += 36;
+
 	int aTopMidWidth = Sexy::IMAGE_DIALOG_TOPMIDDLE->mWidth;
 	int aImageWidth = Sexy::IMAGE_DIALOG_TOPLEFT->mWidth + Sexy::IMAGE_DIALOG_TOPRIGHT->mWidth + aTopMidWidth;
 	if (aDialogWidth < aImageWidth)
@@ -68,18 +76,6 @@ ZombatarTOSDialog::ZombatarTOSDialog(LawnApp* theApp) :
 		int anExtraWidth = (aDialogWidth - aImageWidth) % aTopMidWidth;
 		if (anExtraWidth) aDialogWidth += aTopMidWidth - anExtraWidth;
 	}
-
-	int aTextStartY = mContentInsets.mTop + mBackgroundInsets.mTop + DIALOG_HEADER_OFFSET;
-	if (mDialogHeader.size() > 0)
-		aTextStartY += mHeaderFont->GetHeight() + mSpaceAfterHeader;
-
-	mTextAreaHeight = mTotalTextHeight;
-	bool aNeedsScroll = mTextAreaHeight > TOS_MIN_TEXT_H;
-	if (aNeedsScroll)
-		mTextAreaHeight = TOS_MIN_TEXT_H;
-
-	int aDialogHeight = aTextStartY + mTextAreaHeight + mContentInsets.mBottom + mBackgroundInsets.mBottom + 60;
-	if (mTallBottom) aDialogHeight += 36;
 
 	int aBottomHeight = (mTallBottom ? Sexy::IMAGE_DIALOG_BIGBOTTOMLEFT : Sexy::IMAGE_DIALOG_BOTTOMLEFT)->mHeight;
 	int aImageHeight = Sexy::IMAGE_DIALOG_TOPLEFT->mHeight + aBottomHeight + DIALOG_HEADER_OFFSET;
@@ -96,18 +92,12 @@ ZombatarTOSDialog::ZombatarTOSDialog(LawnApp* theApp) :
 	mBackButton = MakeNewButton(Dialog::ID_NO, this, "", nullptr,
 		IMAGE_ZOMBATAR_BACK_BUTTON, IMAGE_ZOMBATAR_BACK_BUTTON_HIGHLIGHT,
 		IMAGE_ZOMBATAR_BACK_BUTTON_HIGHLIGHT);
-	mBackButton->Resize(
-		mBackgroundInsets.mLeft + mContentInsets.mLeft + 10,
-		aTextStartY + mTextAreaHeight + 20,
-		98, 26);
+	mBackButton->Resize(TOS_BACK_BTN_X, TOS_BTN_Y, 98, 26);
 
 	mAcceptButton = MakeNewButton(Dialog::ID_YES, this, "", nullptr,
 		IMAGE_ZOMBATAR_ACCEPT_BUTTON, IMAGE_ZOMBATAR_ACCEPT_BUTTON_HIGHLIGHT,
 		IMAGE_ZOMBATAR_ACCEPT_BUTTON_HIGHLIGHT);
-	mAcceptButton->Resize(
-		aDialogWidth - mBackgroundInsets.mRight - mContentInsets.mRight - 10 - 98,
-		aTextStartY + mTextAreaHeight + 20,
-		98, 26);
+	mAcceptButton->Resize(TOS_ACCEPT_BTN_X, TOS_BTN_Y, 98, 26);
 }
 
 ZombatarTOSDialog::~ZombatarTOSDialog()
@@ -124,16 +114,10 @@ void ZombatarTOSDialog::AddedToManager(WidgetManager* theWidgetManager)
 	if (mBackButton) AddWidget(mBackButton);
 	if (mAcceptButton) AddWidget(mAcceptButton);
 
-	if (mTotalTextHeight > mTextAreaHeight)
+	if (mTotalTextHeight > mTextClipHeight)
 	{
-		int aTextAreaLeft = mBackgroundInsets.mLeft + mContentInsets.mLeft + TOS_TEXT_MARGIN;
-		int aTextWidth = mWidth - TOS_TEXT_MARGIN * 2 - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft - mBackgroundInsets.mRight - 4;
-		int aTextStartY = mContentInsets.mTop + mBackgroundInsets.mTop + DIALOG_HEADER_OFFSET;
-		if (mDialogHeader.size() > 0)
-			aTextStartY += mHeaderFont->GetHeight() + mSpaceAfterHeader;
-
 		mSlider = new Slider(IMAGE_ZOMBATAR_TOS_SLIDER, IMAGE_ZOMBATAR_TOS_SLIDER_THUMB, 0, this);
-		mSlider->Resize(aTextAreaLeft + aTextWidth + 8, aTextStartY, 22, mTextAreaHeight - 2);
+		mSlider->Resize(TOS_TEXT_AREA_X + TOS_TEXT_AREA_W + 6, TOS_TEXT_AREA_Y, 20, mTextClipHeight);
 		theWidgetManager->AddWidget(mSlider);
 	}
 }
@@ -163,7 +147,7 @@ void ZombatarTOSDialog::MouseWheel(int theDelta)
 {
 	mScrollOffset -= theDelta * 20;
 	if (mScrollOffset < 0) mScrollOffset = 0;
-	int aMaxScroll = std::max(0, mTotalTextHeight - mTextAreaHeight);
+	int aMaxScroll = std::max(0, mTotalTextHeight - mTextClipHeight);
 	if (mScrollOffset > aMaxScroll) mScrollOffset = aMaxScroll;
 
 	if (mSlider && aMaxScroll > 0)
@@ -175,7 +159,7 @@ void ZombatarTOSDialog::MouseWheel(int theDelta)
 void ZombatarTOSDialog::SliderVal(int theId, double theVal)
 {
 	(void)theId;
-	int aMaxScroll = std::max(0, mTotalTextHeight - mTextAreaHeight);
+	int aMaxScroll = std::max(0, mTotalTextHeight - mTextClipHeight);
 	mScrollOffset = static_cast<int>(theVal * aMaxScroll);
 	if (mScrollOffset < 0) mScrollOffset = 0;
 	if (mScrollOffset > aMaxScroll) mScrollOffset = aMaxScroll;
@@ -186,28 +170,18 @@ void ZombatarTOSDialog::Draw(Graphics* g)
 {
 	std::string aSavedLines = mDialogLines;
 	mDialogLines = "";
-	int aSavedBtnHeight = mButtonHeight;
-	mButtonHeight = 0;
 
 	LawnDialog::Draw(g);
 
 	mDialogLines = aSavedLines;
-	mButtonHeight = aSavedBtnHeight;
-
-	int aTextAreaLeft = mBackgroundInsets.mLeft + mContentInsets.mLeft + TOS_TEXT_MARGIN;
-	int aTextAreaWidth = mWidth - TOS_TEXT_MARGIN * 2 - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft - mBackgroundInsets.mRight - 4;
-
-	int aTextStartY = mContentInsets.mTop + mBackgroundInsets.mTop + DIALOG_HEADER_OFFSET;
-	if (mDialogHeader.size() > 0)
-		aTextStartY += mHeaderFont->GetHeight() + mSpaceAfterHeader;
 
 	g->SetFont(mLinesFont);
-	g->SetColor(mColors[Dialog::COLOR_LINES]);
+	g->SetColor(Color(255, 255, 255));
 
 	Rect aOldClip = g->mClipRect;
-	g->SetClipRect(aTextAreaLeft - 2, aTextStartY - 2, aTextAreaWidth + 4, mTextAreaHeight + 4);
+	g->SetClipRect(TOS_TEXT_AREA_X - 2, TOS_TEXT_AREA_Y - 2, TOS_TEXT_AREA_W + 4, mTextClipHeight + 4);
 
-	Rect aRect(aTextAreaLeft + 2, aTextStartY + 2 - mScrollOffset, aTextAreaWidth, 0);
+	Rect aRect(TOS_TEXT_AREA_X, TOS_TEXT_AREA_Y - mScrollOffset, TOS_TEXT_AREA_W, 0);
 	WriteWordWrapped(g, aRect, mDialogLines, mLinesFont->GetLineSpacing() + mLineSpacingOffset, mTextAlign);
 
 	g->SetClipRect(aOldClip);

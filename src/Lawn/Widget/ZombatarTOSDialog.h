@@ -48,7 +48,8 @@ private:
 	NewLawnButton*	mAcceptButton;
 	Slider*			mSlider;
 	int				mScrollOffset;
-	int				mTextAreaHeight;
+	int				mTextClipY;
+	int				mTextClipHeight;
 	int				mTotalTextHeight;
 };
 
