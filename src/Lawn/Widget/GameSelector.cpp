@@ -1462,6 +1462,7 @@ void GameSelector::AddPreviewProfiles()
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PLANT_GOLD_MAGNET] = 1;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PLANT_SPIKEROCK] = 1;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PLANT_COBCANNON] = 1;
+		aProfile->mPurchases[StoreItem::STORE_ITEM_PLANT_PUMPKINSTAIR] = 1;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PLANT_IMITATER] = 1;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PACKET_UPGRADE] = 3;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_POOL_CLEANER] = 1;

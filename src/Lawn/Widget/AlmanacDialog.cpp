@@ -156,6 +156,7 @@ void AlmanacDialog::SetupPlant()
 	if (mSelectedSeed == SEED_TALLNUT)				aPosY += 18;
 	else if (mSelectedSeed == SEED_COBCANNON)		aPosX -= 40;
 	else if (mSelectedSeed == SEED_FLOWERPOT)		aPosY -= 20;
+	else if (mSelectedSeed == SEED_WATERPOT)		aPosY -= 20;
 	else if (mSelectedSeed == SEED_INSTANT_COFFEE)	aPosY += 20;
 	else if (mSelectedSeed == SEED_GRAVEBUSTER)		aPosY += 55;
 

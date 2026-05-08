@@ -2195,7 +2195,8 @@ bool LawnApp::IsWallnutBowlingLevel()
 	if (mBoard == nullptr)
 		return false;
 
-	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING || mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2)
+	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING || mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2 || 
+		mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3)
 		return true;
 
 	return IsAdventureMode() && mBoard->mLevel == 5;
@@ -2211,7 +2212,7 @@ bool LawnApp::IsWhackAZombieLevel()
 	if (mBoard == nullptr)
 		return false;
 
-	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE)
+	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE || mGameMode == GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2)
 		return true;
 
 	return IsAdventureMode() && mBoard->mLevel == 15;
@@ -2260,10 +2261,21 @@ bool LawnApp::IsMiniBossLevel()
 	return IsAdventureMode() && (mBoard->mLevel == 10 || mBoard->mLevel == 20 || mBoard->mLevel == 30);
 }
 
+bool LawnApp::OverrideConveyor(){
+	return IsSurvivalMode();
+}
+
+bool LawnApp::IsMiddleBossLevel(){
+	return IsSurvivalEndless(mGameMode) && (mBoard->mChallenge->mSurvivalStage == 0 || mBoard->mChallenge->mSurvivalStage == 2);
+	//return IsSurvivalEndless(mGameMode) && mBoard->mChallenge->mSurvivalStage % 5 == 4;
+}
+
 bool LawnApp::IsFinalBossLevel()
 {
 	if (mBoard == nullptr)
 		return false;
+
+	if(IsMiddleBossLevel()) return true;
 
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_FINAL_BOSS)
 		return true;
@@ -2294,6 +2306,7 @@ bool LawnApp::IsNight()
 
 int LawnApp::GetCurrentChallengeIndex()
 {
+
 	return static_cast<int>(mGameMode) - static_cast<int>(GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1);
 }
 
@@ -2374,7 +2387,7 @@ int LawnApp::GetSeedsAvailable()
 	int aLevel = mPlayerInfo->GetLevel();
 	if (HasFinishedAdventure() || aLevel > 50)
 	{
-		return 49;
+		return NUM_SEEDS_IN_CHOOSER;
 	}
 
 	SeedType aSeedTypeMax = GetAwardSeedForLevel(aLevel);
@@ -2410,6 +2423,10 @@ bool LawnApp::HasSeedType(SeedType theSeedType)
 		return mPlayerInfo->mPurchases[StoreItem::STORE_ITEM_PLANT_SPIKEROCK] > 0;
 	case SeedType::SEED_COBCANNON:
 		return mPlayerInfo->mPurchases[StoreItem::STORE_ITEM_PLANT_COBCANNON] > 0;
+	case SeedType::SEED_PUMPKINSTAIR:
+		return mPlayerInfo->mPurchases[StoreItem::STORE_ITEM_PLANT_PUMPKINSTAIR] > 0;
+	case SeedType::SEED_WATERPOT:
+		return mPlayerInfo->mPurchases[StoreItem::STORE_ITEM_PLANT_WATERPOT] > 0;
 	case SeedType::SEED_IMITATER:
 		return mPlayerInfo->mPurchases[StoreItem::STORE_ITEM_PLANT_IMITATER] > 0;
 	default:

@@ -402,6 +402,10 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
     {
         aScale = 2.0f;
     }
+    else if (mType == CoinType::COIN_ULTIMATESUN)
+    {
+        aScale = 5.0f;
+    }
     else
     {
         aScale = 1.0f;
@@ -432,7 +436,7 @@ bool Coin::IsMoney()
 
 bool Coin::IsSun()
 {
-    return mType == CoinType::COIN_SUN || mType == CoinType::COIN_SMALLSUN || mType == CoinType::COIN_LARGESUN;
+    return mType == CoinType::COIN_SUN || mType == CoinType::COIN_SMALLSUN || mType == CoinType::COIN_LARGESUN || mType == CoinType::COIN_ULTIMATESUN;
 }
 
 bool Coin::IsPresentWithAdvice()
@@ -1311,7 +1315,7 @@ float Coin::GetSunScale()
 
 int Coin::GetSunValue()
 {
-    return mType == CoinType::COIN_SUN ? 25 : mType == CoinType::COIN_SMALLSUN ? 15 : mType == CoinType::COIN_LARGESUN ? 50 : 0;
+    return mType == CoinType::COIN_SUN ? 25 : mType == CoinType::COIN_SMALLSUN ? 15 : mType == CoinType::COIN_LARGESUN ? 50 : mType == CoinType::COIN_ULTIMATESUN ? 1000:0;
 }
 
 int Coin::GetCoinValue(CoinType theCoinType)

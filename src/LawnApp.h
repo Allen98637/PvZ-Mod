@@ -267,6 +267,8 @@ public:
 	/*inline*/ bool					IsSlotMachineLevel();
 	/*inline*/ bool					IsLittleTroubleLevel();
 	/*inline*/ bool					IsStormyNightLevel();
+	/*inline*/ bool					OverrideConveyor();
+	/*inline*/ bool					IsMiddleBossLevel();
 	/*inline*/ bool					IsFinalBossLevel();
 	/*inline*/ bool					IsBungeeBlitzLevel();
 	static /*inline*/ SeedType		GetAwardSeedForLevel(int theLevel);

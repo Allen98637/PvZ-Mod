@@ -44,11 +44,11 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_3,                7,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    1,  2,  "[SURVIVAL_POOL_HARD]" },
 	{ GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_4,                8,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    1,  3,  "[SURVIVAL_FOG_HARD]" },
 	{ GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_5,                9,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    1,  4,  "[SURVIVAL_ROOF_HARD]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1,             10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       3,  0,  "[SURVIVAL_DAY_ENDLESS]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_2,             10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       3,  1,  "[SURVIVAL_NIGHT_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  0,  "[SURVIVAL_DAY_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_2,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  1,  "[SURVIVAL_NIGHT_ENDLESS]" },
 	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  2,  "[SURVIVAL_POOL_ENDLESS]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_4,             10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       3,  2,  "[SURVIVAL_FOG_ENDLESS]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5,             10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       3,  3,  "[SURVIVAL_ROOF_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_4,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  3,  "[SURVIVAL_FOG_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  4,  "[SURVIVAL_ROOF_ENDLESS]" },
 	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS,               0,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   0,  0,  "[WAR_AND_PEAS]" },
 	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING,            6,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   0,  1,  "[WALL_NUT_BOWLING]" },
 	{ GameMode::GAMEMODE_CHALLENGE_SLOT_MACHINE,               2,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   0,  2,  "[SLOT_MACHINE]" },
@@ -75,15 +75,15 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_CHALLENGE_BIG_TIME,                   3,   ChallengePage::CHALLENGE_PAGE_LIMBO,       0,  3,  "[BIG_TIME]" },
 	{ GameMode::GAMEMODE_CHALLENGE_ART_CHALLENGE_SUNFLOWER,    4,   ChallengePage::CHALLENGE_PAGE_LIMBO,       0,  4,  "[ART_CHALLENGE_SUNFLOWER]" },
 	{ GameMode::GAMEMODE_CHALLENGE_AIR_RAID,                   5,   ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  0,  "[AIR_RAID]" },
-	{ GameMode::GAMEMODE_CHALLENGE_ICE,                        6,   ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  1,  "[ICE_LEVEL]" },
-	{ GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN,                 7,   ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  2,  "[ZEN_GARDEN]" },
-	{ GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY,               8,   ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  3,  "[HIGH_GRAVITY]" },
-	{ GameMode::GAMEMODE_CHALLENGE_GRAVE_DANGER,               11,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  4,  "[GRAVE_DANGER]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SHOVEL,                     10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  0,  "[CAN_YOU_DIG_IT]" },
-	{ GameMode::GAMEMODE_CHALLENGE_STORMY_NIGHT,               13,  ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  1,  "[DARK_STORMY_NIGHT]" },
-	{ GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ,               9,   ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  2,  "[BUNGEE_BLITZ]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SQUIRREL,                   10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  3,  "Squirrel" },
-	{ GameMode::GAMEMODE_TREE_OF_WISDOM,                       10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  4,  "Tree of Wisdom" }, // @Patoke: replaced for english
+	{ GameMode::GAMEMODE_CHALLENGE_ICE,                        6,   ChallengePage::CHALLENGE_PAGE_NONE,        1,  1,  "[ICE_LEVEL]" },
+	{ GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN,                 7,   ChallengePage::CHALLENGE_PAGE_NONE,        1,  2,  "[ZEN_GARDEN]" },
+	{ GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY,               8,   ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  1,  "[HIGH_GRAVITY]" },
+	{ GameMode::GAMEMODE_CHALLENGE_GRAVE_DANGER,               11,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  2,  "[GRAVE_DANGER]" },
+	{ GameMode::GAMEMODE_CHALLENGE_SHOVEL,                     10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  3,  "[CAN_YOU_DIG_IT]" },
+	{ GameMode::GAMEMODE_CHALLENGE_STORMY_NIGHT,               13,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  4,  "[DARK_STORMY_NIGHT]" },
+	{ GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ,               9,   ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  0,  "[BUNGEE_BLITZ]" },
+	{ GameMode::GAMEMODE_CHALLENGE_SQUIRREL,                   10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  1,  "Squirrel" },
+	{ GameMode::GAMEMODE_TREE_OF_WISDOM,                       10,  ChallengePage::CHALLENGE_PAGE_NONE,        2,  4,  "Tree of Wisdom" }, // @Patoke: replaced for english
 	{ GameMode::GAMEMODE_SCARY_POTTER_1,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  0,  "[SCARY_POTTER_1]" },
 	{ GameMode::GAMEMODE_SCARY_POTTER_2,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  1,  "[SCARY_POTTER_2]" },
 	{ GameMode::GAMEMODE_SCARY_POTTER_3,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  2,  "[SCARY_POTTER_3]" },
@@ -104,8 +104,10 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_8,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  2,  "[I_ZOMBIE_8]" },
 	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_9,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  3,  "[I_ZOMBIE_9]" },
 	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS,              11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  4,  "[I_ZOMBIE_ENDLESS]" },
-	{ GameMode::GAMEMODE_UPSELL,                               10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       3,  4,  "Upsell" },
-	{ GameMode::GAMEMODE_INTRO,                                10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  3,  "Intro" }
+	{ GameMode::GAMEMODE_UPSELL,                               10,  ChallengePage::CHALLENGE_PAGE_NONE,        3,  2,  "Upsell" },
+	{ GameMode::GAMEMODE_INTRO,                                10,  ChallengePage::CHALLENGE_PAGE_NONE,       2,  3,  "Intro" },
+	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3,          6,   ChallengePage::CHALLENGE_PAGE_LIMBO,   	   2,  2,  "[WALL_NUT_BOWLING_EXTREME]" },
+	{ GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2,           16,  ChallengePage::CHALLENGE_PAGE_LIMBO,   	2,  3,  "[WHACK_A_ZOMBIE]" },
 };
 
 // GOTY @Patoke: 0x430810
@@ -121,6 +123,7 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	mUnlockChallengeIndex = -1;
 	mUnlockStateCounter = 0;
 	mLoadedResourceNames.push_back("DelayLoad_ChallengeScreen");
+	mPageButtonCount = 0;
 
 	for (std::string& resource : mLoadedResourceNames)
 		TodLoadResources(resource.c_str());
@@ -133,23 +136,27 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(42, 42, 90);
 	mBackButton->Resize(18, 568, 111, 26);
 
-	for (int aPageIdx = CHALLENGE_PAGE_SURVIVAL; aPageIdx < MAX_CHALLANGE_PAGES; aPageIdx++)
+	if(thePage == CHALLENGE_PAGE_CHALLENGE){
+		mPages[0] = CHALLENGE_PAGE_CHALLENGE;
+		mPages[1] = CHALLENGE_PAGE_LIMBO;
+		mPageButtonCount = 2;
+	}
+
+	for (int iii = 0; iii < mPageButtonCount; iii++)
 	{
+		int aPageIdx = mPages[iii];
 		ButtonWidget* aPageButton = new ButtonWidget(ChallengeScreen::ChallengeScreen_Page + aPageIdx, this);
 		aPageButton->mDoFinger = true;
-		mPageButton[aPageIdx] = aPageButton;
-		if (aPageIdx == CHALLENGE_PAGE_LIMBO)
-			aPageButton->mLabel = TodStringTranslate("Limbo Page");
-		else
-			aPageButton->mLabel = TodReplaceNumberString("[PAGE_X]", "{PAGE}", aPageIdx);
+		mPageButton[iii] = aPageButton;
+		aPageButton->mLabel = TodReplaceNumberString("[PAGE_X]", "{PAGE}", iii + 1);
 		aPageButton->mButtonImage = Sexy::IMAGE_BLANK;
 		aPageButton->mOverImage = Sexy::IMAGE_BLANK;
 		aPageButton->mDownImage = Sexy::IMAGE_BLANK;
 		aPageButton->SetFont(Sexy::FONT_BRIANNETOD12);
 		aPageButton->mColors[ButtonWidget::COLOR_LABEL] = Color(255, 240, 0);
 		aPageButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(220, 220, 0);
-		aPageButton->Resize(200 + 100 * aPageIdx, 540, 100, 75);
-		if (!ShowPageButtons() || aPageIdx == CHALLENGE_PAGE_SURVIVAL || aPageIdx == CHALLENGE_PAGE_PUZZLE)
+		aPageButton->Resize(200 + 100 * iii, 540, 100, 75);
+		if (!ShowPageButtons())
 			aPageButton->mVisible = false;
 	}
 	
@@ -208,7 +215,10 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 ChallengeScreen::~ChallengeScreen()
 {
 	delete mBackButton;
-	for (ButtonWidget* aPageButton : mPageButton) delete aPageButton;
+	for (int i = 0; i < mPageButtonCount; i++){
+		ButtonWidget* aPageButton = mPageButton[i];
+		delete aPageButton;
+	}
 	for (ButtonWidget* aChallengeButton : mChallengeButtons) delete aChallengeButton;
 	delete mToolTip;
 }
@@ -219,7 +229,7 @@ ChallengeDefinition& GetChallengeDefinition(int theChallengeMode)
 
 	ChallengeDefinition& aDef = gChallengeDefs[theChallengeMode];
 	(void)aDef; // Unused in Release mode
-	TOD_ASSERT(aDef.mChallengeMode == theChallengeMode + GAMEMODE_SURVIVAL_NORMAL_STAGE_1);
+	//TOD_ASSERT(aDef.mChallengeMode == theChallengeMode + GAMEMODE_SURVIVAL_NORMAL_STAGE_1);
 
 	return gChallengeDefs[theChallengeMode];
 }
@@ -365,7 +375,7 @@ void ChallengeScreen::UpdateButtons()
 {
 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
 		mChallengeButtons[aChallengeMode]->mVisible = GetChallengeDefinition(aChallengeMode).mPage == mPageIndex;
-	for (int aPage = 0; aPage < MAX_CHALLANGE_PAGES; aPage++)
+	for (int aPage = 0; aPage < mPageButtonCount; aPage++)
 	{
 		ButtonWidget* aPageButton = mPageButton[aPage];
 
@@ -373,7 +383,7 @@ void ChallengeScreen::UpdateButtons()
 		aPageButton->mVisible = true;
 #endif
 
-		if (aPage == mPageIndex)
+		if (mPages[aPage] == mPageIndex)
 		{
 			aPageButton->mColors[ButtonWidget::COLOR_LABEL] = Color(64, 64, 64);
 			aPageButton->mDisabled = true;
@@ -601,7 +611,10 @@ void ChallengeScreen::AddedToManager(WidgetManager* theWidgetManager)
 {
 	Widget::AddedToManager(theWidgetManager);
 	AddWidget(mBackButton);
-	for (ButtonWidget* aButton : mPageButton) AddWidget(aButton);
+	for (int i = 0; i < mPageButtonCount; i++){
+		ButtonWidget* aButton = mPageButton[i];
+		AddWidget(aButton);
+	}
 	for (ButtonWidget* aButton : mChallengeButtons) AddWidget(aButton);
 }
 
@@ -609,7 +622,10 @@ void ChallengeScreen::RemovedFromManager(WidgetManager* theWidgetManager)
 {
 	Widget::RemovedFromManager(theWidgetManager);
 	RemoveWidget(mBackButton);
-	for (ButtonWidget* aButton : mPageButton) RemoveWidget(aButton);
+	for (int i = 0; i < mPageButtonCount; i++){
+		ButtonWidget* aButton = mPageButton[i];
+		RemoveWidget(aButton);
+	}
 	for (ButtonWidget* aButton : mChallengeButtons) RemoveWidget(aButton);
 }
 

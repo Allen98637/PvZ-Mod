@@ -72,6 +72,8 @@ public:
     float                   mCobTargetX;
     int32_t                 mCobTargetRow;
     ZombieID                mTargetZombieID;
+    int32_t                 mTargetZombieX;
+    int32_t                 mTargetZombieY;
     int32_t                 mLastPortalX;
 
 public:
@@ -95,6 +97,7 @@ public:
     unsigned int            GetDamageFlags(Zombie* theZombie/* = nullptr*/);
     Rect                    GetProjectileRect();
     void                    UpdateNormalMotion();
+    Zombie*                 UpdateTargetZombie();
     Plant*                  FindCollisionTargetPlant();
     void                    ConvertToFireball(int theGridX);
     void                    ConvertToPea(int theGridX);

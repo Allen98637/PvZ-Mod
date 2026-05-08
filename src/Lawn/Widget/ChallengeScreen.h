@@ -44,6 +44,7 @@ private:
 public:
     NewLawnButton*              mBackButton;
     ButtonWidget*               mPageButton[MAX_CHALLANGE_PAGES];
+    int                         mPageButtonCount;
     ButtonWidget*               mChallengeButtons[NUM_CHALLENGE_MODES];
     LawnApp*                    mApp;
     ToolTipWidget*              mToolTip;
@@ -54,6 +55,7 @@ public:
     int                         mUnlockChallengeIndex;
     float                       mLockShakeX;
     float                       mLockShakeY;
+    ChallengePage               mPages[4];
 
 public:
     ChallengeScreen(LawnApp* theApp, ChallengePage thePage);

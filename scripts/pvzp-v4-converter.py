@@ -173,6 +173,7 @@ class ZombieType(IntEnum):
     ZOMBIE_SQUASH_HEAD = 30
     ZOMBIE_TALLNUT_HEAD = 31
     ZOMBIE_REDEYE_GARGANTUAR = 32
+    ZOMBIE_GIGA_FOOTBALL = 33
 
 
 class SeedType(IntEnum):
@@ -226,6 +227,8 @@ class SeedType(IntEnum):
     SEED_SPIKEROCK = 46
     SEED_COBCANNON = 47
     SEED_IMITATER = 48
+    SEED_PUMPKINSTAIR = 49
+    SEED_WATERPOT = 49
 
 
 class BackgroundType(IntEnum):
@@ -356,6 +359,8 @@ PLANT_NAMES = {
     SeedType.SEED_GOLD_MAGNET: "Gold Magnet",
     SeedType.SEED_SPIKEROCK: "Spikerock",
     SeedType.SEED_COBCANNON: "Cob Cannon",
+    SeedType.SEED_PUMPKINSTAIR: "Pumpkin Stair",
+    SeedType.SEED_WATERPOT: "Water Pot",
     SeedType.SEED_IMITATER: "Imitater",
 }
 

@@ -278,6 +278,8 @@ ZombieAllowedLevels gZombieAllowedLevels[NUM_ZOMBIE_TYPES] = {
 	{ ZOMBIE_SQUASH_HEAD, {0} },
 	{ ZOMBIE_TALLNUT_HEAD, {0} },
 	{ ZOMBIE_REDEYE_GARGANTUAR, {0} },
+	{ ZOMBIE_GIGA_FOOTBALL, {0} },
+	{ ZOMBIE_DOOR_PAIL, {0} },
 };
 
 SeedType gArtChallengeWallnut[MAX_GRID_SIZE_Y][MAX_GRID_SIZE_X] = {
@@ -370,7 +372,7 @@ void Challenge::InitLevel()
 		mChallengeStateCounter = 100;
 		mApp->PlayFoley(FOLEY_RAIN);
 	}
-	if (mApp->IsFinalBossLevel())
+	if (mApp->IsFinalBossLevel() && !mApp->OverrideConveyor())
 	{
 		mBoard->mSeedBank->AddSeed(SEED_CABBAGEPULT);
 		mBoard->mSeedBank->AddSeed(SEED_JALAPENO);
@@ -1212,19 +1214,27 @@ void Challenge::MouseDownWhackAZombie(int theX, int theY)
 			{
 				mApp->PlayFoley(FOLEY_SHIELD_HIT);
 			}
-			else if (aTopZombie->mHelmType == HELMTYPE_TRAFFIC_CONE)
+			else
 			{
 				mApp->PlayFoley(FOLEY_PLASTIC_HIT);
 			}
 
-			aTopZombie->TakeHelmDamage(900, 0U);
+			aTopZombie->TakeHelmDamage(750, 0U);
 		}
 		else
 		{
-			mApp->PlayFoley(FOLEY_BONK);
-			mApp->AddTodParticle(theX - 3, theY + 9, RENDER_LAYER_ABOVE_UI, PARTICLE_POW);
-			aTopZombie->DieWithLoot();
-			mBoard->ClearCursor();
+			if(aTopZombie->mBodyHealth <= 750){
+				mApp->PlayFoley(FOLEY_BONK);
+				mApp->AddTodParticle(theX - 3, theY + 9, RENDER_LAYER_ABOVE_UI, PARTICLE_POW);
+				if (aTopZombie->mZombieType == ZombieType::ZOMBIE_CATAPULT){
+					mApp->AddTodParticle(aTopZombie->mPosX + 80.0f, aTopZombie->mPosY + 60.0f, aTopZombie->mRenderOrder + 1, ParticleEffect::PARTICLE_CATAPULT_EXPLOSION);
+					mApp->PlayFoley(FoleyType::FOLEY_EXPLOSION);
+				}
+				aTopZombie->DieWithLoot();
+				mBoard->ClearCursor();
+			}
+			else
+				aTopZombie->TakeBodyDamage(750, 0U);
 		}
 	}
 }
@@ -1743,7 +1753,7 @@ void Challenge::UpdateConveyorBelt()
 		aSeedPickArray[0].mItem = SEED_PEASHOOTER;
 		aSeedPickArray[0].mWeight = 100;
 	}
-	else if (mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2)
+	else if (mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2 || mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3)
 	{
 		aSeedPickCount = 3;
 		aSeedPickArray[0].mItem = SEED_WALLNUT;
@@ -2513,10 +2523,26 @@ void Challenge::InitZombieWavesSurvival()
 		if (mBoard->GetSurvivalFlagsCompleted() < 10 && aRandZombie == ZOMBIE_REDEYE_GARGANTUAR)								continue;
 		if (mApp->IsSurvivalNormal(mApp->mGameMode) && aRandZombie > ZOMBIE_SNORKEL)								continue;
 		if (mBoard->IsZombieTypeSpawnedOnly(aRandZombie) || Zombie::IsZombotany(aRandZombie) ||
-			aRandZombie == ZOMBIE_DUCKY_TUBE || aRandZombie == ZOMBIE_YETI)											continue;
+			aRandZombie == ZOMBIE_DUCKY_TUBE)											continue;
 
 		mBoard->mZombieAllowed[aRandZombie] = true;
 		aCapacity--;
+	}
+}
+
+void Challenge::InitZombieWavesWallnutEndless()
+{
+	for (int i = 0; i < NUM_ZOMBIE_TYPES; i++){
+		ZombieType aZombieType = static_cast<ZombieType>(i);
+		const ZombieDefinition& aZombieDef = GetZombieDefinition(aZombieType);
+		if (mBoard->IsZombieTypePoolOnly(aZombieType) && !mBoard->StageHasPool())		continue;
+		if (aZombieType == ZOMBIE_DIGGER || aZombieType == ZOMBIE_BUNGEE || aZombieType == ZOMBIE_BALLOON || 
+			aZombieType == ZOMBIE_POGO) continue;
+		//if (mBoard->GetSurvivalFlagsCompleted() < 10 && aZombieType == ZOMBIE_REDEYE_GARGANTUAR)			continue;
+		if (Zombie::IsZombotany(aZombieType) || aZombieDef.mPickWeight == 0
+		)	continue;
+
+		mBoard->mZombieAllowed[aZombieType] = true;
 	}
 }
 
@@ -2711,6 +2737,9 @@ void Challenge::InitZombieWaves()
 			aList[ZOMBIE_DANCER] = true;
 			aList[ZOMBIE_DOOR] = true;
 		}
+		else if(aGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3){
+			InitZombieWavesWallnutEndless();
+		}
 	}
 	else if (mApp->IsStormyNightLevel())
 	{
@@ -2878,13 +2907,38 @@ void Challenge::WhackAZombieSpawning()
 				aMaxSpeed = 2;
 			}
 
+			if(mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2){
+				TodWeightedArray aZomPicks[ZombieType::NUM_ZOMBIE_TYPES];
+				int aZomPicksCount = 0;
+				for (int i = 0; i < NUM_ZOMBIE_TYPES; i++){
+					ZombieType aZombieType = static_cast<ZombieType>(i);
+					const ZombieDefinition& aZombieDef = GetZombieDefinition(aZombieType);
+					if (mBoard->IsZombieTypePoolOnly(aZombieType) && !mBoard->StageHasPool())		continue;
+					if (aZombieType == ZOMBIE_DIGGER || aZombieType == ZOMBIE_BUNGEE || aZombieType == ZOMBIE_BALLOON ||
+						aZombieType == ZOMBIE_POLEVAULTER || aZombieType == ZOMBIE_NEWSPAPER || aZombieType == ZOMBIE_DOOR ||
+						aZombieType == ZOMBIE_ZAMBONI || aZombieType == ZOMBIE_LADDER || aZombieType == ZOMBIE_DOOR_PAIL ||
+						aZombieType == ZOMBIE_POGO
+					) continue;
+					if (mBoard->IsZombieTypeSpawnedOnly(aZombieType) || Zombie::IsZombotany(aZombieType) ||
+						aZombieDef.mPickWeight == 0
+					)	continue;
+					if(aZombieDef.mFirstAllowedWave > mBoard->mCurrentWave) continue;
+
+					aZomPicks[aZomPicksCount].mItem = aZombieType;
+					aZomPicks[aZomPicksCount++].mWeight = aZombieDef.mPickWeight;
+				}
+				aZombieType = (ZombieType)TodPickFromWeightedArray(aZomPicks, aZomPicksCount);
+				
+				float aMaxSpeed = TodAnimateCurve(1, 40, mBoard->mCurrentWave, 1, 4, CURVE_EASE_IN);
+				if (aIsFinalWave) aMaxSpeed = 3;
+			}
+
 			Zombie* aZombie = mBoard->AddZombie(aZombieType, mBoard->mCurrentWave);
 			if (aZombie == nullptr)
 				break;
-
 			aZombie->RiseFromGrave(aGraveStone->mGridX, aGraveStone->mGridY);
 			aZombie->mPhaseCounter = 50;
-			aZombie->mVelX = RandRangeFloat(0.5f, aMaxSpeed);
+			aZombie->mVelX *= RandRangeFloat(0.5f / 0.23f, aMaxSpeed / 0.32f);
 			aZombie->UpdateAnimSpeed();
 		}
 

@@ -68,6 +68,7 @@ ReanimationParams gLawnReanimationArray[ReanimationType::NUM_REANIMS] = {
 	{ ReanimationType::REANIM_MARIGOLD,                             "reanim/Marigold.reanim",                          0 },
 	{ ReanimationType::REANIM_ICESHROOM,                            "reanim/IceShroom.reanim",                         0 },
 	{ ReanimationType::REANIM_ZOMBIE_FOOTBALL,                      "reanim/Zombie_football.reanim",                   0 },
+	{ ReanimationType::REANIM_ZOMBIE_FOOTBALL_GIGA,                 "reanim/Zombie_football_giga.reanim",                   0 },
 	{ ReanimationType::REANIM_ZOMBIE_NEWSPAPER,                     "reanim/Zombie_paper.reanim",                      0 },
 	{ ReanimationType::REANIM_ZOMBIE_ZAMBONI,                       "reanim/Zombie_zamboni.reanim",                    0 },
 	{ ReanimationType::REANIM_SPLASH,                               "reanim/splash.reanim",                            0 },
@@ -82,6 +83,7 @@ ReanimationParams gLawnReanimationArray[ReanimationType::NUM_REANIMS] = {
 	{ ReanimationType::REANIM_ZOMBIE_CHARRED_GARGANTUAR,            "reanim/Zombie_charred_gargantuar.reanim",         0 },
 	{ ReanimationType::REANIM_SCRAREYSHROOM,                        "reanim/ScaredyShroom.reanim",                     0 },
 	{ ReanimationType::REANIM_PUMPKIN,                              "reanim/Pumpkin.reanim",                           0 },
+	{ ReanimationType::REANIM_PUMPKIN_STAIR,                        "reanim/Pumpkin_stair.reanim",                     0 },
 	{ ReanimationType::REANIM_PLANTERN,                             "reanim/Plantern.reanim",                          0 },
 	{ ReanimationType::REANIM_TORCHWOOD,                            "reanim/Torchwood.reanim",                         0 },
 	{ ReanimationType::REANIM_SPLITPEA,                             "reanim/SplitPea.reanim",                          0 },
@@ -181,6 +183,7 @@ ReanimationParams gLawnReanimationArray[ReanimationType::NUM_REANIMS] = {
 	{ ReanimationType::REANIM_CREDITS_WEARETHEUNDEAD,               "reanim/Credits_WeAreTheUndead.reanim",            1 },
 	{ ReanimationType::REANIM_CREDITS_DISCOLIGHTS,                  "reanim/Credits_DiscoLights.reanim",               1 },
 	{ ReanimationType::REANIM_FLAG,                                 "reanim/Zombie_FlagPole.reanim",                   0 },
+	{ ReanimationType::REANIM_WATER_POT,                        	"reanim/pot_water.reanim",                     0 },
 };
 
 ReanimatorTransform::ReanimatorTransform() :

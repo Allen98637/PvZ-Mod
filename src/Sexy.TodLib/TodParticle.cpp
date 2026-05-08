@@ -44,6 +44,7 @@ ParticleParams gLawnParticleArray[ParticleEffect::NUM_PARTICLES] = {
 	{ ParticleEffect::PARTICLE_ZOMBIE_TRAFFIC_CONE, "particles/ZombieTrafficCone.xml" },
 	{ ParticleEffect::PARTICLE_ZOMBIE_PAIL, "particles/ZombiePail.xml" },
 	{ ParticleEffect::PARTICLE_ZOMBIE_HELMET, "particles/ZombieHelmet.xml" },
+	{ ParticleEffect::PARTICLE_ZOMBIE_HELMET_GIGA, "particles/ZombieHelmetGiga.xml" },
 	{ ParticleEffect::PARTICLE_ZOMBIE_FLAG, "particles/ZombieFlag.xml" },
 	{ ParticleEffect::PARTICLE_ZOMBIE_DOOR, "particles/ZombieDoor.xml" },
 	{ ParticleEffect::PARTICLE_ZOMBIE_NEWSPAPER, "particles/ZombieNewspaper.xml" },

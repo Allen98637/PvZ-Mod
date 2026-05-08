@@ -177,6 +177,7 @@ void ImitaterDialog::MouseDown(int x, int y, int theClickCount)
 			aSeedChooser->ClickedSeedInChooser(aImitater);
 			aSeedChooser->UpdateImitaterButton();
 			mApp->KillDialog(mId);
+			mApp->mWidgetManager->SetFocus(aSeedChooser);
 		}
 	}
 	else

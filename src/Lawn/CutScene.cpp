@@ -948,7 +948,7 @@ void CutScene::StartLevelIntro()
 	{
 		mApp->mMusic->MakeSureMusicIsPlaying(MusicTune::MUSIC_TUNE_TITLE_CRAZY_DAVE_MAIN_THEME);
 	}
-	else if (mApp->IsFinalBossLevel())
+	else if (mApp->IsFinalBossLevel() && !mApp->IsMiddleBossLevel())
 	{
 		mApp->mMusic->StopAllMusic();
 	}
@@ -1324,6 +1324,7 @@ void CutScene::AnimateBoard()
 		int aTimeBossEnter = TimeReadySetPlantStart + mLawnMowerTime + mCrazyDaveTime;
 		if (mCutsceneTime == aTimeBossEnter)
 		{
+			mApp->mMusic->FadeOut(150);
 			mBoard->mChallenge->PlayBossEnter();
 		}
 	}
@@ -1331,7 +1332,7 @@ void CutScene::AnimateBoard()
 	// ====================================================================================================
 	// ▲ 僵王博士关卡背景音乐的播放
 	// ====================================================================================================
-	if (mApp->IsFinalBossLevel() && mCutsceneTime == aTimeSeedBankOnStart)
+	if (mApp->IsFinalBossLevel() && mCutsceneTime == aTimeSeedBankOnStart && !mApp->OverrideConveyor())
 	{
 		mApp->mMusic->StartGameMusic();
 	}

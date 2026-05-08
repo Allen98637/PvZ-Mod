@@ -406,9 +406,13 @@ unsigned int Projectile::GetDamageFlags(Zombie* theZombie)
 	{
 		SetBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_BYPASSES_SHIELD), true);
 	}
-	else if (mMotionType == ProjectileMotion::MOTION_STAR && mVelX < 0.0f)
+	else if (mMotionType == ProjectileMotion::MOTION_STAR && mVelX < 1e-6f)
 	{
 		SetBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_BYPASSES_SHIELD), true);
+	}
+	else if (mMotionType == ProjectileMotion::MOTION_HOMING)
+	{
+		SetBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_BYPASSES_SHIELD), mVelX < 1e-6f);
 	}
 
 	if (mProjectileType == ProjectileType::PROJECTILE_SNOWPEA || mProjectileType == ProjectileType::PROJECTILE_WINTERMELON)
@@ -642,10 +646,13 @@ void Projectile::UpdateNormalMotion()
 	else if (mMotionType == ProjectileMotion::MOTION_HOMING)
 	{
 		Zombie* aZombie = mBoard->ZombieTryToGet(mTargetZombieID);
+		if(!aZombie || !aZombie->mHasHead) aZombie = UpdateTargetZombie();
 		if (aZombie && aZombie->EffectedByDamage(static_cast<unsigned int>(mDamageRangeFlags)))
 		{
 			Rect aZombieRect = aZombie->GetZombieRect();
-			SexyVector2 aTargetCenter(aZombie->ZombieTargetLeadX(0.0f), aZombieRect.mY + aZombieRect.mHeight / 2);
+			mTargetZombieX = aZombie->ZombieTargetLeadX(0.0f);
+			mTargetZombieY = aZombieRect.mY + aZombieRect.mHeight / 2;
+			SexyVector2 aTargetCenter(mTargetZombieX, mTargetZombieY);
 			SexyVector2 aProjectileCenter(mPosX + mWidth / 2, mPosY + mHeight / 2);
 			SexyVector2 aToTarget = (aTargetCenter - aProjectileCenter).Normalize();
 			SexyVector2 aMotion(mVelX, mVelY);
@@ -732,6 +739,31 @@ void Projectile::UpdateNormalMotion()
 	CheckForHighGround();
 }
 
+Zombie* Projectile::UpdateTargetZombie(){
+	int aHighestWeight = 0;
+    Zombie* aBestZombie = nullptr;
+
+    Zombie* aZombie = nullptr;
+    while (mBoard->IterateZombies(aZombie)){
+        Rect aZombieRect = aZombie->GetZombieRect();
+        int aWeight = -Distance2D(mTargetZombieX, mTargetZombieY, aZombieRect.mX + aZombieRect.mWidth / 2, aZombieRect.mY + aZombieRect.mHeight / 2);
+        if(!aZombie->mHasHead) aWeight -= 10000;
+        if (aZombie->IsFlying())
+        {
+            aWeight += 10000;  // 优先攻击飞行单位
+        }
+
+        if (aBestZombie == nullptr || aWeight > aHighestWeight)
+        {
+            aHighestWeight = aWeight;
+            aBestZombie = aZombie;
+        }
+	}
+	if(aBestZombie != nullptr)
+		mTargetZombieID = mBoard->ZombieGetID(aBestZombie);
+	return aBestZombie;
+}
+
 void Projectile::UpdateMotion()
 {
 	if (mAnimTicksPerFrame > 0)
@@ -804,8 +836,9 @@ void Projectile::PlayImpactSound(Zombie* theZombie)
 			mApp->PlayFoley(FoleyType::FOLEY_SHIELD_HIT);
 			aPlaySplatSound = false;
 		}
-		else if (theZombie->mHelmType == HELMTYPE_TRAFFIC_CONE || theZombie->mHelmType == HELMTYPE_DIGGER || theZombie->mHelmType == HELMTYPE_FOOTBALL)
-		{
+		else if (theZombie->mHelmType == HELMTYPE_TRAFFIC_CONE || theZombie->mHelmType == HELMTYPE_DIGGER || 
+			theZombie->mHelmType == HELMTYPE_FOOTBALL || theZombie->mHelmType == HELMTYPE_GIGA_FOOTBALL
+		){
 			mApp->PlayFoley(FoleyType::FOLEY_PLASTIC_HIT);
 		}
 	}

@@ -91,6 +91,7 @@ public:
     int                     mLastMouseY;
     SeedChooserState        mChooseState;
     int                     mViewLawnTime;
+    int                     mChooserScrollY;
 
 public:
     SeedChooserScreen();
@@ -127,6 +128,7 @@ public:
     virtual void            MouseUp(int x, int y, int theClickCount);
     void                    UpdateImitaterButton();
     virtual void            MouseDown(int x, int y, int theClickCount);
+    virtual void            MouseWheel(int theDelta);
     /*inline*/ bool         PickedPlantType(SeedType theSeedType);
     void                    CloseSeedChooser();
     virtual void            KeyDown(KeyCode theKey);

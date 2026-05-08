@@ -132,6 +132,7 @@ public:
     int                    BeghouledCheckForPossibleMoves(BeghouledBoardState* theBoardState);
     void                    BeghouledCheckStuckState();
     void                    InitZombieWavesSurvival();
+    void                    InitZombieWavesWallnutEndless();
     /*inline*/ void         InitZombieWavesFromList(ZombieType* theZombieList, int theListLength);
     void                    InitZombieWaves();
     /*inline*/ Rect         SlotMachineGetHandleRect();
@@ -267,6 +268,7 @@ public:
     ZombieType                      mZombieType;
     int32_t                         mAllowedOnLevel[50];
 };
+
 extern int gZombieWaves[NUM_LEVELS];
 extern ZombieAllowedLevels gZombieAllowedLevels[NUM_ZOMBIE_TYPES];
 

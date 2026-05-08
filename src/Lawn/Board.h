@@ -111,6 +111,7 @@ struct ZombiePicker
 
 struct PlantsOnLawn
 {
+	Plant*							mUnderPlant2;
 	Plant*							mUnderPlant;
 	Plant*							mPumpkinPlant;
 	Plant*							mFlyingPlant;
@@ -121,6 +122,16 @@ struct BungeeDropGrid
 {
 	TodWeightedGridArray			mGridArray[MAX_GRID_SIZE_X * MAX_GRID_SIZE_Y];
 	int								mGridArrayCount;
+};
+
+
+struct CustomSurvivalOption
+{
+    BackgroundType  mLevel;
+    bool            mBoss;
+    bool            mZomBotany;
+    bool            mGraves;
+    bool            mBungee;
 };
 
 class Board : public Widget, public ButtonListener
@@ -247,6 +258,7 @@ public:
 	uint32_t						mDiamondsCollected;										//+GOTY @Patoke: 0x57CC
 	uint32_t						mPottedPlantsCollected;
 	uint32_t						mChocolateCollected;
+	CustomSurvivalOption			mCustomSurvivalOption;
 
 public:
 	Board(LawnApp* theApp);
@@ -377,6 +389,7 @@ public:
 	void							KillAllPlantsInRadius(int theX, int theY, int theRadius);
 	Plant*							GetPumpkinAt(int theGridX, int theGridY);
 	Plant*							GetFlowerPotAt(int theGridX, int theGridY);
+	Plant*							GetWaterPotAt(int theGridX, int theGridY);
 	static bool						CanZombieSpawnOnLevel(ZombieType theZombieType, int theLevel);
 	bool							IsZombieWaveDistributionOk();
 	void							PickBackground();
@@ -421,6 +434,7 @@ public:
 	/*inline*/ int					CountPlantByType(SeedType theSeedType);
 	bool							PlantingRequirementsMet(SeedType theSeedType);
 	bool							HasValidCobCannonSpot();
+	bool							HasGoodPumpkins();
 	bool							IsValidCobCannonSpot(int theGridX, int theGridY);
 	bool							IsValidCobCannonSpotHelper(int theGridX, int theGridY);
 	void							MouseDownCobcannonFire(int x, int y, int theClickCount);
@@ -455,6 +469,7 @@ public:
 	void							AddBossRenderItem(RenderItem* theRenderList, int& theCurRenderItem, Zombie* theBossZombie);
 	/*inline*/ GridItem*			GetCraterAt(int theGridX, int theGridY);
 	/*inline*/ GridItem*			GetGraveStoneAt(int theGridX, int theGridY);
+	/*inline*/ bool					CanClimb(int theGridX, int theGridY);
 	/*inline*/ GridItem*			GetLadderAt(int theGridX, int theGridY);
 	/*inline*/ GridItem*			AddALadder(int theGridX, int theGridY);
 	/*inline*/ GridItem*			AddACrater(int theGridX, int theGridY);

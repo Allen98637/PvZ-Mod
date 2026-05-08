@@ -174,6 +174,7 @@ public:
     float                           mOriginalAnimRate;
     PlantID                         mTargetPlantID;
     int32_t                         mBossMode;
+	ZombieType			            mTargetType;
     int32_t                         mTargetRow;
     int32_t                         mBossBungeeCounter;
     int32_t                         mBossStompCounter;
@@ -184,6 +185,7 @@ public:
     bool                            mIsFireBall;
     ReanimationID                   mMoweredReanimID;
     int32_t                         mLastPortalX;
+    int                             mParameterI0;
 
 public:
     Zombie();
@@ -299,6 +301,7 @@ public:
     void                            UpdateClimbingLadder();
     void                            UpdateZombieGargantuar();
     int                             GetBodyDamageIndex();
+    bool                            BurnDidntKill();
     void                            ApplyBurn();
     void                            UpdateBurn();
     bool                            ZombieNotWalking();
@@ -367,6 +370,7 @@ public:
     void                            BossHeadSpitContact();
     void                            BossHeadSpit();
     void                            UpdateBossFireball();
+    Rect                            GetBossFireballRect();
     void                            BossDestroyFireball();
     void                            BossDestroyIceballInRow();
     void                            DiggerLoseAxe();

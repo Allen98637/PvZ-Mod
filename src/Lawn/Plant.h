@@ -96,7 +96,8 @@ enum PlantState : int32_t
     STATE_ZEN_GARDEN_HAPPY,
     STATE_MARIGOLD_ENDING,
     STATE_FLOWERPOT_INVULNERABLE,
-    STATE_LILYPAD_INVULNERABLE
+    STATE_LILYPAD_INVULNERABLE,
+    STATE_WATERPOT_INVULNERABLE,
 };
 
 enum PLANT_LAYER : int32_t
@@ -112,6 +113,7 @@ enum PLANT_LAYER : int32_t
 
 enum PLANT_ORDER : int32_t
 {
+    PLANT_ORDER_WATERPOT,
     PLANT_ORDER_LILYPAD,
     PLANT_ORDER_NORMAL,
     PLANT_ORDER_PUMPKIN,
@@ -143,7 +145,10 @@ enum MagnetItemType : int32_t
     MAGNET_ITEM_SILVER_COIN,
     MAGNET_ITEM_GOLD_COIN,
     MAGNET_ITEM_DIAMOND,
-    MAGNET_ITEM_PICK_AXE
+    MAGNET_ITEM_PICK_AXE,
+    MAGNET_ITEM_GIGA_FOOTBALL_HELMET_1,
+    MAGNET_ITEM_GIGA_FOOTBALL_HELMET_2,
+    MAGNET_ITEM_GIGA_FOOTBALL_HELMET_3
 };
 
 class MagnetItem
@@ -211,6 +216,7 @@ public:
     bool                    mIsAsleep;
     bool                    mIsOnBoard;
     bool                    mHighlighted;
+    float                   mParameterF0;
 
 public:
     Plant();
@@ -313,6 +319,7 @@ public:
     void                    PlayIdleAnim(float theRate);
     void                    UpdateFlowerPot();
     void                    UpdateLilypad();
+    void                    UpdateWaterPot();
     void                    GoldMagnetFindTargets();
     bool                    IsAGoldMagnetAboutToSuck();
     bool                    DrawMagnetItemsOnTop();
@@ -320,6 +327,7 @@ public:
 
 float                       PlantDrawHeightOffset(Board* theBoard, Plant* thePlant, SeedType theSeedType, int theCol, int theRow);
 float                       PlantFlowerPotHeightOffset(SeedType theSeedType, float theFlowerPotScale);
+float                       PlantWaterPotHeightOffset(SeedType theSeedType, float theWaterPotScale, Board* theBoard, float PotPara);
 
 class PlantDefinition
 {

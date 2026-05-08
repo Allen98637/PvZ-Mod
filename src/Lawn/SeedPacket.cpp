@@ -242,6 +242,10 @@ void SeedPacketDrawSeed(Graphics* g, float x, float y, SeedType theSeedType, See
 	{
 		TodDrawImageCelScaledF(g, aImage, x, y, 5, 0, g->mScaleX, g->mScaleY);
 	}
+	else if (aSeedType == SeedType::SEED_PUMPKINSTAIR && g->mScaleX <= 1.0f)
+	{
+		TodDrawImageCelScaledF(g, aImage, x, y, 5, 0, g->mScaleX, g->mScaleY);
+	}
 	else if (aSeedType == SeedType::SEED_TWINSUNFLOWER && g->mScaleX <= 1.0f)
 	{
 		TodDrawImageCelScaledF(g, aImage, x, y, 6, 0, g->mScaleX, g->mScaleY);
@@ -358,6 +362,7 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 
 	case SeedType::SEED_FUMESHROOM:
 	case SeedType::SEED_PUMPKINSHELL:
+	case SeedType::SEED_PUMPKINSTAIR:
 	case SeedType::SEED_CHOMPER:
 	case SeedType::SEED_DOOMSHROOM:
 	case SeedType::SEED_SQUASH:
@@ -444,6 +449,13 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 		aScale = 0.5f;
 		aOffsetX = 2.0f;
 		aOffsetY = 8.0f;
+		break;
+
+	
+	case SeedType::SEED_WATERPOT:
+		aScale = 0.4f;
+		aOffsetX = 10.0f;
+		aOffsetY = 15.0f;
 		break;
 
 	case SeedType::SEED_ZOMBIE_NORMAL:
@@ -797,6 +809,9 @@ void SeedPacket::MouseDown(int x, int y, int theClickCount)
 			case SeedType::SEED_CATTAIL:
 				mBoard->DisplayAdvice("[ADVICE_PLANT_NEEDS_LILYPAD]", MessageStyle::MESSAGE_STYLE_HINT_LONG, AdviceType::ADVICE_PLANT_NEEDS_LILYPAD);
 				break;
+			case SeedType::SEED_PUMPKINSTAIR:
+				mBoard->DisplayAdvice("[ADVICE_PLANT_NEEDS_PUMPKINSHELL]", MessageStyle::MESSAGE_STYLE_HINT_LONG, AdviceType::ADVICE_PLANT_NEEDS_PUMPKINSHELL);
+				break;
 			default:
 				TOD_ASSERT(false);
 				break;
@@ -815,6 +830,7 @@ void SeedPacket::MouseDown(int x, int y, int theClickCount)
 	mBoard->ClearAdvice(AdviceType::ADVICE_PLANT_NEEDS_MAGNETSHROOM);
 	mBoard->ClearAdvice(AdviceType::ADVICE_PLANT_NEEDS_FUMESHROOM);
 	mBoard->ClearAdvice(AdviceType::ADVICE_PLANT_NEEDS_LILYPAD);
+	mBoard->ClearAdvice(AdviceType::ADVICE_PLANT_NEEDS_PUMPKINSHELL);
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
 	{

@@ -41,6 +41,8 @@
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "widget/WidgetManager.h"
 
+Rect chooserRect(22, 123, 450, 439);
+
 // GOTY @Patoke: 0x48E020
 SeedChooserScreen::SeedChooserScreen()
 {
@@ -57,6 +59,7 @@ SeedChooserScreen::SeedChooserScreen()
 	mToolTip = new ToolTipWidget();
 	mToolTip->mMaxLinesWidth = mApp->GetInteger("SEED_CHOOSER_SCREEN_TOOL_TIP_MAX_LINE_WIDTH", 0);
 	mToolTipSeed = -1;
+	mChooserScrollY = 0;
 
 	mStartButton = new GameButton(SeedChooserScreen::SeedChooserScreen_Start);
 	mStartButton->SetLabel("[LETS_ROCK_BUTTON]"); // @Patoke: wrong local name
@@ -289,8 +292,11 @@ void SeedChooserScreen::GetSeedPositionInChooser(int theIndex, int& x, int& y)
 	}
 	else
 	{
-		int aRow = theIndex / 8;
-		int aCol = theIndex % 8;
+		int aIndex = theIndex;
+		if(theIndex > SEED_IMITATER) aIndex -= 1;
+
+		int aRow = aIndex / 8;
+		int aCol = aIndex % 8;
 
 		x = aCol * 53 + 22;
 		if (Has7Rows())
@@ -301,6 +307,7 @@ void SeedChooserScreen::GetSeedPositionInChooser(int theIndex, int& x, int& y)
 		{
 			y = aRow * 73 + 128;
 		}
+		y += mChooserScrollY;
 	}
 }
 
@@ -327,6 +334,8 @@ unsigned int SeedChooserScreen::SeedNotRecommendedToPick(SeedType theSeedType)
 	uint aRecFlags = mBoard->SeedNotRecommendedForLevel(theSeedType);
 	if (TestBit(aRecFlags, NOT_RECOMMENDED_NOCTURNAL) && PickedPlantType(SEED_INSTANT_COFFEE))
 		SetBit(aRecFlags, NOT_RECOMMENDED_NOCTURNAL, false);
+	if (TestBit(aRecFlags, NOT_RECOMMENDED_NEEDS_POOL) && PickedPlantType(SEED_WATERPOT))
+		SetBit(aRecFlags, NOT_RECOMMENDED_NEEDS_POOL, false);
 	return aRecFlags;
 }
 
@@ -358,7 +367,8 @@ void SeedChooserScreen::Draw(Graphics* g)
 	// @Patoke: wrong local name
 	TodDrawString(g, "[CHOOSE_YOUR_PLANTS]", 229, 110, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
 
-	int aNumSeeds = Has7Rows() ? 48 : 40;
+	int aNumSeeds = Has7Rows() ? NUM_SEEDS_IN_CHOOSER : 40;
+	g->SetClipRect(chooserRect);
 	for (SeedType aSeedShadow = SEED_PEASHOOTER; aSeedShadow < aNumSeeds; aSeedShadow = (SeedType)(aSeedShadow + 1))
 	{
 		int x, y;
@@ -367,7 +377,7 @@ void SeedChooserScreen::Draw(Graphics* g)
 		{
 			continue;
 		}
-
+		
 		if (mApp->HasSeedType(aSeedShadow))
 		{
 			ChosenSeed& aChosenSeed = mChosenSeeds[aSeedShadow];
@@ -381,6 +391,7 @@ void SeedChooserScreen::Draw(Graphics* g)
 			g->DrawImage(Sexy::IMAGE_SEEDPACKETSILHOUETTE, x, y);
 		}
 	}
+	g->ClearClipRect();
 
 	int aNumSeedsInBank = mBoard->mSeedBank->mNumPackets;
 	for (int anIndex = 0; anIndex < aNumSeedsInBank; anIndex++)
@@ -404,17 +415,25 @@ void SeedChooserScreen::Draw(Graphics* g)
 			if (((SeedNotRecommendedToPick(aSeedType) || SeedNotAllowedToPick(aSeedType)) && aSeedState == SEED_IN_CHOOSER) ||
 				SeedNotAllowedDuringTrial(aSeedType))
 				aGrayed = true;
-			
+
+
+			if(aSeedState == SEED_IN_CHOOSER){
+				GetSeedPositionInChooser(aSeedType, aChosenSeed.mX, aChosenSeed.mY);
+				g->SetClipRect(chooserRect);
+			}
 			int aPosX = aChosenSeed.mX;
 			int aPosY = aChosenSeed.mY;
+
 			if (aSeedState == SEED_IN_BANK)
 			{
 				aPosX -= mX;
 				aPosY -= mY;
 			}
 			DrawSeedPacket(g, aPosX, aPosY, aChosenSeed.mSeedType, aChosenSeed.mImitaterType, 0, aGrayed ? 115 : 255, true, false);
+			g->ClearClipRect();
 		}
 	}
+	
 
 	mImitaterButton->Draw(g);
 	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < NUM_SEEDS_IN_CHOOSER; aSeedType = (SeedType)(aSeedType + 1))
@@ -423,8 +442,10 @@ void SeedChooserScreen::Draw(Graphics* g)
 		ChosenSeedState aSeedState = aChosenSeed.mSeedState;
 		if (mApp->HasSeedType(aSeedType) && (aSeedState == SEED_FLYING_TO_BANK || aSeedState == SEED_FLYING_TO_CHOOSER))
 		{
+			if(aChosenSeed.mY > 300) g->SetClipRect(chooserRect);
 			DrawSeedPacket(g, aChosenSeed.mX, aChosenSeed.mY, aChosenSeed.mSeedType, aChosenSeed.mImitaterType, 0, 255, true, false);
 		}
+		g->ClearClipRect();
 	}
 
 	mStartButton->Draw(g);
@@ -699,7 +720,8 @@ void SeedChooserScreen::OnStartButton()
 		!CheckSeedUpgrade(SEED_COBCANNON, SEED_KERNELPULT) || 
 		!CheckSeedUpgrade(SEED_GOLD_MAGNET, SEED_MAGNETSHROOM) || 
 		!CheckSeedUpgrade(SEED_GLOOMSHROOM, SEED_FUMESHROOM) || 
-		!CheckSeedUpgrade(SEED_CATTAIL, SEED_LILYPAD))
+		!CheckSeedUpgrade(SEED_CATTAIL, SEED_LILYPAD) || 
+		!CheckSeedUpgrade(SEED_PUMPKINSTAIR, SEED_PUMPKINSHELL))
 		return;
 
 	CloseSeedChooser();
@@ -742,6 +764,7 @@ void SeedChooserScreen::ButtonDepress(int theId)
 	{
 		mApp->DoAlmanacDialog()->WaitForResult(true);
 		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
+		mApp->mWidgetManager->SetFocus(this);
 	}
 	else if (theId == SeedChooserScreen::SeedChooserScreen_Store)
 	{
@@ -754,6 +777,7 @@ void SeedChooserScreen::ButtonDepress(int theId)
 			mApp->PreNewGame(GAMEMODE_TREE_OF_WISDOM, false);
 		}
 		else mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
+		mApp->mWidgetManager->SetFocus(this);
 	}
 	else if (theId == SeedChooserScreen::SeedChooserScreen_Menu)
 	{
@@ -779,7 +803,11 @@ SeedType SeedChooserScreen::SeedHitTest(int x, int y)
 		{
 			ChosenSeed& aChosenSeed = mChosenSeeds[aSeedType];
 			if (!mApp->HasSeedType(aSeedType) || aChosenSeed.mSeedState == SEED_PACKET_HIDDEN) continue;
-			if (Rect(aChosenSeed.mX, aChosenSeed.mY, SEED_PACKET_WIDTH, SEED_PACKET_HEIGHT).Contains(x, y)) return aSeedType;
+			if (Rect(aChosenSeed.mX, aChosenSeed.mY, SEED_PACKET_WIDTH, SEED_PACKET_HEIGHT).Contains(x, y)){
+				if(aChosenSeed.mSeedState == SEED_FLYING_TO_BANK || aChosenSeed.mSeedState == SEED_IN_BANK ||
+					y >= chooserRect.mY && y <= chooserRect.mY + chooserRect.mHeight
+				) return aSeedType;
+			}
 		}
 	}
 	return SEED_NONE;
@@ -1072,9 +1100,26 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 					}
 					else ClickedSeedInBank(aChosenSeed);
 				}
-				else if (aChosenSeed.mSeedState == SEED_IN_CHOOSER)
-					ClickedSeedInChooser(aChosenSeed);
+				else if (aChosenSeed.mSeedState == SEED_IN_CHOOSER){
+					if(y >= chooserRect.mY && y <= chooserRect.mY + chooserRect.mHeight)
+						ClickedSeedInChooser(aChosenSeed);
+				}
 			}
+		}
+	}
+}
+
+void SeedChooserScreen::MouseWheel(int theDelta){
+	Widget::MouseWheel(theDelta);
+	if(chooserRect.Contains(mLastMouseX, mLastMouseY) && Has7Rows()){
+		if (theDelta > 0){
+			mChooserScrollY += 10;
+			if(mChooserScrollY >= 0) mChooserScrollY = 0;
+		}
+		else if(theDelta < 0){
+			mChooserScrollY -= 10;
+			int Ymin = -((NUM_SEEDS_IN_CHOOSER - 2) / 8 - 5) * 70;
+			if(mChooserScrollY <= Ymin) mChooserScrollY = Ymin;
 		}
 	}
 }
