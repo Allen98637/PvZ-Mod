@@ -2478,11 +2478,11 @@ void Plant::UpdateBowling()
                     mApp->PlayFoley(FoleyType::FOLEY_PLASTIC_HIT);
                 }
                 
-                aZombie->TakeHelmDamage(750, 0U);
+                aZombie->TakeHelmDamage(900, 0U);
             }
             else
             {
-                aZombie->TakeDamage(700, 0U);
+                aZombie->TakeDamage(900, 0U);
             }
         }
         else if (aZombie->mShieldType != ShieldType::SHIELDTYPE_NONE)
@@ -2500,11 +2500,11 @@ void Plant::UpdateBowling()
                 mApp->PlayFoley(FoleyType::FOLEY_PLASTIC_HIT);
             }
             
-            aZombie->TakeHelmDamage(750, 0U);
+            aZombie->TakeHelmDamage(900, 0U);
         }
         else
         {
-            aZombie->TakeDamage(700, 0U);
+            aZombie->TakeDamage((aZombie->mZombieType == ZombieType::ZOMBIE_CATAPULT || aZombie->mZombieType == ZombieType::ZOMBIE_ZAMBONI)?400:950, 0U);
         }
 
         if ((!mApp->IsFirstTimeAdventureMode() || mApp->mPlayerInfo->GetLevel() > 10) && mSeedType == SeedType::SEED_WALLNUT)

@@ -437,6 +437,19 @@ void LawnApp::PreNewGame(GameMode theGameMode, bool theLookForSavedGame)
 	NewGame();
 }
 
+void LawnApp::PreNewGame(GameMode theGameMode, bool theLookForSavedGame, CustomSurvivalOption option)
+{
+	mGameMode = theGameMode;
+	if (theLookForSavedGame && TryLoadGame())
+		return;
+
+	std::string aFileName = GetSavedGameName(mGameMode, mPlayerInfo->mId);
+	EraseFile(aFileName);
+	std::string aLegacyFileName = GetLegacySavedGameName(mGameMode, mPlayerInfo->mId);
+	EraseFile(aLegacyFileName);
+	NewGame(option);
+}
+
 // GOTY @Patoke: 0x4528B0
 void LawnApp::MakeNewBoard()
 {
@@ -508,6 +521,20 @@ bool LawnApp::TryLoadGame()
 	return false;
 }
 
+bool LawnApp::HasSaveData(GameMode daMode){
+	std::string aSaveName = GetSavedGameName(daMode, mPlayerInfo->mId);
+	std::string aLegacySaveName = GetLegacySavedGameName(daMode, mPlayerInfo->mId);
+	if (this->FileExists(aSaveName))
+	{
+		return true;
+	}
+	if (this->FileExists(aLegacySaveName))
+	{
+		return true;
+	}
+	return false;
+}
+
 // GOTY @Patoke: 0x452B30
 void LawnApp::NewGame()
 {
@@ -515,6 +542,21 @@ void LawnApp::NewGame()
 
 	MakeNewBoard();
 	mBoard->InitLevel();
+	mBoardResult = BoardResult::BOARDRESULT_NONE;
+	mGameScene = GameScenes::SCENE_LEVEL_INTRO;
+
+	ShowSeedChooserScreen();
+	mBoard->mCutScene->StartLevelIntro();
+}
+
+void LawnApp::NewGame(CustomSurvivalOption option)
+{
+	mFirstTimeGameSelector = false;
+
+	MakeNewBoard();
+	mBoard->mCustomSurvivalOption = option;
+	mBoard->InitLevel();
+	
 	mBoardResult = BoardResult::BOARDRESULT_NONE;
 	mGameScene = GameScenes::SCENE_LEVEL_INTRO;
 
@@ -2095,7 +2137,8 @@ bool LawnApp::IsAdventureMode()
 
 bool LawnApp::IsSurvivalMode()
 {
-	return mGameMode >= GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1 && mGameMode <= GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5;
+	return (mGameMode >= GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1 && mGameMode <= GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5) ||
+		(mGameMode >= GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_1 && mGameMode <= GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_15);
 }
 
 bool LawnApp::IsPuzzleMode()
@@ -2124,8 +2167,15 @@ bool LawnApp::IsSurvivalHard(GameMode theGameMode)
 
 bool LawnApp::IsSurvivalEndless(GameMode theGameMode)
 {
+	if(IsSurvivalCustom(theGameMode)) return true;
 	int aLevel = theGameMode - GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1;
 	return aLevel >= 0 && aLevel <= 4;
+}
+
+bool LawnApp::IsSurvivalCustom(GameMode theGameMode)
+{
+	int aLevel = theGameMode - GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_1;
+	return aLevel >= 0 && aLevel <= 14;
 }
 
 bool LawnApp::IsEndlessScaryPotter(GameMode theGameMode)
@@ -2266,8 +2316,8 @@ bool LawnApp::OverrideConveyor(){
 }
 
 bool LawnApp::IsMiddleBossLevel(){
-	return IsSurvivalEndless(mGameMode) && (mBoard->mChallenge->mSurvivalStage == 0 || mBoard->mChallenge->mSurvivalStage == 2);
-	//return IsSurvivalEndless(mGameMode) && mBoard->mChallenge->mSurvivalStage % 5 == 4;
+	return (IsSurvivalCustom(mGameMode) && mBoard->mCustomSurvivalOption.mBoss) && (mBoard->mChallenge->mSurvivalStage == 0 || mBoard->mChallenge->mSurvivalStage == 2);
+	//return (IsSurvivalCustom(mGameMode) && mBoard->mCustomSurvivalOption.mBoss) && mBoard->mChallenge->mSurvivalStage % 5 == 4;
 }
 
 bool LawnApp::IsFinalBossLevel()

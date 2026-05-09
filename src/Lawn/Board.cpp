@@ -911,7 +911,10 @@ void Board::LoadBackgroundImages()
 
 void Board::PickBackground()
 {
-	switch (mApp->mGameMode)
+	if(mApp->IsSurvivalCustom(mApp->mGameMode)){
+		mBackground = mCustomSurvivalOption.mLevel;
+	}
+	else{ switch (mApp->mGameMode)
 	{
 	case GameMode::GAMEMODE_ADVENTURE:
 		if (mLevel <= 1 * LEVELS_PER_AREA)
@@ -1052,7 +1055,7 @@ void Board::PickBackground()
 	default:
 		TOD_ASSERT(false);
 		break;
-	}
+	}}
 	LoadBackgroundImages();
 
 	if (mBackground == BackgroundType::BACKGROUND_1_DAY || mBackground == BackgroundType::BACKGROUND_GREENHOUSE || mBackground == BackgroundType::BACKGROUND_TREEOFWISDOM)
@@ -5228,7 +5231,7 @@ int Board::GetSurvivalFlagsCompleted()
 {
 	int aWavesPerFlag = GetNumWavesPerFlag();
 	int aFlagsCompleted = mChallenge->mSurvivalStage * GetNumWavesPerSurvivalStage() / aWavesPerFlag;
-	if (mApp->IsSurvivalEndless(mApp->mGameMode)){
+	if (mApp->IsSurvivalCustom(mApp->mGameMode) && mCustomSurvivalOption.mBoss){
 		aFlagsCompleted = mChallenge->mSurvivalStage * 2;
 		if (mChallenge->mSurvivalStage % 5 == 4) aFlagsCompleted += 1;
 	}
@@ -9824,12 +9827,12 @@ int Board::GetNumWavesPerSurvivalStage()
 	{
 		return 10;
 	}
-	else if (mApp->IsSurvivalHard(mApp->mGameMode))
-	{
+	else if (mApp->IsSurvivalCustom(mApp->mGameMode) && mCustomSurvivalOption.mBoss){
+		if (mChallenge->mSurvivalStage % 5 == 3) return 30;
 		return 20;
 	}
-	else if (mApp->IsSurvivalEndless(mApp->mGameMode)){
-		if (mChallenge->mSurvivalStage % 5 == 3) return 30;
+	else if (mApp->IsSurvivalMode())
+	{
 		return 20;
 	}
 

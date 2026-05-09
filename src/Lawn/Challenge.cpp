@@ -1223,7 +1223,8 @@ void Challenge::MouseDownWhackAZombie(int theX, int theY)
 		}
 		else
 		{
-			if(aTopZombie->mBodyHealth <= 750){
+			int dmg = (aTopZombie->mZombieType == ZombieType::ZOMBIE_CATAPULT)?400:950;
+			if(aTopZombie->mBodyHealth <= dmg){
 				mApp->PlayFoley(FOLEY_BONK);
 				mApp->AddTodParticle(theX - 3, theY + 9, RENDER_LAYER_ABOVE_UI, PARTICLE_POW);
 				if (aTopZombie->mZombieType == ZombieType::ZOMBIE_CATAPULT){
@@ -1234,7 +1235,7 @@ void Challenge::MouseDownWhackAZombie(int theX, int theY)
 				mBoard->ClearCursor();
 			}
 			else
-				aTopZombie->TakeBodyDamage(750, 0U);
+				aTopZombie->TakeBodyDamage(dmg, 0U);
 		}
 	}
 }

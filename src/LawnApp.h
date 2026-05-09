@@ -48,6 +48,7 @@ class ChallengeScreen;
 class StoreScreen;
 class AlmanacDialog;
 class TypingCheck;
+struct CustomSurvivalOption;
 
 namespace Sexy
 {
@@ -182,8 +183,11 @@ public:
 	void							MakeNewBoard();
 	void							StartPlaying();
 	bool							TryLoadGame();
+	bool							HasSaveData(GameMode daMode);
 	void							NewGame();
+	void							NewGame(CustomSurvivalOption option);
 	void							PreNewGame(GameMode theGameMode, bool theLookForSavedGame);
+	void							PreNewGame(GameMode theGameMode, bool theLookForSavedGame, CustomSurvivalOption option);
 	void							ShowGameSelector();
 	void							KillGameSelector();
 	void							ShowAwardScreen(AwardType theAwardType, bool theShowAchievements); // @Patoke: add argument
@@ -281,6 +285,7 @@ public:
 	static /*inline*/ bool			IsSurvivalNormal(GameMode theGameMode);
 	static /*inline*/ bool			IsSurvivalHard(GameMode theGameMode);
 	static /*inline*/ bool			IsSurvivalEndless(GameMode theGameMode);
+	static /*inline*/ bool			IsSurvivalCustom(GameMode theGameMode);
 	/*inline*/ bool					HasFinishedAdventure();
 	/*inline*/ bool					IsFirstTimeAdventureMode();
 	/*inline*/ bool					CanSpawnYetis();

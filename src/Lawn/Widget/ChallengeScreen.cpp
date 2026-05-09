@@ -30,6 +30,7 @@
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "misc/Debug.h"
+#include "CustomSurvivalDialog.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "widget/WidgetManager.h"
 
@@ -108,6 +109,21 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_INTRO,                                10,  ChallengePage::CHALLENGE_PAGE_NONE,       2,  3,  "Intro" },
 	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3,          6,   ChallengePage::CHALLENGE_PAGE_LIMBO,   	   2,  2,  "[WALL_NUT_BOWLING_EXTREME]" },
 	{ GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2,           16,  ChallengePage::CHALLENGE_PAGE_LIMBO,   	2,  3,  "[WHACK_A_ZOMBIE]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_1,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  0,  "[SURVIVAL_DAY_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_2,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  1,  "[SURVIVAL_NIGHT_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_3,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  2,  "[SURVIVAL_POOL_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_4,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  3,  "[SURVIVAL_FOG_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_5,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  4,  "[SURVIVAL_ROOF_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_6,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  0,  "[SURVIVAL_DAY_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_7,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  1,  "[SURVIVAL_NIGHT_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_8,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  2,  "[SURVIVAL_POOL_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_9,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  3,  "[SURVIVAL_FOG_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_10,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,   1,  4,  "[SURVIVAL_ROOF_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_11,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  0,  "[SURVIVAL_DAY_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_12,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  1,  "[SURVIVAL_NIGHT_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_13,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  2,  "[SURVIVAL_POOL_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_14,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  3,  "[SURVIVAL_FOG_ENDLESS]" },
+	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_15,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  4,  "[SURVIVAL_ROOF_ENDLESS]" },
 };
 
 // GOTY @Patoke: 0x430810
@@ -139,6 +155,11 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	if(thePage == CHALLENGE_PAGE_CHALLENGE){
 		mPages[0] = CHALLENGE_PAGE_CHALLENGE;
 		mPages[1] = CHALLENGE_PAGE_LIMBO;
+		mPageButtonCount = 2;
+	}
+	if(thePage == CHALLENGE_PAGE_SURVIVAL){
+		mPages[0] = CHALLENGE_PAGE_SURVIVAL;
+		mPages[1] = CHALLENGE_PAGE_SURVIVAL_2;
 		mPageButtonCount = 2;
 	}
 
@@ -283,7 +304,7 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 		{
 			return aDef.mChallengeMode == GAMEMODE_CHALLENGE_RAINING_SEEDS ? 1 : 2;
 		}
-		else if (mPageIndex == CHALLENGE_PAGE_SURVIVAL && aDef.mChallengeMode >= GAMEMODE_SURVIVAL_NORMAL_STAGE_4)
+		else if ((mPageIndex == CHALLENGE_PAGE_SURVIVAL || mPageIndex == CHALLENGE_PAGE_SURVIVAL_2) && aDef.mChallengeMode >= GAMEMODE_SURVIVAL_NORMAL_STAGE_4)
 		{
 			return aDef.mChallengeMode == GAMEMODE_SURVIVAL_NORMAL_STAGE_4 ? 1 : 2;
 		}
@@ -335,6 +356,9 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 	else
 	{
 		int aIdxInPage = aDef.mRow * 5 + aDef.mCol;
+		if((aDef.mPage == CHALLENGE_PAGE_SURVIVAL_2)){
+			return 10 - mApp->GetNumTrophies(CHALLENGE_PAGE_SURVIVAL);
+		}
 		if ((aDef.mPage == CHALLENGE_PAGE_CHALLENGE || aDef.mPage == CHALLENGE_PAGE_SURVIVAL) && !mApp->HasFinishedAdventure())
 		{
 			return aIdxInPage < 3 ? 0 : aIdxInPage == 3 ? 1 : 2;
@@ -644,14 +668,23 @@ void ChallengeScreen::ButtonDepress(int theId)
 	}
 
 	int aChallengeMode = theId - ChallengeScreen::ChallengeScreen_Mode;
-	if (aChallengeMode >= 0 && aChallengeMode < NUM_CHALLENGE_MODES)
+	GameMode daMode = (GameMode)(aChallengeMode + 1);
+	if(aChallengeMode >= GAMEMODE_SURVIVAL_CUSTOM_STAGE_1 && aChallengeMode <= GAMEMODE_SURVIVAL_CUSTOM_STAGE_15 && 
+		!mApp->HasSaveData(daMode))
+	{
+		CustomSurvivalDialog* aDialog = new CustomSurvivalDialog(mApp, aChallengeMode);
+		mApp->CenterDialog(aDialog, aDialog->mWidth, aDialog->mHeight);
+		mApp->AddDialog(Dialogs::DIALOG_CustomSurvival, aDialog);
+		mWidgetManager->SetFocus(aDialog);
+	}
+	else if (aChallengeMode >= 0 && aChallengeMode < NUM_CHALLENGE_MODES)
 	{
 		mApp->KillChallengeScreen();
-		mApp->PreNewGame((GameMode)(aChallengeMode + 1), true);
+		mApp->PreNewGame(daMode, true);
 	}
 
 	int aPageIndex = theId - ChallengeScreen::ChallengeScreen_Page;
-	if (aPageIndex >= 0 && aPageIndex < 4)
+	if (aPageIndex >= 0 && aPageIndex < MAX_CHALLANGE_PAGES)
 	{
 		mPageIndex = (ChallengePage)aPageIndex;
 		UpdateButtons();
