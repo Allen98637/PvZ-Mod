@@ -51,6 +51,7 @@ protected:
 
 public:
 	
+	Dialog*		mNoD;
 	LawnApp*				mApp;
 	int						mCurrentLevel;
 	LawnStoneButton*		mLevelUpButtom;
@@ -65,7 +66,7 @@ public:
 	int		 				mChallengeMode;
 
 public:
-	CustomSurvivalDialog(LawnApp* theApp, int theMode);
+	CustomSurvivalDialog(LawnApp* theApp, int theMode, Dialog* daNoD);
 	~CustomSurvivalDialog();
 
 	int						GetPreferredHeight(int theWidth);

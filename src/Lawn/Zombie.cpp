@@ -6855,7 +6855,7 @@ void Zombie::PoolSplash(bool theInToPoolSound)
 
 void Zombie::CheckForPool()
 {
-    if (!Zombie::ZombieTypeCanGoInPool(mZombieType) || IsFlying())
+    if (!Zombie::ZombieTypeCanGoInPool(mZombieType) || IsFlying() || mZombieHeight == ZombieHeight::HEIGHT_GETTING_BUNGEE_DROPPED)
     {
         return;
     }
@@ -8150,7 +8150,7 @@ void Zombie::RiseFromGrave(int theCol, int theRow)
     mZombiePhase = ZombiePhase::PHASE_RISING_FROM_GRAVE;
     mPhaseCounter = 150;
     
-    if (mBoard->StageHasPool())
+    if (mBoard->StageHasPool() && mBoard->IsPoolSquare(5, theRow))
     {
         mAltitude = -150.0f;
         mInPool = true;

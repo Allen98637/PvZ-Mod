@@ -88,7 +88,8 @@ enum SaveChunkTypeV4
 	SAVE4_CHUNK_SEEDBANK = 17,
 	SAVE4_CHUNK_SEEDPACKETS = 18,
 	SAVE4_CHUNK_CHALLENGE = 19,
-	SAVE4_CHUNK_MUSIC = 20
+	SAVE4_CHUNK_MUSIC = 20,
+	SAVE4_CHUNK_CUSTOMSURVIVALOPTION = 21
 };
 
 static constexpr const uint32_t SAVE4_CHUNK_VERSION = 1U;
@@ -787,6 +788,16 @@ static void SyncMusicTailPortable(PortableSaveContext& theContext, Music& theMus
 	}
 	theContext.SyncInt32(theMusic.mFadeOutCounter);
 	theContext.SyncInt32(theMusic.mFadeOutDuration);
+}
+
+static void SyncCustomSurvivalTailPortable(PortableSaveContext& theContext, CustomSurvivalOption& theOption)
+{
+	SyncEnum32(theContext, theOption.mLevel);
+	theContext.SyncBool(theOption.mBoss);
+	theContext.SyncBool(theOption.mZomBotany);
+    theContext.SyncBool(theOption.mGraves);
+    theContext.SyncBool(theOption.mBungee);
+    theContext.SyncBool(theOption.mFog);
 }
 
 static void SyncZombieTailPortable(PortableSaveContext& theContext, Zombie& theZombie)
@@ -2261,6 +2272,38 @@ static void SyncMusicPortable(PortableSaveContext& theContext, Board* theBoard)
 	}
 }
 
+static void SyncCustomSurvivalPortable(PortableSaveContext& theContext, Board* theBoard)
+{
+	if (theContext.mReading)
+	{
+		std::vector<unsigned char> aBlob;
+		if (!ReadTLVBlob(theContext, aBlob))
+			return;
+		TLVReader aReader(aBlob.data(), aBlob.size());
+		while (aReader.mOk && aReader.mPos < aReader.mSize)
+		{
+			uint32_t aFieldId = 0;
+			uint32_t aFieldSize = 0;
+			if (!aReader.ReadU32(aFieldId) || !aReader.ReadU32(aFieldSize))
+				break;
+			const unsigned char* aFieldData = nullptr;
+			if (!aReader.ReadBytes(aFieldData, aFieldSize))
+				break;
+			switch (aFieldId)
+			{
+			case PORTABLE_FIELD_TAIL: ApplyFieldWithSync(aFieldData, aFieldSize, [&](PortableSaveContext& c){ SyncCustomSurvivalTailPortable(c, theBoard->mCustomSurvivalOption); }); break;
+			default: break;
+			}
+		}
+	}
+	else
+	{
+		std::vector<unsigned char> aBlob;
+		AppendFieldWithSync(aBlob, PORTABLE_FIELD_TAIL, [&](PortableSaveContext& c){ SyncCustomSurvivalTailPortable(c, theBoard->mCustomSurvivalOption); });
+		WriteTLVBlob(theContext, aBlob);
+	}
+}
+
 static void SyncBoardPortable(PortableSaveContext& theContext, Board* theBoard)
 {
 	SyncBoardBasePortable(theContext, theBoard);
@@ -2283,6 +2326,7 @@ static void SyncBoardPortable(PortableSaveContext& theContext, Board* theBoard)
 	SyncSeedPacketsPortable(theContext, theBoard);
 	SyncChallengePortable(theContext, theBoard);
 	SyncMusicPortable(theContext, theBoard);
+	SyncCustomSurvivalPortable(theContext, theBoard);
 }
 
 
@@ -2332,6 +2376,8 @@ static ChunkSyncFn GetChunkSyncFn(uint32_t theChunkType)
 		return SyncChallengePortable;
 	case SAVE4_CHUNK_MUSIC:
 		return SyncMusicPortable;
+	case SAVE4_CHUNK_CUSTOMSURVIVALOPTION:
+		return SyncCustomSurvivalPortable;
 	default:
 		return nullptr;
 	}
@@ -3099,6 +3145,7 @@ bool LawnSaveGame(Board* theBoard, const std::string& theFilePath)
 	if (!WriteChunkV4(aPayload, SAVE4_CHUNK_SEEDPACKETS, theBoard)) return false;
 	if (!WriteChunkV4(aPayload, SAVE4_CHUNK_CHALLENGE, theBoard)) return false;
 	if (!WriteChunkV4(aPayload, SAVE4_CHUNK_MUSIC, theBoard)) return false;
+	if (!WriteChunkV4(aPayload, SAVE4_CHUNK_CUSTOMSURVIVALOPTION, theBoard)) return false;
 
 	SaveFileHeaderV4 aHeader{};
 	memcpy(aHeader.mMagic, SAVE_FILE_MAGIC_V4, sizeof(aHeader.mMagic));

@@ -23,6 +23,8 @@
 #include "../Zombie.h"
 #include "GameButton.h"
 #include "../../LawnApp.h"
+#include "CustomSurvivalDialog.h"
+#include "widget/WidgetManager.h"
 #include "ContinueDialog.h"
 #include "../../Resources.h"
 #include "../../Sexy.TodLib/TodFoley.h"
@@ -144,6 +146,12 @@ void ContinueDialog::ButtonDepress(int theId)
             );
             aDialog->mLawnYesButton->mLabel = TodStringTranslate("[RESTART_BUTTON]");
             //aDialog->CalcSize(0, 0);
+        }
+        else if(mApp->IsSurvivalCustom(mApp->mGameMode)){
+            CustomSurvivalDialog* aDialog = new CustomSurvivalDialog(mApp, mApp->mGameMode, this);
+            mApp->CenterDialog(aDialog, aDialog->mWidth, aDialog->mHeight);
+            mApp->AddDialog(Dialogs::DIALOG_CustomSurvival, aDialog);
+            mApp->mWidgetManager->SetFocus(aDialog);
         }
         else
         {

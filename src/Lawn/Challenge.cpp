@@ -2523,8 +2523,8 @@ void Challenge::InitZombieWavesSurvival()
 		if (!mBoard->StageHasRoof() && !mApp->IsSurvivalEndless(mApp->mGameMode) && aRandZombie == ZOMBIE_BUNGEE)	continue;
 		if (mBoard->GetSurvivalFlagsCompleted() < 10 && aRandZombie == ZOMBIE_REDEYE_GARGANTUAR)								continue;
 		if (mApp->IsSurvivalNormal(mApp->mGameMode) && aRandZombie > ZOMBIE_SNORKEL)								continue;
-		if (mBoard->IsZombieTypeSpawnedOnly(aRandZombie) || Zombie::IsZombotany(aRandZombie) ||
-			aRandZombie == ZOMBIE_DUCKY_TUBE)											continue;
+		if (mBoard->IsZombieTypeSpawnedOnly(aRandZombie) || aRandZombie == ZOMBIE_DUCKY_TUBE)											continue;
+		if(Zombie::IsZombotany(aRandZombie) && (!mApp->IsSurvivalCustom(mApp->mGameMode) || !mBoard->mCustomSurvivalOption.mZomBotany))	continue;
 
 		mBoard->mZombieAllowed[aRandZombie] = true;
 		aCapacity--;

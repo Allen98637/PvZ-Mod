@@ -187,7 +187,7 @@ public:
 	void							NewGame();
 	void							NewGame(CustomSurvivalOption option);
 	void							PreNewGame(GameMode theGameMode, bool theLookForSavedGame);
-	void							PreNewGame(GameMode theGameMode, bool theLookForSavedGame, CustomSurvivalOption option);
+	void							PreNewGame(GameMode theGameMode, CustomSurvivalOption option);
 	void							ShowGameSelector();
 	void							KillGameSelector();
 	void							ShowAwardScreen(AwardType theAwardType, bool theShowAchievements); // @Patoke: add argument

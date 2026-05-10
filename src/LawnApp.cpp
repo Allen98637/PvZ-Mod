@@ -437,11 +437,9 @@ void LawnApp::PreNewGame(GameMode theGameMode, bool theLookForSavedGame)
 	NewGame();
 }
 
-void LawnApp::PreNewGame(GameMode theGameMode, bool theLookForSavedGame, CustomSurvivalOption option)
+void LawnApp::PreNewGame(GameMode theGameMode, CustomSurvivalOption option)
 {
 	mGameMode = theGameMode;
-	if (theLookForSavedGame && TryLoadGame())
-		return;
 
 	std::string aFileName = GetSavedGameName(mGameMode, mPlayerInfo->mId);
 	EraseFile(aFileName);
@@ -2316,7 +2314,7 @@ bool LawnApp::OverrideConveyor(){
 }
 
 bool LawnApp::IsMiddleBossLevel(){
-	return (IsSurvivalCustom(mGameMode) && mBoard->mCustomSurvivalOption.mBoss) && (mBoard->mChallenge->mSurvivalStage == 0 || mBoard->mChallenge->mSurvivalStage == 2);
+	return (IsSurvivalCustom(mGameMode) && mBoard->mCustomSurvivalOption.mBoss) && (mBoard->mChallenge->mSurvivalStage == 0 || mBoard->mChallenge->mSurvivalStage <= 2);
 	//return (IsSurvivalCustom(mGameMode) && mBoard->mCustomSurvivalOption.mBoss) && mBoard->mChallenge->mSurvivalStage % 5 == 4;
 }
 

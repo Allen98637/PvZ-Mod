@@ -23,6 +23,7 @@
 #include "GameButton.h"
 #include "../Cutscene.h"
 #include "AlmanacDialog.h"
+#include "CustomSurvivalDialog.h"
 #include "../LawnCommon.h"
 #include "../../LawnApp.h"
 #include "../System/Music.h"
@@ -32,6 +33,7 @@
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "widget/Slider.h"
 #include "widget/Checkbox.h"
+#include "widget/WidgetManager.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 
 using namespace Sexy;
@@ -375,18 +377,26 @@ void NewOptionsDialog::ButtonDepress(int theId)
                 aDialogMessage = "[RESTART_LEVEL_BODY]";
             }
 
-            LawnDialog* aDialog = (LawnDialog*)mApp->DoDialog(Dialogs::DIALOG_CONFIRM_RESTART, true, aDialogTitle, aDialogMessage, "", Dialog::BUTTONS_YES_NO);
-            aDialog->mLawnYesButton->mLabel = TodStringTranslate("[RESTART_BUTTON]");
-            aDialog->mLawnNoButton->mLabel = TodStringTranslate("[DIALOG_BUTTON_CANCEL]");
-            
-            if (aDialog->WaitForResult(true) == Dialog::ID_YES)
-            {
-                mApp->mMusic->StopAllMusic();
-                mApp->mSoundSystem->CancelPausedFoley();
-                mApp->KillNewOptionsDialog();
-                mApp->mBoardResult = BoardResult::BOARDRESULT_RESTART;
-                mApp->mSawYeti = mApp->mBoard->mKilledYeti;
-                mApp->PreNewGame(mApp->mGameMode, false);
+            if(mApp->IsSurvivalCustom(mApp->mGameMode)){
+                CustomSurvivalDialog* aDialog = new CustomSurvivalDialog(mApp, mApp->mGameMode, this);
+                mApp->CenterDialog(aDialog, aDialog->mWidth, aDialog->mHeight);
+                mApp->AddDialog(Dialogs::DIALOG_CustomSurvival, aDialog);
+                mWidgetManager->SetFocus(aDialog);
+            }
+            else{
+                LawnDialog* aDialog = (LawnDialog*)mApp->DoDialog(Dialogs::DIALOG_CONFIRM_RESTART, true, aDialogTitle, aDialogMessage, "", Dialog::BUTTONS_YES_NO);
+                aDialog->mLawnYesButton->mLabel = TodStringTranslate("[RESTART_BUTTON]");
+                aDialog->mLawnNoButton->mLabel = TodStringTranslate("[DIALOG_BUTTON_CANCEL]");
+                
+                if (aDialog->WaitForResult(true) == Dialog::ID_YES)
+                {
+                    mApp->mMusic->StopAllMusic();
+                    mApp->mSoundSystem->CancelPausedFoley();
+                    mApp->KillNewOptionsDialog();
+                    mApp->mBoardResult = BoardResult::BOARDRESULT_RESTART;
+                    mApp->mSawYeti = mApp->mBoard->mKilledYeti;
+                    mApp->PreNewGame(mApp->mGameMode, false);
+                }
             }
         }
         break;

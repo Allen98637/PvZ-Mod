@@ -223,8 +223,6 @@ bool Sexy::ExtractDelayLoad_Background4Resources(ResourceManager* theManager)
 		IMAGE_BACKGROUND4 = aMgr.GetImageThrow("IMAGE_BACKGROUND4");
 		IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY");
 		IMAGE_BACKGROUND4_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND4_GAMEOVER_MASK");
-		IMAGE_FOG = aMgr.GetImageThrow("IMAGE_FOG");
-		IMAGE_FOG_SOFTWARE = aMgr.GetImageThrow("IMAGE_FOG_SOFTWARE");
 	}
 	catch (ResourceManagerException&)
 	{
@@ -1971,6 +1969,8 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
 		IMAGE_ZOMBIE_NOTE_SMALL = aMgr.GetImageThrow("IMAGE_ZOMBIE_NOTE_SMALL");
 		IMAGE_ZOMBIE_SEAWEED = aMgr.GetImageThrow("IMAGE_ZOMBIE_SEAWEED");
 		IMAGE_ZOMBOSS_PARTICLES = aMgr.GetImageThrow("IMAGE_ZOMBOSS_PARTICLES");
+		IMAGE_FOG = aMgr.GetImageThrow("IMAGE_FOG");
+		IMAGE_FOG_SOFTWARE = aMgr.GetImageThrow("IMAGE_FOG_SOFTWARE");
 	}
 	catch (ResourceManagerException&)
 	{

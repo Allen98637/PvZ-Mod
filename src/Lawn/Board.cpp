@@ -695,7 +695,14 @@ void Board::PickZombieWaves()
 		}
 		else if (mApp->IsSurvivalMode() && mChallenge->mSurvivalStage > 0)
 		{
-			aZombiePoints = (mChallenge->mSurvivalStage * GetNumWavesPerSurvivalStage() + aWave) * 2 / 5 + 1;
+			if(mApp->IsSurvivalCustom(mApp->mGameMode) && mCustomSurvivalOption.mBoss){
+				if(mChallenge->mSurvivalStage % 5 == 0 && aWave <= 3){
+					aZombiePoints = 30 + aWave / 3;
+				}
+				else aZombiePoints = (mChallenge->mSurvivalStage * 20 + aWave) * 2 / 5 + 1;
+			}
+			else
+				aZombiePoints = (mChallenge->mSurvivalStage * GetNumWavesPerSurvivalStage() + aWave) * 2 / 5 + 1;
 		}
 		else if (mApp->IsAdventureMode() && mApp->HasFinishedAdventure() && mLevel != 5)
 		{
@@ -1151,6 +1158,13 @@ void Board::PickBackground()
 		else if (mApp->IsWhackAZombieLevel())
 		{
 			mChallenge->WhackAZombiePlaceGraves(9);
+		}
+		else if(mApp->IsSurvivalCustom(mApp->mGameMode) && mCustomSurvivalOption.mGraves){
+			AddGraveStones(4, 1, aLevelRNG);
+			AddGraveStones(5, 1, aLevelRNG);
+			AddGraveStones(6, 2, aLevelRNG);
+			AddGraveStones(7, 2, aLevelRNG);
+			AddGraveStones(8, 3, aLevelRNG);
 		}
 		else if (mBackground == BackgroundType::BACKGROUND_2_NIGHT)
 		{
@@ -2512,7 +2526,7 @@ ZombieType Board::PickGraveRisingZombieType()
 	aZombieWeightArray[0].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_NORMAL).mPickWeight;
 	aZombieWeightArray[1].mItem = ZombieType::ZOMBIE_TRAFFIC_CONE;
 	aZombieWeightArray[1].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_TRAFFIC_CONE).mPickWeight;
-	if (!StageHasGraveStones())
+	if (!StageHasGraveStones() || mApp->IsSurvivalCustom(mApp->mGameMode))
 	{
 		aZombieWeightArray[2].mItem = ZombieType::ZOMBIE_PAIL;
 		aZombieWeightArray[2].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_PAIL).mPickWeight;
@@ -4987,9 +5001,10 @@ void Board::SpawnZombiesFromPool()
 void Board::SetupBungeeDrop(BungeeDropGrid* theBungeeDropGrid)
 {
 	theBungeeDropGrid->mGridArrayCount = 0;
+	int RowC = StageHas6Rows()?5:4;
 	for (int aGridX = 4; aGridX < MAX_GRID_SIZE_X; aGridX++)
 	{
-		for (int aGridY = 0; aGridY <= 4; aGridY++)
+		for (int aGridY = 0; aGridY <= RowC; aGridY++)
 		{
 			int aCount = theBungeeDropGrid->mGridArrayCount;
 			theBungeeDropGrid->mGridArray[aCount].mX = aGridX;
@@ -5007,7 +5022,7 @@ void Board::BungeeDropZombie(BungeeDropGrid* theBungeeDropGrid, ZombieType theZo
 	aGrid->mWeight = 1;
 
 	Zombie* aBungeeZombie = AddZombie(ZombieType::ZOMBIE_BUNGEE, mCurrentWave);
-	Zombie* aZombie = AddZombie(theZombieType, mCurrentWave);
+	Zombie* aZombie = AddZombieInRow(theZombieType, aGrid->mY, mCurrentWave);
 	TOD_ASSERT(aBungeeZombie && aZombie);
 
 	aBungeeZombie->BungeeDropZombie(aZombie, aGrid->mX, aGrid->mY);
@@ -5062,14 +5077,20 @@ void Board::SpawnZombiesFromGraves()
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2)
 		return;
 
-	if (StageHasRoof())
-	{
-		SpawnZombiesFromSky();
+	if(mApp->IsSurvivalCustom(mApp->mGameMode)){
+		if (mCustomSurvivalOption.mBungee) SpawnZombiesFromSky();
+		if (StageHasPool()) SpawnZombiesFromPool();
 	}
-	else if (StageHasPool())
-	{
-		SpawnZombiesFromPool();
-		return;
+	else{
+		if (StageHasRoof())
+		{
+			SpawnZombiesFromSky();
+		}
+		else if (StageHasPool())
+		{
+			SpawnZombiesFromPool();
+			return;
+		}
 	}
 	
 //	int aZombiePoints = GetGraveStonesCount();
@@ -8947,7 +8968,9 @@ bool Board::StageHasGraveStones()
 		mApp->IsScaryPotterLevel())
 		return false;
 
-	return mBackground == BackgroundType::BACKGROUND_2_NIGHT;
+	if(mApp->IsSurvivalCustom(mApp->mGameMode)) return mCustomSurvivalOption.mGraves;
+
+	return (mBackground == BackgroundType::BACKGROUND_2_NIGHT);
 }
 
 bool Board::StageHasRoof()
@@ -8983,6 +9006,7 @@ bool Board::StageHasZombieWalkInFromRight()
 
 bool Board::StageHasFog()
 {
+	if(mApp->IsSurvivalCustom(mApp->mGameMode)) return mCustomSurvivalOption.mFog;
 	return !mApp->IsStormyNightLevel() && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_INVISIGHOUL && mBackground == BackgroundType::BACKGROUND_4_FOG;
 }
 

@@ -22,15 +22,15 @@
 #include "../Board.h"
 #include "GameButton.h"
 #include "../Cutscene.h"
-#include "AlmanacDialog.h"
 #include "../LawnCommon.h"
 #include "../../LawnApp.h"
 #include "../System/Music.h"
 #include "../../Resources.h"
-#include "CustomSurvivalDialog.h"
 #include "../../ConstEnums.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "widget/Checkbox.h"
+#include "LawnDialog.h"
+#include "CustomSurvivalDialog.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "graphics/ImageFont.h"
 
@@ -38,11 +38,12 @@ using namespace Sexy;
 
 std::string levelList[6] = {"[DAY]", "[NIGHT]", "[POOL]", "[FOG]", "[ROOF]", "[NIGHT_ROOF]"};
 
-CustomSurvivalDialog::CustomSurvivalDialog(LawnApp* theApp, int theMode) : 
+CustomSurvivalDialog::CustomSurvivalDialog(LawnApp* theApp, int theMode, Dialog* daNoD) : 
 	Dialog(nullptr, nullptr, Dialogs::DIALOG_CustomSurvival, true, "Custom Endless", "", "", Dialog::BUTTONS_NONE)
 {
     mApp = theApp;
     mChallengeMode = theMode;
+    mNoD = daNoD;
     SetColor(Dialog::COLOR_BUTTON_TEXT, Color(255, 255, 100));
 
     SetColor(0, { 0xE0,0xBB,0x62 });
@@ -291,12 +292,23 @@ void CustomSurvivalDialog::ButtonDepress(int theId)
     case CustomSurvivalDialog::CustomSurvivalDialog_Go:
     {
         mApp->KillDialog(Dialogs::DIALOG_CustomSurvival);
-        mApp->KillChallengeScreen();
         CustomSurvivalOption options = {
             static_cast<BackgroundType>(BACKGROUND_1_DAY + mCurrentLevel), mBossCheckbox->mChecked, mZombotomyCheckbox->mChecked,
             mGraveCheckbox->mChecked, mBungeeCheckbox->mChecked, mFogCheckbox->mChecked
         };
-		mApp->PreNewGame((GameMode)(mChallengeMode + 1), true, options);
+        if(mNoD){
+            mApp->mMusic->StopAllMusic();
+            mApp->mSoundSystem->CancelPausedFoley();
+            mApp->KillNewOptionsDialog();
+            mApp->KillDialog(Dialogs::DIALOG_CONTINUE);
+            mApp->mBoardResult = BoardResult::BOARDRESULT_RESTART;
+            mApp->mSawYeti = mApp->mBoard->mKilledYeti;
+            mApp->PreNewGame(mApp->mGameMode, options);
+        }
+        else{
+            mApp->KillChallengeScreen();
+            mApp->PreNewGame((GameMode)(mChallengeMode + 1), options);
+        }
         break;
     }
     }
