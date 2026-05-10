@@ -2342,7 +2342,7 @@ void CutScene::DrawIntro(Graphics* g)
 			"[INTRO_PRESENTS]", 
 			BOARD_WIDTH / 2 - mBoard->mX, 
 			310 - mBoard->mY, 
-			FONT_BRIANNETOD16,
+			FONT_BRIANNETOD32,
 			Color(255, 255, 255, anAlpha), 
 			DrawStringJustification::DS_ALIGN_CENTER
 		);
