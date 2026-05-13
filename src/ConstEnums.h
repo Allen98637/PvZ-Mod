@@ -1321,9 +1321,9 @@ enum ZombiePhase : int32_t
     PHASE_DANCER_DANCING_LEFT,
     PHASE_DANCER_WALK_TO_RAISE,
     PHASE_DANCER_RAISE_LEFT_1,
-    PHASE_DANCER_RAISE_RIGHT_1,
+    PHASE_DANCER_RAISE_RIGHT_1, // deprecated: not used for the disco dancer zombie
     PHASE_DANCER_RAISE_LEFT_2,
-    PHASE_DANCER_RAISE_RIGHT_2,
+    PHASE_DANCER_RAISE_RIGHT_2, // deprecated: not used for the disco dancer zombie
     PHASE_DANCER_RISING,
     PHASE_DOLPHIN_WALKING,
     PHASE_DOLPHIN_INTO_POOL,
