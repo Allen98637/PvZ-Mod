@@ -2693,7 +2693,7 @@ bool Plant::IsUpgradableTo(SeedType theUpgradedType)
         return aPlant == nullptr || aPlant->mSeedType != SeedType::SEED_CATTAIL;
     }
     if(theUpgradedType == SeedType::SEED_PUMPKINSTAIR && mSeedType == SeedType::SEED_PUMPKINSHELL){
-        return mPlantHealth == mPlantMaxHealth;
+        return mPlantHealth >= mPlantMaxHealth * 2 / 3;
     }
     return false;
 }

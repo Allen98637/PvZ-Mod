@@ -2468,7 +2468,7 @@ bool Board::HasGoodPumpkins()
 	Plant* aPlant = nullptr;
 	while (IteratePlants(aPlant))
 	{
-		if (aPlant->mSeedType == SeedType::SEED_PUMPKINSHELL && aPlant->mPlantHealth == aPlant->mPlantMaxHealth)
+		if (aPlant->mSeedType == SeedType::SEED_PUMPKINSHELL && aPlant->mPlantHealth >= aPlant->mPlantMaxHealth * 2 / 3)
 		{
 			return true;
 		}
@@ -2672,7 +2672,7 @@ bool Board::RowCanHaveZombieType(int theRow, ZombieType theZombieType)
 	// 非水路不能刷出水路僵尸；前 5 小波，水面仅刷出潜水僵尸或海豚骑士僵尸
 	if (mPlantRow[theRow] == PlantRowType::PLANTROW_POOL)
 	{
-		if (aCurrentWave < 5 && !IsZombieTypePoolOnly(theZombieType))
+		if (aCurrentWave < 5 && !IsZombieTypePoolOnly(theZombieType) && theZombieType != ZOMBIE_JACKSON_DANCER)
 		{
 			return false;
 		}
@@ -5107,7 +5107,7 @@ void Board::SpawnZombiesFromGraves()
 		}
 		
 		ZombieType aZombieType = PickGraveRisingZombieType();
-		Zombie* aZombie = AddZombie(aZombieType, mCurrentWave);
+		Zombie* aZombie = AddZombieInRow(aZombieType, aGridItem->mGridY, mCurrentWave);
 		if (aZombie == nullptr)
 		{
 			return;

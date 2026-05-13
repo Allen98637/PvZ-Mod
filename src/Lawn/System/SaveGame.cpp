@@ -855,7 +855,7 @@ static void SyncZombieTailPortable(PortableSaveContext& theContext, Zombie& theZ
 	theContext.SyncInt32(theZombie.mFlyingMaxHealth);
 	theContext.SyncBool(theZombie.mDead);
 	SyncEnumU32(theContext, theZombie.mRelatedZombieID);
-	SyncEnumU32Array(theContext, &theZombie.mFollowerZombieID[0], MAX_ZOMBIE_FOLLOWERS);
+	SyncEnumU32Array(theContext, &theZombie.mFollowerZombieID[0], NUM_JACKSON_DANCERS);
 	theContext.SyncBool(theZombie.mPlayingSong);
 	theContext.SyncInt32(theZombie.mParticleOffsetX);
 	theContext.SyncInt32(theZombie.mParticleOffsetY);

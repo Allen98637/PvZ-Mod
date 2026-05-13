@@ -30,6 +30,7 @@
 #define NUM_BOBSLED_FOLLOWERS 3
 #define NUM_BACKUP_DANCERS 4
 #define NUM_BOSS_BUNGEES 3
+#define NUM_JACKSON_DANCERS 12
 
 constexpr const int ZOMBIE_START_RANDOM_OFFSET = 40;
 constexpr const int BUNGEE_ZOMBIE_HEIGHT = 3000;
@@ -48,6 +49,7 @@ constexpr const int JackInTheBoxZombieRadius = 115;
 constexpr const int JackInTheBoxPlantRadius = 90;
 constexpr const int BOBSLED_CRASH_TIME = 150;
 constexpr const int ZOMBIE_BACKUP_DANCER_RISE_HEIGHT = -200;
+constexpr const int ZOMBIE_BACKUP_DANCER_RISE_HEIGHT_POOL = -150;
 constexpr const int BOSS_FLASH_HEALTH_FRACTION = 10;
 constexpr const int TICKS_BETWEEN_EATS = 4;
 constexpr const int DAMAGE_PER_EAT = TICKS_BETWEEN_EATS;
@@ -162,7 +164,7 @@ public:
     int32_t                         mFlyingMaxHealth;
     bool                            mDead;
     ZombieID                        mRelatedZombieID;
-    ZombieID                        mFollowerZombieID[MAX_ZOMBIE_FOLLOWERS];
+    ZombieID                        mFollowerZombieID[NUM_JACKSON_DANCERS];
     bool                            mPlayingSong;
     int32_t                         mParticleOffsetX;
     int32_t                         mParticleOffsetY;
@@ -336,6 +338,7 @@ public:
     void                            SetAnimRate(float theAnimRate);
     void                            ApplyAnimRate(float theAnimRate);
     /*inline*/ bool                 IsDeadOrDying();
+    void                            SetupJacksonDancer();
     void                            DrawDancerReanim(Graphics* g);
     void                            DrawBungeeReanim(Graphics* g);
     void                            DrawBungeeTarget(Graphics* g);
