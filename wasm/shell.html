@@ -232,6 +232,10 @@ var Module = {
     print: function(text) { console.log(text); },
     printErr: function(text) { console.warn(text); }
 };
+
+Module.canvas.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
 </script>
 {{{ SCRIPT }}}
 <script>
