@@ -475,7 +475,7 @@ void Challenge::StartLevel()
 	{
 		ScaryPotterStart();
 	}
-	if (mApp->IsLittleTroubleLevel() || mApp->IsStormyNightLevel() || mApp->IsBungeeBlitzLevel() || aGameMode == GAMEMODE_CHALLENGE_INVISIGHOUL)
+	if (mApp->IsLittleTroubleLevel() || (mApp->IsStormyNightLevel() && !mApp->IsSurvivalMode()) || mApp->IsBungeeBlitzLevel() || aGameMode == GAMEMODE_CHALLENGE_INVISIGHOUL)
 	{
 		mBoard->mZombieCountDown = 200;
 		mBoard->mZombieCountDownStart = mBoard->mZombieCountDown;

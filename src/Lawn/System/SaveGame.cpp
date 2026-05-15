@@ -798,6 +798,7 @@ static void SyncCustomSurvivalTailPortable(PortableSaveContext& theContext, Cust
     theContext.SyncBool(theOption.mGraves);
     theContext.SyncBool(theOption.mBungee);
     theContext.SyncBool(theOption.mFog);
+    theContext.SyncBool(theOption.mStorm);
 }
 
 static void SyncZombieTailPortable(PortableSaveContext& theContext, Zombie& theZombie)

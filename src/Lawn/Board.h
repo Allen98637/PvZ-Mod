@@ -133,6 +133,7 @@ struct CustomSurvivalOption
     bool            mGraves;
     bool            mBungee;
     bool            mFog;
+	bool            mStorm;
 };
 
 class Board : public Widget, public ButtonListener

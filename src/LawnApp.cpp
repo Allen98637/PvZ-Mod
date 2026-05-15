@@ -2284,6 +2284,8 @@ bool LawnApp::IsStormyNightLevel()
 	if (mBoard == nullptr)
 		return false;
 
+	if(IsSurvivalCustom(mGameMode)) return mBoard->mCustomSurvivalOption.mStorm;
+
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_STORMY_NIGHT)
 		return true;
 

@@ -51,7 +51,7 @@ CustomSurvivalDialog::CustomSurvivalDialog(LawnApp* theApp, int theMode, Dialog*
     SetHeaderFont(Sexy::FONT_DWARVENTODCRAFT24);
 
     mWidth = 693;
-    mHeight = 535;
+    mHeight = 584;
 
     mCurrentLevel = 2;
     mLevelDownButtom = MakeButton(CustomSurvivalDialog::CustomSurvivalDialog_LevelDown, this, "<");
@@ -62,6 +62,7 @@ CustomSurvivalDialog::CustomSurvivalDialog(LawnApp* theApp, int theMode, Dialog*
     mGraveCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Grave, this, false);
     mBungeeCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Bungee, this, false);
     mFogCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Fog, this, false);
+    mStormCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Storm, this, false);
     
     mCancelButton = MakeButton(CustomSurvivalDialog::CustomSurvivalDialog_Cancel, this, "[DIALOG_BUTTON_CANCEL]");
     mGoButton = MakeButton(CustomSurvivalDialog::CustomSurvivalDialog_Go, this, "[DIALOG_BUTTON_OK]");
@@ -75,6 +76,7 @@ CustomSurvivalDialog::~CustomSurvivalDialog()
     delete mZombotomyCheckbox;
     delete mGraveCheckbox;
     delete mBungeeCheckbox;
+    delete mStormCheckbox;
     delete mFogCheckbox;
     delete mCancelButton;
     delete mGoButton;
@@ -98,6 +100,7 @@ void CustomSurvivalDialog::AddedToManager(Sexy::WidgetManager* theWidgetManager)
     AddWidget(mFogCheckbox);
     AddWidget(mCancelButton);
     AddWidget(mGoButton);
+    AddWidget(mStormCheckbox);
 }
 
 void CustomSurvivalDialog::RemovedFromManager(Sexy::WidgetManager* theWidgetManager)
@@ -112,6 +115,7 @@ void CustomSurvivalDialog::RemovedFromManager(Sexy::WidgetManager* theWidgetMana
     RemoveWidget(mFogCheckbox);
     RemoveWidget(mCancelButton);
     RemoveWidget(mGoButton);
+    RemoveWidget(mStormCheckbox);
 }
 
 void CustomSurvivalDialog::Resize(int theX, int theY, int theWidth, int theHeight)
@@ -122,6 +126,7 @@ void CustomSurvivalDialog::Resize(int theX, int theY, int theWidth, int theHeigh
     mGraveCheckbox->Resize(380, 285, 46, 45);
     mBungeeCheckbox->Resize(381, 324, 46, 45);
     mFogCheckbox->Resize(379, 365, 46, 45);
+    mStormCheckbox->Resize(382, 405, 46, 45);
     mLevelDownButtom->Resize(64, 116, 71, 46);
     mLevelUpButtom->Resize(mWidth - 133, 118, 71, 46);
 
@@ -230,6 +235,7 @@ void CustomSurvivalDialog::Draw(Sexy::Graphics* g)
     TodDrawString(g, "Graves", aCheckboxLabelsX, 307, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     TodDrawString(g, "Bungee Wave", aCheckboxLabelsX, 347, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     TodDrawString(g, "Fog", aCheckboxLabelsX, 387, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+    TodDrawString(g, "Storm", aCheckboxLabelsX, 427, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     if (aFontScale != 1.0f)
         g->SetScale(1.0f, 1.0f, 0.0f, 0.0f);
 }
@@ -294,7 +300,7 @@ void CustomSurvivalDialog::ButtonDepress(int theId)
         mApp->KillDialog(Dialogs::DIALOG_CustomSurvival);
         CustomSurvivalOption options = {
             static_cast<BackgroundType>(BACKGROUND_1_DAY + mCurrentLevel), mBossCheckbox->mChecked, mZombotomyCheckbox->mChecked,
-            mGraveCheckbox->mChecked, mBungeeCheckbox->mChecked, mFogCheckbox->mChecked
+            mGraveCheckbox->mChecked, mBungeeCheckbox->mChecked, mFogCheckbox->mChecked, mStormCheckbox->mChecked
         };
         if(mNoD){
             mApp->mMusic->StopAllMusic();

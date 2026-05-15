@@ -47,6 +47,7 @@ protected:
 		CustomSurvivalDialog_Fog,
 		CustomSurvivalDialog_Cancel,
 		CustomSurvivalDialog_Go,
+		CustomSurvivalDialog_Storm,
 	};
 
 public:
@@ -61,6 +62,7 @@ public:
 	Sexy::Checkbox*			mGraveCheckbox;
 	Sexy::Checkbox*			mBungeeCheckbox;
 	Sexy::Checkbox*			mFogCheckbox;
+	Sexy::Checkbox*			mStormCheckbox;
 	LawnStoneButton*		mCancelButton;
 	LawnStoneButton*		mGoButton;
 	int		 				mChallengeMode;

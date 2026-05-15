@@ -3835,13 +3835,13 @@ void Zombie::SetupReanimForLostArm(unsigned int theDamageFlags)
             break;
         case ZombieType::ZOMBIE_JACKSON:
             // @Patoke: updated for new assets
-            GetTrackPosition("Zombie_disco_outerarm_lower", aPosX, aPosY);
-            aBodyReanim->SetImageOverride("Zombie_disco_outerarm_upper", IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_UPPER2);
+            GetTrackPosition("Zombie_outerarm_lower", aPosX, aPosY);
+            aBodyReanim->SetImageOverride("Zombie_outerarm_upper", IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_UPPER2);
             break;
         case ZombieType::ZOMBIE_JACKSON_DANCER:
             // @Patoke: updated for new assets
-            GetTrackPosition("Zombie_disco_outerarm_lower", aPosX, aPosY);
-            aBodyReanim->SetImageOverride("Zombie_disco_outerarm_upper", IMAGE_REANIM_ZOMBIE_DANCER_OUTERARM_UPPER2);
+            GetTrackPosition("Zombie_outerarm_lower", aPosX, aPosY);
+            aBodyReanim->SetImageOverride("Zombie_outerarm_upper", IMAGE_REANIM_ZOMBIE_DANCER_OUTERARM_UPPER2);
             break;
         case ZombieType::ZOMBIE_LADDER:
             GetTrackPosition("Zombie_outerarm_hand", aPosX, aPosY);
