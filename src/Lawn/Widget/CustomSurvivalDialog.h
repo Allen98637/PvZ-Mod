@@ -40,8 +40,7 @@ protected:
 	{
 		CustomSurvivalDialog_LevelUp,
 		CustomSurvivalDialog_LevelDown,
-		CustomSurvivalDialog_Boss,
-		CustomSurvivalDialog_Zombotomy,
+		CustomSurvivalDialog_AllowedZombie,
 		CustomSurvivalDialog_Grave,
 		CustomSurvivalDialog_Bungee,
 		CustomSurvivalDialog_Fog,
@@ -57,8 +56,7 @@ public:
 	int						mCurrentLevel;
 	LawnStoneButton*		mLevelUpButtom;
 	LawnStoneButton*		mLevelDownButtom;
-	Sexy::Checkbox*			mBossCheckbox;
-	Sexy::Checkbox*			mZombotomyCheckbox;
+	LawnStoneButton*		mAllowedZombieButtom;
 	Sexy::Checkbox*			mGraveCheckbox;
 	Sexy::Checkbox*			mBungeeCheckbox;
 	Sexy::Checkbox*			mFogCheckbox;
@@ -66,6 +64,7 @@ public:
 	LawnStoneButton*		mCancelButton;
 	LawnStoneButton*		mGoButton;
 	int		 				mChallengeMode;
+	bool					mZombieAllowed[100];
 
 public:
 	CustomSurvivalDialog(LawnApp* theApp, int theMode, Dialog* daNoD);

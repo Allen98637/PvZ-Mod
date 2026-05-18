@@ -462,7 +462,7 @@ void MessageWidget::Draw(Graphics* g)
 			if (mApp->IsSurvivalMode() && mApp->mBoard->mChallenge->mSurvivalStage > 0)
 			{
 				int aFlags = mApp->mBoard->GetNumWavesPerSurvivalStage() * mApp->mBoard->mChallenge->mSurvivalStage / mApp->mBoard->GetNumWavesPerFlag();
-				if (mApp->IsSurvivalCustom(mApp->mGameMode) && mApp->mBoard->mCustomSurvivalOption.mBoss){
+				if (mApp->LevelHasBoss()){
 					aFlags = mApp->mBoard->mChallenge->mSurvivalStage * 2;
 					if (mApp->mBoard->mChallenge->mSurvivalStage % 5 == 4) aFlags += 1;
 				}

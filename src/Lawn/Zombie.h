@@ -317,6 +317,7 @@ public:
     void                            DragUnder();
     static /*inline*/ void          SetupDoorArms(Reanimation* aReanim, bool theShow);
     static void                     SetupReanimLayers(Reanimation* aReanim, ZombieType theZombieType);
+    static void                     SetupCachedLayers(Reanimation* aReanim, ZombieType theZombieType, Reanimation*& bReanim);
     /*inline*/ bool                 IsOnBoard();
     void                            DrawButter(Graphics* g, const ZombieDrawPosition& theDrawPos);
     bool                            IsImmobilizied();

@@ -31,8 +31,10 @@
 #include "widget/Checkbox.h"
 #include "LawnDialog.h"
 #include "CustomSurvivalDialog.h"
+#include "AllowedZombieDialog.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "graphics/ImageFont.h"
+#include "widget/WidgetManager.h"
 
 using namespace Sexy;
 
@@ -53,12 +55,18 @@ CustomSurvivalDialog::CustomSurvivalDialog(LawnApp* theApp, int theMode, Dialog*
     mWidth = 693;
     mHeight = 584;
 
+    for(int i = 0; i < NUM_ZOMBIE_TYPES; i++){
+        mZombieAllowed[i] = true;
+        ZombieType aType = (ZombieType)i;
+        if(aType == ZOMBIE_BOSS || Zombie::IsZombotany(aType) || aType == ZOMBIE_BOBSLED) mZombieAllowed[i] = false;
+        if(GetZombieDefinition(aType).mPickWeight == 0 || aType == ZOMBIE_DUCKY_TUBE) mZombieAllowed[i] = false;
+    }
+    for(int i = NUM_ZOMBIE_TYPES; i < 100; i++) mZombieAllowed[i] = false;
     mCurrentLevel = 2;
     mLevelDownButtom = MakeButton(CustomSurvivalDialog::CustomSurvivalDialog_LevelDown, this, "<");
     mLevelUpButtom = MakeButton(CustomSurvivalDialog::CustomSurvivalDialog_LevelUp, this, ">");
 
-    mBossCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Boss, this, false);
-    mZombotomyCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Zombotomy, this, false);
+    mAllowedZombieButtom = MakeButton(CustomSurvivalDialog::CustomSurvivalDialog_AllowedZombie, this, "[ALLOWED_ZOMBIE]");
     mGraveCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Grave, this, false);
     mBungeeCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Bungee, this, false);
     mFogCheckbox = MakeNewCheckbox(CustomSurvivalDialog::CustomSurvivalDialog_Fog, this, false);
@@ -72,8 +80,7 @@ CustomSurvivalDialog::~CustomSurvivalDialog()
 {
     delete mLevelUpButtom;
     delete mLevelDownButtom;
-    delete mBossCheckbox;
-    delete mZombotomyCheckbox;
+    delete mAllowedZombieButtom;
     delete mGraveCheckbox;
     delete mBungeeCheckbox;
     delete mStormCheckbox;
@@ -93,8 +100,7 @@ void CustomSurvivalDialog::AddedToManager(Sexy::WidgetManager* theWidgetManager)
     Dialog::AddedToManager(theWidgetManager);
     AddWidget(mLevelUpButtom);
     AddWidget(mLevelDownButtom);
-    AddWidget(mBossCheckbox);
-    AddWidget(mZombotomyCheckbox);
+    AddWidget(mAllowedZombieButtom);
     AddWidget(mGraveCheckbox);
     AddWidget(mBungeeCheckbox);
     AddWidget(mFogCheckbox);
@@ -108,8 +114,7 @@ void CustomSurvivalDialog::RemovedFromManager(Sexy::WidgetManager* theWidgetMana
     Dialog::RemovedFromManager(theWidgetManager);
     RemoveWidget(mLevelUpButtom);
     RemoveWidget(mLevelDownButtom);
-    RemoveWidget(mBossCheckbox);
-    RemoveWidget(mZombotomyCheckbox);
+    RemoveWidget(mAllowedZombieButtom);
     RemoveWidget(mGraveCheckbox);
     RemoveWidget(mBungeeCheckbox);
     RemoveWidget(mFogCheckbox);
@@ -121,8 +126,7 @@ void CustomSurvivalDialog::RemovedFromManager(Sexy::WidgetManager* theWidgetMana
 void CustomSurvivalDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 {
     Dialog::Resize(theX, theY, theWidth, theHeight);
-    mBossCheckbox->Resize(379, 205, 46, 45);
-    mZombotomyCheckbox->Resize(380, 244, 46, 45);
+    mAllowedZombieButtom->Resize(196, 205, 301, 46);
     mGraveCheckbox->Resize(380, 285, 46, 45);
     mBungeeCheckbox->Resize(381, 324, 46, 45);
     mFogCheckbox->Resize(379, 365, 46, 45);
@@ -230,8 +234,6 @@ void CustomSurvivalDialog::Draw(Sexy::Graphics* g)
     if (aFontScale != 1.0f)
         g->SetScale(aFontScale, aFontScale, 0.0f, 0.0f);
     TodDrawString(g, levelList[mCurrentLevel], mWidth / 2, 140, FONT_DWARVENTODCRAFT18, bTextColor, DrawStringJustification::DS_ALIGN_CENTER);
-    TodDrawString(g, "Boss Encounter", aCheckboxLabelsX, 227, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
-    TodDrawString(g, "Zombotomy", aCheckboxLabelsX, 267, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     TodDrawString(g, "Graves", aCheckboxLabelsX, 307, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     TodDrawString(g, "Bungee Wave", aCheckboxLabelsX, 347, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     TodDrawString(g, "Fog", aCheckboxLabelsX, 387, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
@@ -289,6 +291,15 @@ void CustomSurvivalDialog::ButtonDepress(int theId)
         break;
     }
 
+    case CustomSurvivalDialog::CustomSurvivalDialog_AllowedZombie:
+    {
+        AllowedZombieDialog* aDialog = new AllowedZombieDialog(mApp, mZombieAllowed);
+        mApp->CenterDialog(aDialog, aDialog->mWidth, aDialog->mHeight);
+        mApp->AddDialog(Dialogs::DIALOG_AllowedZombie, aDialog);
+        mApp->mWidgetManager->SetFocus(aDialog);
+        break;
+    }
+
     case CustomSurvivalDialog::CustomSurvivalDialog_Cancel:
     {
         mApp->KillDialog(Dialogs::DIALOG_CustomSurvival);
@@ -298,10 +309,15 @@ void CustomSurvivalDialog::ButtonDepress(int theId)
     case CustomSurvivalDialog::CustomSurvivalDialog_Go:
     {
         mApp->KillDialog(Dialogs::DIALOG_CustomSurvival);
-        CustomSurvivalOption options = {
-            static_cast<BackgroundType>(BACKGROUND_1_DAY + mCurrentLevel), mBossCheckbox->mChecked, mZombotomyCheckbox->mChecked,
-            mGraveCheckbox->mChecked, mBungeeCheckbox->mChecked, mFogCheckbox->mChecked, mStormCheckbox->mChecked
-        };
+        CustomSurvivalOption options;
+        options.mLevel = static_cast<BackgroundType>(BACKGROUND_1_DAY + mCurrentLevel);
+        for(int i = 0; i < 100; i++){
+            options.mAllowedZombie[i] = mZombieAllowed[i];
+        }
+        options.mGraves = mGraveCheckbox->mChecked;
+        options.mBungee = mBungeeCheckbox->mChecked;
+        options.mFog = mFogCheckbox->mChecked;
+        options.mStorm = mStormCheckbox->mChecked;
         if(mNoD){
             mApp->mMusic->StopAllMusic();
             mApp->mSoundSystem->CancelPausedFoley();

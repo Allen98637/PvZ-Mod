@@ -186,6 +186,7 @@ ReanimationParams gLawnReanimationArray[ReanimationType::NUM_REANIMS] = {
 	{ ReanimationType::REANIM_WATER_POT,                        	"reanim/pot_water.reanim",                     0 },
 	{ ReanimationType::REANIM_JACKSON,                 			    "reanim/Zombie_Jackson.reanim",               0 },
 	{ ReanimationType::REANIM_ZOMBIE_DANCER,                        "reanim/Zombie_dancer.reanim",               0 },
+	{ ReanimationType::REANIM_BLUEOON,                              "reanim/Zombie_blueoon.reanim",                    0 },
 };
 
 ReanimatorTransform::ReanimatorTransform() :

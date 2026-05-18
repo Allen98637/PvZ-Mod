@@ -793,8 +793,9 @@ static void SyncMusicTailPortable(PortableSaveContext& theContext, Music& theMus
 static void SyncCustomSurvivalTailPortable(PortableSaveContext& theContext, CustomSurvivalOption& theOption)
 {
 	SyncEnum32(theContext, theOption.mLevel);
-	theContext.SyncBool(theOption.mBoss);
-	theContext.SyncBool(theOption.mZomBotany);
+	for(int i = 1; i < 100; i++){
+		theContext.SyncBool(theOption.mAllowedZombie[i]);
+	}
     theContext.SyncBool(theOption.mGraves);
     theContext.SyncBool(theOption.mBungee);
     theContext.SyncBool(theOption.mFog);
@@ -930,6 +931,10 @@ static void SyncPlantTailPortable(PortableSaveContext& theContext, Plant& thePla
 	theContext.SyncBool(thePlant.mIsAsleep);
 	theContext.SyncBool(thePlant.mIsOnBoard);
 	theContext.SyncBool(thePlant.mHighlighted);
+	theContext.SyncFloat(thePlant.mParameterF0);
+	theContext.SyncInt32(thePlant.mRelatedZombieCount);
+	for (int i = 0; i < thePlant.mRelatedZombieCount; i++)
+		SyncEnumU32(theContext, thePlant.mRelatedZombieID[i]);
 }
 
 static void SyncProjectileTailPortable(PortableSaveContext& theContext, Projectile& theProjectile)

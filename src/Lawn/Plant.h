@@ -217,6 +217,8 @@ public:
     bool                    mIsOnBoard;
     bool                    mHighlighted;
     float                   mParameterF0;
+    int                     mRelatedZombieCount;
+    ZombieID                mRelatedZombieID[256];
 
 public:
     Plant();

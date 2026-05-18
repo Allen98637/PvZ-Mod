@@ -128,8 +128,7 @@ struct BungeeDropGrid
 struct CustomSurvivalOption
 {
     BackgroundType  mLevel;
-    bool            mBoss;
-    bool            mZomBotany;
+    bool            mAllowedZombie[100];
     bool            mGraves;
     bool            mBungee;
     bool            mFog;

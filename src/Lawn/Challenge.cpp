@@ -280,6 +280,9 @@ ZombieAllowedLevels gZombieAllowedLevels[NUM_ZOMBIE_TYPES] = {
 	{ ZOMBIE_REDEYE_GARGANTUAR, {0} },
 	{ ZOMBIE_GIGA_FOOTBALL, {0} },
 	{ ZOMBIE_DOOR_PAIL, {0} },
+	{ ZOMBIE_JACKSON, {0} },
+	{ ZOMBIE_JACKSON_DANCER, {0} },
+	{ ZOMBIE_BLUEOON, {0} },
 };
 
 SeedType gArtChallengeWallnut[MAX_GRID_SIZE_Y][MAX_GRID_SIZE_X] = {
@@ -465,6 +468,7 @@ void Challenge::StartLevel()
 		mBoard->mZombieCountDownStart = mBoard->mZombieCountDown;
 		mBoard->mSeedBank->AddSeed(SEED_WALLNUT);
 		mConveyorBeltCounter = 400;
+		if(aGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3) mConveyorBeltCounter = 200;
 		mShowBowlingLine = true;
 	}
 	if (aGameMode == GAMEMODE_CHALLENGE_SHOVEL || aGameMode == GAMEMODE_CHALLENGE_SQUIRREL)
@@ -1651,8 +1655,12 @@ void Challenge::UpdateConveyorBelt()
 	{
 		aConveyorSpeedMultiplier = 3.0f;
 	}
+	else if(mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3){
+		aConveyorSpeedMultiplier = 0.5f;
+	}
 	int aNumSeedsOnConveyor = mBoard->mSeedBank->GetNumSeedsOnConveyorBelt();
 	mConveyorBeltCounter = aConveyorSpeedMultiplier * (aNumSeedsOnConveyor > 8 ? 1000 : aNumSeedsOnConveyor > 6 ? 500 : aNumSeedsOnConveyor > 4 ? 425 : 400);
+	
 
 	TodWeightedArray aSeedPickArray[20];
 	int aSeedPickCount = 0;
@@ -2503,7 +2511,7 @@ void Challenge::InitZombieWavesSurvival()
 	mBoard->mZombieAllowed[ZOMBIE_NORMAL] = true;
 	MTRand aLevelRNG = MTRand(mBoard->GetLevelRandSeed());
 
-	if (aLevelRNG.Next((unsigned long)5) == 0)
+	if (aLevelRNG.Next((unsigned long)5) == 0 && (!mApp->IsSurvivalCustom(mApp->mGameMode) || mBoard->mCustomSurvivalOption.mAllowedZombie[ZOMBIE_NEWSPAPER]))
 	{
 		mBoard->mZombieAllowed[ZOMBIE_NEWSPAPER] = true;
 	}
@@ -2513,18 +2521,46 @@ void Challenge::InitZombieWavesSurvival()
 	}
 
 	int aCapacity = std::min(mSurvivalStage + 1, 9);
+	int aPCount = 0;
+	ZombieType preZom[NUM_ZOMBIE_TYPES];
+	if(mApp->IsSurvivalCustom(mApp->mGameMode)){
+		for(int i = ZOMBIE_NORMAL; i < NUM_ZOMBIE_TYPES; i++){
+			ZombieType aType = (ZombieType)i;
+			if (mBoard->mZombieAllowed[aType])	continue;
+			if (mBoard->IsZombieTypePoolOnly(aType) && !mBoard->StageHasPool())		continue;
+			if (mBoard->GetSurvivalFlagsCompleted() < 10 && aType == ZOMBIE_REDEYE_GARGANTUAR)		continue;						
+			
+			if(GetZombieDefinition(aType).mPickWeight == 0)					continue;
+			if (!mBoard->mCustomSurvivalOption.mAllowedZombie[aType])				continue;
+			preZom[aPCount++] = aType;
+		}
+		if(aPCount <= aCapacity){
+			for(int i = 0; i < aPCount; i++){
+				mBoard->mZombieAllowed[preZom[i]] = true;
+			}
+			aCapacity = 0;
+		}
+	}
 	while (aCapacity > 0)
 	{
 		ZombieType aRandZombie = (ZombieType)aLevelRNG.Next((unsigned long)NUM_ZOMBIE_TYPES);
 		if (mBoard->mZombieAllowed[aRandZombie])																	continue;
 		if (mBoard->IsZombieTypePoolOnly(aRandZombie) && !mBoard->StageHasPool())									continue;
-		if (mBoard->StageHasRoof() && (aRandZombie == ZOMBIE_DIGGER || aRandZombie == ZOMBIE_DANCER))				continue;
-		if (mBoard->StageHasGraveStones() && aRandZombie == ZOMBIE_ZAMBONI)											continue;
-		if (!mBoard->StageHasRoof() && !mApp->IsSurvivalEndless(mApp->mGameMode) && aRandZombie == ZOMBIE_BUNGEE)	continue;
-		if (mBoard->GetSurvivalFlagsCompleted() < 10 && aRandZombie == ZOMBIE_REDEYE_GARGANTUAR)								continue;
-		if (mApp->IsSurvivalNormal(mApp->mGameMode) && aRandZombie > ZOMBIE_SNORKEL)								continue;
-		if (mBoard->IsZombieTypeSpawnedOnly(aRandZombie) || aRandZombie == ZOMBIE_DUCKY_TUBE)											continue;
-		if(Zombie::IsZombotany(aRandZombie) && (!mApp->IsSurvivalCustom(mApp->mGameMode) || !mBoard->mCustomSurvivalOption.mZomBotany))	continue;
+		if (mBoard->GetSurvivalFlagsCompleted() < 10 && aRandZombie == ZOMBIE_REDEYE_GARGANTUAR)		continue;						
+		
+		if(mApp->IsSurvivalCustom(mApp->mGameMode)){
+			if(GetZombieDefinition(aRandZombie).mPickWeight == 0)					continue;
+			if (!mBoard->mCustomSurvivalOption.mAllowedZombie[aRandZombie])				continue;
+			if (aRandZombie == ZOMBIE_BOBSLED && !mBoard->mZombieAllowed[ZOMBIE_ZAMBONI]) continue;
+		}
+		else{
+			if (mBoard->StageHasRoof() && (aRandZombie == ZOMBIE_DIGGER || aRandZombie == ZOMBIE_DANCER))				continue;
+			if (mBoard->StageHasGraveStones() && aRandZombie == ZOMBIE_ZAMBONI)			continue;
+			if (!mBoard->StageHasRoof() && !mApp->IsSurvivalEndless(mApp->mGameMode) && aRandZombie == ZOMBIE_BUNGEE)	continue;
+			if (mApp->IsSurvivalNormal(mApp->mGameMode) && aRandZombie > ZOMBIE_SNORKEL)								continue;
+			if (mBoard->IsZombieTypeSpawnedOnly(aRandZombie) || aRandZombie == ZOMBIE_DUCKY_TUBE)	continue;
+			if(Zombie::IsZombotany(aRandZombie))	continue;
+		}
 
 		mBoard->mZombieAllowed[aRandZombie] = true;
 		aCapacity--;
@@ -2538,7 +2574,7 @@ void Challenge::InitZombieWavesWallnutEndless()
 		const ZombieDefinition& aZombieDef = GetZombieDefinition(aZombieType);
 		if (mBoard->IsZombieTypePoolOnly(aZombieType) && !mBoard->StageHasPool())		continue;
 		if (aZombieType == ZOMBIE_DIGGER || aZombieType == ZOMBIE_BUNGEE || aZombieType == ZOMBIE_BALLOON || 
-			aZombieType == ZOMBIE_POGO) continue;
+			aZombieType == ZOMBIE_POGO || aZombieType == ZOMBIE_BLUEOON) continue;
 		//if (mBoard->GetSurvivalFlagsCompleted() < 10 && aZombieType == ZOMBIE_REDEYE_GARGANTUAR)			continue;
 		if (Zombie::IsZombotany(aZombieType) || aZombieDef.mPickWeight == 0
 		)	continue;
@@ -2918,7 +2954,7 @@ void Challenge::WhackAZombieSpawning()
 					if (aZombieType == ZOMBIE_DIGGER || aZombieType == ZOMBIE_BUNGEE || aZombieType == ZOMBIE_BALLOON ||
 						aZombieType == ZOMBIE_POLEVAULTER || aZombieType == ZOMBIE_NEWSPAPER || aZombieType == ZOMBIE_DOOR ||
 						aZombieType == ZOMBIE_ZAMBONI || aZombieType == ZOMBIE_LADDER || aZombieType == ZOMBIE_DOOR_PAIL ||
-						aZombieType == ZOMBIE_POGO
+						aZombieType == ZOMBIE_POGO || aZombieType == ZOMBIE_BLUEOON
 					) continue;
 					if (mBoard->IsZombieTypeSpawnedOnly(aZombieType) || Zombie::IsZombotany(aZombieType) ||
 						aZombieDef.mPickWeight == 0

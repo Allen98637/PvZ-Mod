@@ -159,6 +159,7 @@ void Plant::PlantInitialize(int theGridX, int theGridY, SeedType theSeedType, Se
     mLaunchRate = aPlantDef.mLaunchRate;
     mSubclass = aPlantDef.mSubClass;
     mRenderOrder = CalcRenderOrder();
+    mRelatedZombieCount = 0;
 
     Reanimation* aBodyReanim = nullptr;
     if (aPlantDef.mReanimationType != ReanimationType::REANIM_NONE)
@@ -2460,12 +2461,18 @@ void Plant::UpdateBowling()
             return;
         }
 
-        mApp->PlayFoley(FoleyType::FOLEY_BOWLINGIMPACT);
-        mBoard->ShakeBoard(1, -2);
 
+        bool aHit = true;
         if (mSeedType == SeedType::SEED_GIANT_WALLNUT)
         {
-            aZombie->TakeDamage(1800, 0U);
+            ZombieID zId = mBoard->ZombieGetID(aZombie);
+            for(int i = 0; i < mRelatedZombieCount; i++){
+                if(mRelatedZombieID[i] == zId){aHit = false;break;}
+            }
+            if(aHit){
+                aZombie->TakeDamage(1800, 0U);
+                mRelatedZombieID[mRelatedZombieCount++] = zId;
+            }
         }
         else if (aZombie->mShieldType != ShieldType::SHIELDTYPE_NONE && mState != PlantState::STATE_NOTREADY)
         {
@@ -2550,6 +2557,10 @@ void Plant::UpdateBowling()
             {
                 aNewState = Sexy::Rand(2) ? PlantState::STATE_BOWLING_UP : PlantState::STATE_BOWLING_DOWN;
             }
+        }
+        if(aHit){
+            mApp->PlayFoley(FoleyType::FOLEY_BOWLINGIMPACT);
+            mBoard->ShakeBoard(1, -2);
         }
     }
 

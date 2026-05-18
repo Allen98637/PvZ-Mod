@@ -273,6 +273,7 @@ public:
 	/*inline*/ bool					IsStormyNightLevel();
 	/*inline*/ bool					OverrideConveyor();
 	/*inline*/ bool					IsMiddleBossLevel();
+	/*inline*/ bool					LevelHasBoss();
 	/*inline*/ bool					IsFinalBossLevel();
 	/*inline*/ bool					IsBungeeBlitzLevel();
 	static /*inline*/ SeedType		GetAwardSeedForLevel(int theLevel);

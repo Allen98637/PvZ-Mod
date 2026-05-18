@@ -2316,8 +2316,13 @@ bool LawnApp::OverrideConveyor(){
 }
 
 bool LawnApp::IsMiddleBossLevel(){
-	return (IsSurvivalCustom(mGameMode) && mBoard->mCustomSurvivalOption.mBoss) && (mBoard->mChallenge->mSurvivalStage == 0 || mBoard->mChallenge->mSurvivalStage <= 2);
-	//return (IsSurvivalCustom(mGameMode) && mBoard->mCustomSurvivalOption.mBoss) && mBoard->mChallenge->mSurvivalStage % 5 == 4;
+	return LevelHasBoss() && (mBoard->mChallenge->mSurvivalStage == 0 || mBoard->mChallenge->mSurvivalStage <= 2);
+	//return (LevelHasBoss() && mBoard->mChallenge->mSurvivalStage % 5 == 4;
+}
+
+bool LawnApp::LevelHasBoss(){
+	if(!IsSurvivalCustom(mGameMode)) return false;
+	return mBoard->mCustomSurvivalOption.mAllowedZombie[ZOMBIE_BOSS];
 }
 
 bool LawnApp::IsFinalBossLevel()

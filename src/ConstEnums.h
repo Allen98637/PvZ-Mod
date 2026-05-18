@@ -324,6 +324,7 @@ enum Dialogs : int32_t
     DIALOG_IMITATER,                            // 49：模仿者对话
     DIALOG_PURCHASE_PACKET_SLOT,                // 50：升级卡槽的格子数量
     DIALOG_CustomSurvival,
+    DIALOG_AllowedZombie,
     NUM_DIALOGS
 };
 enum DebugTextMode : int32_t
@@ -991,6 +992,7 @@ enum ReanimationType : uint32_t {
     REANIM_WATER_POT,
     REANIM_JACKSON,
     REANIM_ZOMBIE_DANCER,
+    REANIM_BLUEOON,
     NUM_REANIMS
 };
 enum ReanimLoopType : int32_t
@@ -1411,6 +1413,7 @@ enum ZombieType : int32_t
     ZOMBIE_DOOR_PAIL,
     ZOMBIE_JACKSON,
     ZOMBIE_JACKSON_DANCER,
+    ZOMBIE_BLUEOON,
     NUM_ZOMBIE_TYPES,
     ZOMBIE_CACHED_POLEVAULTER_WITH_POLE, 
     NUM_CACHED_ZOMBIE_TYPES

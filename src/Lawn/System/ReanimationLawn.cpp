@@ -276,11 +276,12 @@ MemoryImage* ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 	if (aZombieDef.mReanimationType == ReanimationType::REANIM_ZOMBIE)
 	{
 		Reanimation aReanim;
+		Reanimation* bReanim = nullptr;
 		aReanim.ReanimationInitializeType(aPosX, aPosY, aZombieDef.mReanimationType);
 		aReanim.SetFramesForLayer("anim_idle");
-		Zombie::SetupReanimLayers(&aReanim, aUseZombieType);
+		Zombie::SetupCachedLayers(&aReanim, aUseZombieType, bReanim);
 
-		if (theZombieType == ZombieType::ZOMBIE_DOOR)
+		if (theZombieType == ZombieType::ZOMBIE_DOOR || theZombieType == ZombieType::ZOMBIE_DOOR_PAIL)
 			aReanim.AssignRenderGroupToTrack("anim_screendoor", RENDER_GROUP_NORMAL);
 		else if (theZombieType == ZombieType::ZOMBIE_FLAG)
 		{
@@ -290,6 +291,10 @@ MemoryImage* ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 			aReanimFlag.Draw(&aMemoryGraphics);
 		}
 		aReanim.Draw(&aMemoryGraphics);
+		if(bReanim){
+			bReanim->Draw(&aMemoryGraphics);
+			delete bReanim;
+		}
 	}
 	else if (aZombieDef.mReanimationType == ReanimationType::REANIM_BOSS)
 	{
@@ -305,6 +310,15 @@ MemoryImage* ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 		aReanim.AssignRenderGroupToTrack("boss_body1", RENDER_GROUP_HIDDEN);
 		aReanim.AssignRenderGroupToTrack("boss_neck", RENDER_GROUP_HIDDEN);
 		aReanim.AssignRenderGroupToTrack("boss_head2", RENDER_GROUP_HIDDEN);
+		aReanim.Draw(&aMemoryGraphics);
+	}
+	else if(theZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR){
+		aPosY = 60.0f;
+		Reanimation aReanim;
+		aReanim.ReanimationInitializeType(aPosX, aPosY, aZombieDef.mReanimationType);
+		aReanim.SetFramesForLayer("anim_idle");
+		aReanim.SetImageOverride("anim_head1", IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD_REDEYE);
+
 		aReanim.Draw(&aMemoryGraphics);
 	}
 	else

@@ -695,7 +695,7 @@ void Board::PickZombieWaves()
 		}
 		else if (mApp->IsSurvivalMode() && mChallenge->mSurvivalStage > 0)
 		{
-			if(mApp->IsSurvivalCustom(mApp->mGameMode) && mCustomSurvivalOption.mBoss){
+			if(mApp->LevelHasBoss()){
 				if(mChallenge->mSurvivalStage % 5 == 0 && aWave <= 3){
 					aZombiePoints = 30 + aWave / 3;
 				}
@@ -733,6 +733,9 @@ void Board::PickZombieWaves()
 		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_COLUMN)
 		{
 			aZombiePoints *= 6;
+		}
+		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3){
+			aZombiePoints *= 3;
 		}
 		else if (mApp->IsLittleTroubleLevel() || mApp->IsWallnutBowlingLevel())
 		{
@@ -5252,7 +5255,7 @@ int Board::GetSurvivalFlagsCompleted()
 {
 	int aWavesPerFlag = GetNumWavesPerFlag();
 	int aFlagsCompleted = mChallenge->mSurvivalStage * GetNumWavesPerSurvivalStage() / aWavesPerFlag;
-	if (mApp->IsSurvivalCustom(mApp->mGameMode) && mCustomSurvivalOption.mBoss){
+	if (mApp->LevelHasBoss()){
 		aFlagsCompleted = mChallenge->mSurvivalStage * 2;
 		if (mChallenge->mSurvivalStage % 5 == 4) aFlagsCompleted += 1;
 	}
@@ -9851,7 +9854,7 @@ int Board::GetNumWavesPerSurvivalStage()
 	{
 		return 10;
 	}
-	else if (mApp->IsSurvivalCustom(mApp->mGameMode) && mCustomSurvivalOption.mBoss){
+	else if (mApp->LevelHasBoss()){
 		if (mChallenge->mSurvivalStage % 5 == 3) return 30;
 		return 20;
 	}
