@@ -1308,10 +1308,6 @@ void Zombie::PickRandomSpeed()
     {
         mVelX = 0.3f;
     }
-    else if (mZombiePhase == ZombiePhase::PHASE_DOLPHIN_WALKING_IN_POOL)
-    {
-        mVelX = 0.3f;
-    }
     else if (mZombiePhase == ZombiePhase::PHASE_DIGGER_WALKING)
     {
         if (mApp->IsIZombieLevel())
@@ -1358,7 +1354,7 @@ void Zombie::PickRandomSpeed()
     }
     else
     {
-        mVelX = RandRangeFloat(0.23f, 0.32f);
+        mVelX = RandRangeFloat(0.23f, 0.37f);
         if (mVelX < 0.3f)
         {
             mAnimTicksPerFrame = 12;

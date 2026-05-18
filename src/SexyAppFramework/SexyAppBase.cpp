@@ -775,7 +775,7 @@ bool SexyAppBase::KillDialog(int theDialogId, bool removeWidget, bool deleteWidg
 
 		// set the result to something else so DoMainLoop knows that the dialog is gone 
 		// in case nobody else sets mResult		
-		if (aDialog->mResult == -1) 
+		if (aDialog->mResult == 0x7FFFFFFF)
 			aDialog->mResult = 0;
 		
 		DialogList::iterator aListItr = std::find(mDialogList.begin(),mDialogList.end(),aDialog);

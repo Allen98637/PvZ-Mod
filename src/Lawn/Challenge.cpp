@@ -2809,7 +2809,7 @@ void Challenge::WhackAZombiePlaceGraves(int theGraveCount)
 				continue;
 
 			TodWeightedGridArray* aPick = &aPicks[aPickCount++];
-			aPick->mWeight = mBoard->GetTopPlantAt(aCol, aRow, TOPPLANT_ANY) ? 100000 : 1;
+			aPick->mWeight = mBoard->GetTopPlantAt(aCol, aRow, TOPPLANT_ANY) ? 1 : 100000;
 			aPick->mX = aCol;
 			aPick->mY = aRow;
 		}
@@ -4254,7 +4254,7 @@ void Challenge::ScaryPotterOpenPot(GridItem* theScaryPot)
 		theScaryPot->mGridItemState == GRIDITEM_STATE_SCARY_POT_LEAF ? PARTICLE_VASE_SHATTER_LEAF :
 		theScaryPot->mGridItemState == GRIDITEM_STATE_SCARY_POT_ZOMBIE ? PARTICLE_VASE_SHATTER_ZOMBIE :
 		PARTICLE_VASE_SHATTER;
-	mApp->AddTodParticle(aXPos + 20, aYPos, RENDER_LAYER_TOP, anEffect);
+	mApp->AddTodParticle(aXPos + 20, aYPos, RENDER_LAYER_GROUND, anEffect);
 }
 
 void Challenge::ScaryPotterJackExplode(int thePosX, int thePosY)
