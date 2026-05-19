@@ -181,6 +181,10 @@ public:
     int32_t                 mSubclass;
     int32_t                 mDisappearCountdown;
     int32_t                 mDoSpecialCountdown;
+    int32_t                 mChilledCounter;
+    int32_t                 mButteredCounter;
+    int32_t                 mIceTrapCounter;
+    bool                    mMindControlled;
     int32_t                 mStateCountdown;
     int32_t                 mLaunchCounter;
     int32_t                 mLaunchRate;
@@ -192,12 +196,19 @@ public:
     ParticleSystemID        mParticleID;
     int32_t                 mShootingCounter;
     ReanimationID           mBodyReanimID;
+    float                   mBodyReanimRate;
     ReanimationID           mHeadReanimID;
+    float                   mHeadReanimRate;
     ReanimationID           mHeadReanimID2;
+    float                   mHeadReanimRate2;
     ReanimationID           mHeadReanimID3;
+    float                   mHeadReanimRate3;
     ReanimationID           mBlinkReanimID;
+    float                   mBlinkReanimRate;
     ReanimationID           mLightReanimID;
+    float                   mLightReanimRate;
     ReanimationID           mSleepingReanimID;
+    float                   mSleepingReanimRate;
     int32_t                 mBlinkCountdown;
     int32_t                 mRecentlyEatenCountdown;
     int32_t                 mEatenFlashCountdown;
@@ -325,6 +336,10 @@ public:
     void                    GoldMagnetFindTargets();
     bool                    IsAGoldMagnetAboutToSuck();
     bool                    DrawMagnetItemsOnTop();
+    //void                    UpdateReanim(ReanimationID theID, const char* theTrackName, ReanimLoopType theLoopType, int theBlendTime, float theAnimRate);
+    void                    UpdateAnimSpeed();
+    float                   GetAnimSpeed(float theRate);
+    void                    ApplyChill(bool theIsIceTrap);
 };
 
 float                       PlantDrawHeightOffset(Board* theBoard, Plant* thePlant, SeedType theSeedType, int theCol, int theRow);

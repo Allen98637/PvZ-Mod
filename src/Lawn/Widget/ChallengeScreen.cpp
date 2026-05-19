@@ -124,6 +124,7 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_13,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  2,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_14,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  3,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_15,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  4,  "[SURVIVAL_CUSTOM]" },
+	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  4,  "[WAR_AND_PEAS_3]" },
 };
 
 // GOTY @Patoke: 0x430810
@@ -669,10 +670,10 @@ void ChallengeScreen::ButtonDepress(int theId)
 
 	int aChallengeMode = theId - ChallengeScreen::ChallengeScreen_Mode;
 	GameMode daMode = (GameMode)(aChallengeMode + 1);
-	if(aChallengeMode >= GAMEMODE_SURVIVAL_CUSTOM_STAGE_1 && aChallengeMode <= GAMEMODE_SURVIVAL_CUSTOM_STAGE_15 && 
+	if(daMode >= GAMEMODE_SURVIVAL_CUSTOM_STAGE_1 && daMode <= GAMEMODE_SURVIVAL_CUSTOM_STAGE_15 && 
 		!mApp->HasSaveData(daMode))
 	{
-		CustomSurvivalDialog* aDialog = new CustomSurvivalDialog(mApp, aChallengeMode, nullptr);
+		CustomSurvivalDialog* aDialog = new CustomSurvivalDialog(mApp, daMode, nullptr);
 		mApp->CenterDialog(aDialog, aDialog->mWidth, aDialog->mHeight);
 		mApp->AddDialog(Dialogs::DIALOG_CustomSurvival, aDialog);
 		mWidgetManager->SetFocus(aDialog);

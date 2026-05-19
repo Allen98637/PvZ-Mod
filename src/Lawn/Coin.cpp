@@ -1408,7 +1408,7 @@ void Coin::MouseDown(int x, int y, int theClickCount)
         return;
     }
 
-    if (theClickCount >= 0 && !mIsBeingCollected)
+    if (theClickCount >= 0 && !mIsBeingCollected && (!IsLevelAward() || theClickCount != 999))
     {
         PlayCollectSound();
         Collect();

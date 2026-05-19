@@ -140,6 +140,13 @@ ParticleParams gLawnParticleArray[ParticleEffect::NUM_PARTICLES] = {
 	{ ParticleEffect::PARTICLE_STARBURST, "particles/Starburst.xml" },
 	{ ParticleEffect::PARTICLE_CREDITS_FOG, "particles/Credits_fog.xml" },
 	{ ParticleEffect::PARTICLE_PERSENT_PICK_UP_ARROW, "particles/UpsellArrow.xml" },
+	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_CABBAGE, "particles/UmbrellaReflectCabbage.xml" },
+	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_KERNEL, "particles/UmbrellaReflectKernel.xml" },
+	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_BUTTER, "particles/UmbrellaReflectButter.xml" },
+	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_MELON, "particles/UmbrellaReflectMelon.xml" },
+	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_WINTERMELON, "particles/UmbrellaReflectWinterMelon.xml" },
+	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_CABBAGE2, "particles/UmbrellaReflectCabbage2.xml" },
+	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_MELON2, "particles/UmbrellaReflectMelon2.xml" },
 };  // 0x6A0FF0
 
 // (ecx = *theParticleFileName, *theParticleDef)  //esp -= 4

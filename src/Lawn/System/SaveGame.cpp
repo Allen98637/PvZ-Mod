@@ -806,6 +806,7 @@ static void SyncZombieTailPortable(PortableSaveContext& theContext, Zombie& theZ
 {
 	SyncEnum32(theContext, theZombie.mZombieType);
 	SyncEnum32(theContext, theZombie.mZombiePhase);
+	SyncEnum32(theContext, theZombie.mZombotomyState);
 	theContext.SyncFloat(theZombie.mPosX);
 	theContext.SyncFloat(theZombie.mPosY);
 	theContext.SyncFloat(theZombie.mVelX);
@@ -820,9 +821,11 @@ static void SyncZombieTailPortable(PortableSaveContext& theContext, Zombie& theZ
 	theContext.SyncInt32(theZombie.mJustGotShotCounter);
 	theContext.SyncInt32(theZombie.mShieldJustGotShotCounter);
 	theContext.SyncInt32(theZombie.mShieldRecoilCounter);
+	theContext.SyncInt32(theZombie.mZombotomyStateCountdown);
 	theContext.SyncInt32(theZombie.mZombieAge);
 	SyncEnum32(theContext, theZombie.mZombieHeight);
 	theContext.SyncInt32(theZombie.mPhaseCounter);
+	theContext.SyncInt32(theZombie.mPhaseCounter2);
 	theContext.SyncInt32(theZombie.mFromWave);
 	theContext.SyncBool(theZombie.mDroppedLoot);
 	theContext.SyncInt32(theZombie.mZombieFade);
@@ -867,6 +870,7 @@ static void SyncZombieTailPortable(PortableSaveContext& theContext, Zombie& theZ
 	theContext.SyncFloat(theZombie.mScaleZombie);
 	theContext.SyncFloat(theZombie.mVelZ);
 	theContext.SyncFloat(theZombie.mOriginalAnimRate);
+	theContext.SyncFloat(theZombie.mHeadAnimRate);
 	SyncEnumU32(theContext, theZombie.mTargetPlantID);
 	theContext.SyncInt32(theZombie.mBossMode);
 	theContext.SyncInt32(theZombie.mTargetRow);
@@ -898,6 +902,10 @@ static void SyncPlantTailPortable(PortableSaveContext& theContext, Plant& thePla
 	theContext.SyncInt32(thePlant.mStateCountdown);
 	theContext.SyncInt32(thePlant.mLaunchCounter);
 	theContext.SyncInt32(thePlant.mLaunchRate);
+	theContext.SyncInt32(thePlant.mChilledCounter);
+	theContext.SyncInt32(thePlant.mButteredCounter);
+	theContext.SyncInt32(thePlant.mIceTrapCounter);
+	theContext.SyncBool(thePlant.mMindControlled);
 	SyncRectPortable(theContext, thePlant.mPlantRect);
 	SyncRectPortable(theContext, thePlant.mPlantAttackRect);
 	theContext.SyncInt32(thePlant.mTargetX);
@@ -906,12 +914,19 @@ static void SyncPlantTailPortable(PortableSaveContext& theContext, Plant& thePla
 	SyncEnumU32(theContext, thePlant.mParticleID);
 	theContext.SyncInt32(thePlant.mShootingCounter);
 	SyncEnumU32(theContext, thePlant.mBodyReanimID);
+	theContext.SyncFloat(thePlant.mBodyReanimRate);
 	SyncEnumU32(theContext, thePlant.mHeadReanimID);
+	theContext.SyncFloat(thePlant.mHeadReanimRate);
 	SyncEnumU32(theContext, thePlant.mHeadReanimID2);
+	theContext.SyncFloat(thePlant.mHeadReanimRate2);
 	SyncEnumU32(theContext, thePlant.mHeadReanimID3);
+	theContext.SyncFloat(thePlant.mHeadReanimRate3);
 	SyncEnumU32(theContext, thePlant.mBlinkReanimID);
+	theContext.SyncFloat(thePlant.mBlinkReanimRate);
 	SyncEnumU32(theContext, thePlant.mLightReanimID);
+	theContext.SyncFloat(thePlant.mLightReanimRate);
 	SyncEnumU32(theContext, thePlant.mSleepingReanimID);
+	theContext.SyncFloat(thePlant.mSleepingReanimRate);
 	theContext.SyncInt32(thePlant.mBlinkCountdown);
 	theContext.SyncInt32(thePlant.mRecentlyEatenCountdown);
 	theContext.SyncInt32(thePlant.mEatenFlashCountdown);

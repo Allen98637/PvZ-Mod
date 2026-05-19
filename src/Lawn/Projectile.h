@@ -43,6 +43,25 @@ public:
 };
 extern ProjectileDefinition gProjectileDefinition[NUM_PROJECTILES];
 
+class PlantOrZombie{
+    public:
+        Plant*      mPlant;
+        Zombie*     mZombie;
+
+    public:
+        PlantOrZombie(){mPlant = nullptr; mZombie = nullptr;}
+        
+        bool                IsPlant(){return mPlant;}
+        bool                IsZombie(){return mZombie;}
+        bool                operator==(const Plant* daP) const {return daP == mPlant;}
+        bool                operator==(const Zombie* daZ) const {return daZ == mZombie;}
+        bool                operator==(std::nullptr_t) const noexcept {return !mPlant && !mZombie;}
+        PlantOrZombie&      operator=(Plant* thePlant) noexcept {mPlant = thePlant; mZombie = nullptr; return *this;}
+        PlantOrZombie&      operator=(Zombie* theZombie) noexcept {mZombie = theZombie; mPlant = nullptr; return *this;}
+        explicit operator   bool() const {return mPlant || mZombie;}
+    }
+};
+
 class Projectile : public GameObject
 {
 public:
@@ -69,6 +88,7 @@ public:
     int32_t                 mDamageRangeFlags;
     int32_t                 mHitTorchwoodGridX;
     AttachmentID            mAttachmentID;
+    ParticleEffect          mUmbrellaParticle;
     float                   mCobTargetX;
     int32_t                 mCobTargetRow;
     ZombieID                mTargetZombieID;
@@ -86,6 +106,7 @@ public:
     void                    DrawShadow(Graphics* g);
     void                    Die();
     void                    DoImpact(Zombie* theZombie);
+    void                    DoImpactPlant(Plant* thePlant);
     void                    UpdateMotion();
     void                    CheckForCollision();
     Zombie*                 FindCollisionTarget();
@@ -93,6 +114,7 @@ public:
     void                    CheckForHighGround();
     bool                    CantHitHighGround();
     void                    DoSplashDamage(Zombie* theZombie);
+    void                    DoSplashDamagePlant(Plant* thePlant);
     ProjectileDefinition&   GetProjectileDef();
     unsigned int            GetDamageFlags(Zombie* theZombie/* = nullptr*/);
     Rect                    GetProjectileRect();
@@ -102,9 +124,12 @@ public:
     void                    ConvertToFireball(int theGridX);
     void                    ConvertToPea(int theGridX);
     bool                    IsSplashDamage(Zombie* theZombie/* = nullptr*/);
+    bool                    IsSplashDamagePlant(Plant* thePlant/* = nullptr*/);
     void                    PlayImpactSound(Zombie* theZombie);
     bool                    IsZombieHitBySplash(Zombie* theZombie);
+    bool                    IsPlantHitBySplash(Plant* theZombie);
     bool                    PeaAboutToHitTorchwood();
+    bool                    IsZombieProjectile();
 
 };
 

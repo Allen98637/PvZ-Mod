@@ -24,7 +24,7 @@
 
 #include "widget/Dialog.h"
 
-#define NUM_CHOOSABLE_ZOMBIES 29
+#define NUM_CHOOSABLE_ZOMBIES 32
 
 class Plant;
 class Zombie;

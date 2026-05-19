@@ -24,6 +24,7 @@
 
 #include <cstdint>
 #include "GameObject.h"
+#include "Projectile.h"
 #include "../GameConstants.h"
 
 #define MAX_ZOMBIE_FOLLOWERS 4
@@ -113,6 +114,8 @@ public:
 public:
 	ZombieType			            mZombieType;
 	ZombiePhase			            mZombiePhase;
+    PlantState                      mZombotomyState;
+    int32_t                         mZombotomyStateCountdown;
 	float				            mPosX;
 	float				            mPosY;
 	float				            mVelX;
@@ -130,6 +133,7 @@ public:
     int32_t                         mZombieAge;
     ZombieHeight                    mZombieHeight;
     int32_t                         mPhaseCounter;
+    int32_t                         mPhaseCounter2;
     int32_t                         mFromWave;
     bool                            mDroppedLoot;
     int32_t                         mZombieFade;
@@ -174,6 +178,7 @@ public:
     float                           mScaleZombie;
     float                           mVelZ;
     float                           mOriginalAnimRate;
+    float                           mHeadAnimRate;
     PlantID                         mTargetPlantID;
     int32_t                         mBossMode;
 	ZombieType			            mTargetType;
@@ -423,6 +428,14 @@ public:
     void                            SetupReanimForLostArm(unsigned int theDamageFlags);
     bool                            IsSquashTarget(Plant* theExcept);
     static /*inline*/ bool			IsZombotany(ZombieType theZombieType);
+    void                            UpdateZombieUmbrellaHead();
+    void                            DoSpecial();
+    Plant*                          FindLobZombotanyTarget();
+    void                            UpdateZombieCabbageHead();
+    void                            UpdateZombieMelonHead();
+    Projectile*                     CreateLobProjectile(Plant* thePlant, ProjectileType aType, float aOriginX, float aOriginY);
+    void                            UpdateHeadReanim(const char* theTrackName, ReanimLoopType theLoopType, int theBlendTime, float theAnimeRate);
+    void                            UpdateZombieSnowPeaHead();
 };
 
 class ZombieDefinition

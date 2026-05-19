@@ -719,7 +719,7 @@ void Board::PickZombieWaves()
 			int aPlainZombiesNum = std::min(aZombiePoints, 8);
 			aZombiePoints *= 2.5f;
 
-			if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2)
+			if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2 && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3)
 			{
 				for (int _i = 0; _i < aPlainZombiesNum; _i++)
 				{
@@ -1043,6 +1043,7 @@ void Board::PickBackground()
 	case GameMode::GAMEMODE_CHALLENGE_POGO_PARTY:
 	case GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY:
 	case GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ:
+	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3:
 		mBackground = BackgroundType::BACKGROUND_5_ROOF;
 		break;
 
@@ -1459,7 +1460,7 @@ void Board::InitLevel()
 	}
 	else
 	{
-		mSunMoney = 50;
+		mSunMoney = 20000;
 	}
 
 	// 初始化行选择数组
@@ -2525,24 +2526,32 @@ ZombieType Board::PickGraveRisingZombieType()
 {
 	TodWeightedArray aZombieWeightArray[ZombieType::NUM_ZOMBIE_TYPES];
 	int aCount = 2;
-	aZombieWeightArray[0].mItem = ZombieType::ZOMBIE_NORMAL;
-	aZombieWeightArray[0].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_NORMAL).mPickWeight;
-	aZombieWeightArray[1].mItem = ZombieType::ZOMBIE_TRAFFIC_CONE;
-	aZombieWeightArray[1].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_TRAFFIC_CONE).mPickWeight;
-	if (!StageHasGraveStones() || mApp->IsSurvivalCustom(mApp->mGameMode))
-	{
-		aZombieWeightArray[2].mItem = ZombieType::ZOMBIE_PAIL;
-		aZombieWeightArray[2].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_PAIL).mPickWeight;
-		aCount++;
+	if(mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3){
+		aZombieWeightArray[0].mItem = ZombieType::ZOMBIE_CABBAGE_HEAD;
+		aZombieWeightArray[0].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_CABBAGE_HEAD).mPickWeight;
+		aZombieWeightArray[1].mItem = ZombieType::ZOMBIE_WALLNUT_HEAD;
+		aZombieWeightArray[1].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_WALLNUT_HEAD).mPickWeight;
 	}
-
-	for (int i = 0; i < aCount; i++)
-	{
-		ZombieType aZombieType = static_cast<ZombieType>(aZombieWeightArray[i].mItem);
-		const ZombieDefinition& aZombieDef = GetZombieDefinition(aZombieType);
-		if ((mApp->IsFirstTimeAdventureMode() && mLevel < aZombieDef.mStartingLevel) || (!mZombieAllowed[aZombieType] && aZombieType != ZombieType::ZOMBIE_NORMAL))
+	else{
+		aZombieWeightArray[0].mItem = ZombieType::ZOMBIE_NORMAL;
+		aZombieWeightArray[0].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_NORMAL).mPickWeight;
+		aZombieWeightArray[1].mItem = ZombieType::ZOMBIE_TRAFFIC_CONE;
+		aZombieWeightArray[1].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_TRAFFIC_CONE).mPickWeight;
+		if (!StageHasGraveStones() || mApp->IsSurvivalCustom(mApp->mGameMode))
 		{
-			aZombieWeightArray[i].mWeight = 0;
+			aZombieWeightArray[2].mItem = ZombieType::ZOMBIE_PAIL;
+			aZombieWeightArray[2].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_PAIL).mPickWeight;
+			aCount++;
+		}
+
+		for (int i = 0; i < aCount; i++)
+		{
+			ZombieType aZombieType = static_cast<ZombieType>(aZombieWeightArray[i].mItem);
+			const ZombieDefinition& aZombieDef = GetZombieDefinition(aZombieType);
+			if ((mApp->IsFirstTimeAdventureMode() && mLevel < aZombieDef.mStartingLevel) || (!mZombieAllowed[aZombieType] && aZombieType != ZombieType::ZOMBIE_NORMAL))
+			{
+				aZombieWeightArray[i].mWeight = 0;
+			}
 		}
 	}
 
@@ -3152,7 +3161,7 @@ void Board::UpdateCursor()
 		if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL || mCursorObject->mCursorType == CursorType::CURSOR_TYPE_HAMMER)
 		{
 			Coin* aCoin = (Coin*)aHitResult.mObject;
-			aCoin->MouseDown(aMouseX, aMouseY, 1);
+			aCoin->MouseDown(aMouseX, aMouseY, 999);
 		}
 		break;
 
@@ -9695,6 +9704,27 @@ Plant* Board::FindUmbrellaPlant(int theGridX, int theGridY)
 			return aPlant;
 		}
 	}
+	return nullptr;
+}
+Zombie* Board::FindUmbrellaZombie(Rect& theRect, int theRow, bool mindControlled)
+{
+	Zombie* aZombie = nullptr;
+	while (IterateZombies(aZombie))
+	{
+		if (aZombie->mMindControlled == mindControlled && aZombie->mZombieType == ZOMBIE_UMBRELLA_HEAD && aZombie->mHasHead)
+		{
+			int aRowDist = aZombie->mRow - theRow;
+			int aCenter = aZombie->mX + 39;
+			int x0 = std::max(aCenter - 115, theRect.mX);
+			int x1 = std::min(aCenter + 115, theRect.mX + theRect.mWidth);
+
+			if (aRowDist <= 1 && aRowDist >= -1 && x1 >= x0)
+			{
+				return aZombie;
+			}
+		}
+	}
+
 	return nullptr;
 }
 

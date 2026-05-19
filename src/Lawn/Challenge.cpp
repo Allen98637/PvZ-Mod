@@ -2749,6 +2749,16 @@ void Challenge::InitZombieWaves()
 		aList[ZOMBIE_SQUASH_HEAD] = true;
 		aList[ZOMBIE_TALLNUT_HEAD] = true;
 	}
+	else if (aGameMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS_3)
+	{
+		aList[ZOMBIE_CABBAGE_HEAD] = true;
+		aList[ZOMBIE_WALLNUT_HEAD] = true;
+		aList[ZOMBIE_JALAPENO_HEAD] = true;
+		aList[ZOMBIE_MELON_HEAD] = true;
+		aList[ZOMBIE_SQUASH_HEAD] = true;
+		aList[ZOMBIE_TALLNUT_HEAD] = true;
+		aList[ZOMBIE_UMBRELLA_HEAD] = true;
+	}
 	else if (mApp->IsShovelLevel())
 	{
 		aList[ZOMBIE_NORMAL] = true;
