@@ -84,4 +84,4 @@ Launch from your application menu or terminal:
 pvz-portable
 ```
 
-Data is stored in `~/.local/share/io.github.wszqkzqk/PvZPortable/` by default.
+Data is stored in `~/.local/share/allen98637/PvZMod/` by default.

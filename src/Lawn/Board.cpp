@@ -1454,10 +1454,6 @@ void Board::InitLevel()
 	{
 		mSunMoney = 150;
 	}
-	else if (mApp->IsSurvivalEndless(aGameMode))
-	{
-		mSunMoney = 20000;
-	}
 	else
 	{
 		mSunMoney = 20000;
@@ -2914,7 +2910,7 @@ PlantingReason Board::CanPlantAt(int theGridX, int theGridY, SeedType theSeedTyp
 		}
 
 		if (!aPlantOnLawn.mNormalPlant || !aPlantOnLawn.mNormalPlant->mIsAsleep || aPlantOnLawn.mNormalPlant->mWakeUpCounter > 0 ||
-			aPlantOnLawn.mNormalPlant->mOnBungeeState == PlantOnBungeeState::GETTING_GRABBED_BY_BUNGEE)
+			aPlantOnLawn.mNormalPlant->mOnBungeeState == PlantOnBungeeState::GETTING_GRABBED_BY_BUNGEE || aPlantOnLawn.mNormalPlant->mMindControlled)
 		{
 			return PlantingReason::PLANTING_NEEDS_SLEEPING;
 		}
@@ -2934,6 +2930,9 @@ PlantingReason Board::CanPlantAt(int theGridX, int theGridY, SeedType theSeedTyp
 		aHasLilypad = false;
 		aHasFlowerPot = false;
 	}
+	else if(aUnderPlant->mMindControlled){
+		return PlantingReason::PLANTING_NOT_HERE;
+	}
 	else
 	{
 		aHasLilypad = aUnderPlant->mSeedType == SeedType::SEED_LILYPAD;
@@ -2942,6 +2941,9 @@ PlantingReason Board::CanPlantAt(int theGridX, int theGridY, SeedType theSeedTyp
 	Plant* aUnderPlant2 = aPlantOnLawn.mUnderPlant2;
 	if(!aUnderPlant2 || aUnderPlant2->mOnBungeeState == PlantOnBungeeState::GETTING_GRABBED_BY_BUNGEE){
 		aHasWaterPot = false;
+	}
+	else if(aUnderPlant2->mMindControlled){
+		return PlantingReason::PLANTING_NOT_HERE;
 	}
 	else{
 		aHasWaterPot = aUnderPlant2->mSeedType == SeedType::SEED_WATERPOT;
@@ -3300,7 +3302,7 @@ void Board::HighlightPlantsForMouse(int theMouseX, int theMouseY)
 	else
 	{
 		Plant* aPlant = ToolHitTest(theMouseX, theMouseY);
-		if (aPlant)
+		if (aPlant && !aPlant->mMindControlled)
 		{
 			aPlant->mHighlighted = true;
 			if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
@@ -4242,7 +4244,7 @@ void Board::MouseDownWithTool(int x, int y, int theClickCount, CursorType theCur
 	}
 
 	Plant* aPlant = ToolHitTest(x, y);
-	if (aPlant == nullptr)
+	if (aPlant == nullptr || aPlant->mMindControlled)
 	{
 		mApp->PlayFoley(FoleyType::FOLEY_DROP);
 	}
@@ -9278,6 +9280,24 @@ Zombie* Board::ZombieTryToGet(ZombieID theZombieID)
 	return mZombies.DataArrayTryToGet(static_cast<unsigned int>(theZombieID));
 }
 
+POZID Board::POZGetID(PlantOrZombie theTarget)
+{
+	if(theTarget.mPlant)
+		return {true, static_cast<ZombieID>(mPlants.DataArrayGetID(theTarget.mPlant))};
+	else
+		return {false, static_cast<ZombieID>(mZombies.DataArrayGetID(theTarget.mZombie))};
+}
+
+PlantOrZombie Board::POZTryToGet(POZID thePOZID)
+{
+	PlantOrZombie aPOZ;
+	unsigned int aID = static_cast<unsigned int>(thePOZID.mID);
+
+	if(thePOZID.mPlant) aPOZ = mPlants.DataArrayTryToGet(thePOZID.mID);
+	else aPOZ = mZombies.DataArrayTryToGet(thePOZID.mID);
+	return aPOZ;
+}
+
 int GetRectOverlap(const Rect& rect1, const Rect& rect2)
 {
 	int xmax, rmin, rmax;
@@ -9460,19 +9480,6 @@ bool Board::IterateReanimations(Reanimation*& theReanimation)
 
 	theReanimation = (Reanimation*)-1;
 	return false;
-}
-
-void Board::KillAllPlantsInRadius(int theX, int theY, int theRadius)
-{
-	Plant* aPlant = nullptr;
-	while (IteratePlants(aPlant))
-	{
-		if (GetCircleRectOverlap(theX, theY, theRadius, aPlant->GetPlantRect()))
-		{
-			mPlantsEaten++;
-			aPlant->Die();
-		}
-	}
 }
 
 unsigned int Board::SeedNotRecommendedForLevel(SeedType theSeedType)
@@ -9694,12 +9701,12 @@ Zombie* Board::GetBossZombie()
 	return nullptr;
 }
 
-Plant* Board::FindUmbrellaPlant(int theGridX, int theGridY)
+Plant* Board::FindUmbrellaPlant(int theGridX, int theGridY, bool mindControlled)
 {
 	Plant* aPlant = nullptr;
 	while (IteratePlants(aPlant))
 	{
-		if (aPlant->mSeedType == SeedType::SEED_UMBRELLA && !aPlant->NotOnGround() && GridInRange(theGridX, theGridY, aPlant->mPlantCol, aPlant->mRow, 1, 1))
+		if (aPlant->mMindControlled == mindControlled && aPlant->mSeedType == SeedType::SEED_UMBRELLA && !aPlant->NotOnGround() && GridInRange(theGridX, theGridY, aPlant->mPlantCol, aPlant->mRow, 1, 1))
 		{
 			return aPlant;
 		}
@@ -9822,8 +9829,9 @@ bool Board::PlantingRequirementsMet(SeedType theSeedType)
 // GOTY @Patoke: 0x420670
 int Board::KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, bool theBurn, int theDamageRangeFlags)
 {
-	Zombie* aZombie = nullptr;
 	int aKilledZombies = 0; // @Patoke: implemented this
+	bool aPlantSide = !TestBit(theDamageRangeFlags, static_cast<int>(DamageRangeFlags::DAMAGES_ONLY_MINDCONTROLLED));
+	Zombie* aZombie = nullptr;
 	while (IterateZombies(aZombie))
 	{
 		if (aZombie->EffectedByDamage(theDamageRangeFlags))
@@ -9849,7 +9857,7 @@ int Board::KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius,
 				aKilledZombies++;
 			}
 		}
-		if(aZombie->mZombieType == ZombieType::ZOMBIE_BOSS && theBurn){
+		if(aZombie->mZombieType == ZombieType::ZOMBIE_BOSS && theBurn && aPlantSide){
 			Rect aBallRect = aZombie->GetBossFireballRect();
 			if(aBallRect.mWidth != 0){
 				int bRowDist = aZombie->mFireballRow - theRow;
@@ -9858,6 +9866,16 @@ int Board::KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius,
 				}
 			}
 
+		}
+	}
+	Plant* aPlant = nullptr;
+	while (IteratePlants(aPlant))
+	{
+		if (aPlantSide == aPlant->mMindControlled && GetCircleRectOverlap(theX, theY, theRadius, aPlant->GetPlantRect()))
+		{
+			aKilledZombies++;
+			aPlant->Die();
+			if(!aPlantSide) mPlantsEaten++;
 		}
 	}
 

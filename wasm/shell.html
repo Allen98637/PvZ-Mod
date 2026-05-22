@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PvZ Portable — Web</title>
+<title>PvZ Mod — Web</title>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -160,11 +160,11 @@ canvas#canvas {
 </head>
 <body class="upload-mode">
 <div id="upload-screen">
-    <h1><a href="https://github.com/wszqkzqk/PvZ-Portable" target="_blank" rel="noopener noreferrer">PvZ Portable | Play Anywhere</a></h1>
+    <h1><a href="https://github.com/allen98637/PvZ-Mod" target="_blank" rel="noopener noreferrer">PvZ Mod | Play Anywhere</a></h1>
     <p id="project-links">
-        <a href="https://github.com/wszqkzqk/PvZ-Portable" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://github.com/wszqkzqk/PvZ-Portable/issues" target="_blank" rel="noopener noreferrer">Issues</a>
-        <a href="https://github.com/wszqkzqk/PvZ-Portable/releases" target="_blank" rel="noopener noreferrer">Releases</a>
+        <a href="https://github.com/allen98637/PvZ-Mod" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/allen98637/PvZ-Mod/issues" target="_blank" rel="noopener noreferrer">Issues</a>
+        <a href="https://github.com/allen98637/PvZ-Mod/releases" target="_blank" rel="noopener noreferrer">Releases</a>
     </p>
     <p>Community-driven re-implementation for <strong>all desktop, mobile, and web</strong>. Play instantly in your browser with no installation. <strong>No game resources are included.</strong></p>
     <p>To use this engine, you <strong>MUST</strong> legally purchase the original game on <a href="https://store.steampowered.com/app/3590/Plants_vs_Zombies_GOTY_Edition/" target="_blank" style="color:#4ecca3;text-decoration:underline;">Steam</a> or <a href="https://www.ea.com/games/plants-vs-zombies/plants-vs-zombies" target="_blank" style="color:#4ecca3;text-decoration:underline;">EA's official website</a>.<br>
@@ -202,7 +202,7 @@ canvas#canvas {
 
     <p class="note">Your files stay in your browser and are never uploaded to any server.<br>Resources can be loaded from a ZIP package or a resource folder. Saves are stored locally in your browser via IndexedDB and can be imported from ZIP or folder.</p>
     <p class="note">Starting the game indicates that you have read the notices above and acknowledge the no-warranty terms of the LGPL v3.0-or-later license for this code.</p>
-    <p class="note">Copyright (C) 2026 Zhou Qiankang &lt;<a href="mailto:wszqkzqk@qq.com" style="color:#4ecca3;text-decoration:underline;">wszqkzqk@qq.com</a>&gt;</p>
+    <p class="note">Copyright (C) 2026 Zhou Qiankang &lt;<a href="mailto:allen98637@qq.com" style="color:#4ecca3;text-decoration:underline;">allen98637@qq.com</a>&gt;</p>
 </div>
 
 <div id="canvas-container">
@@ -594,7 +594,7 @@ async function exportSaves() {
         const blob = await zip.generateAsync({ type: 'blob' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'pvz-portable-savedata.zip';
+        a.download = 'pvz-Mod-savedata.zip';
         a.click();
         URL.revokeObjectURL(a.href);
     } catch (e) {

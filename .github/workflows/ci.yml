@@ -51,7 +51,7 @@ jobs:
       run: |
         chown -R builder:builder .
 
-    - name: Build PvZ-Portable
+    - name: Build PvZ-Mod
       run: |
         sudo -u builder bash -lc '
           mkdir build
@@ -59,14 +59,14 @@ jobs:
           cmake --build build
 
           mkdir -p dist
-          cp build/pvz-portable dist/
-          strip dist/pvz-portable
+          cp build/pvz-mod dist/
+          strip dist/pvz-mod
         '
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
       with:
-        name: pvz-portable-archlinux
+        name: pvz-mod-archlinux
         path: dist/
 
   build-windows-msys2-ucrt64:
@@ -94,7 +94,7 @@ jobs:
           mingw-w64-ucrt-x86_64-ninja
           mingw-w64-ucrt-x86_64-SDL2
 
-    - name: Compile PvZ-Portable for Windows
+    - name: Compile PvZ-Mod for Windows
       shell: msys2 {0}
       run: |
         mkdir build
@@ -102,13 +102,13 @@ jobs:
         cmake --build build
         
         mkdir -p dist
-        cp build/pvz-portable.exe dist/
-        strip dist/pvz-portable.exe
+        cp build/pvz-mod.exe dist/
+        strip dist/pvz-mod.exe
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
       with:
-        name: pvz-portable-windows-msys2-ucrt64
+        name: pvz-mod-windows-msys2-ucrt64
         path: dist/
 
   build-windows-msvc-x64:
@@ -129,19 +129,19 @@ jobs:
       with:
         vcpkgJsonGlob: vcpkg.json
 
-    - name: Compile PvZ-Portable for Windows (MSVC)
+    - name: Compile PvZ-Mod for Windows (MSVC)
       shell: pwsh
       run: |
         cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCONSOLE=OFF -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static
         cmake --build build
 
         New-Item -ItemType Directory -Force -Path dist | Out-Null
-        Copy-Item build/pvz-portable.exe dist/
+        Copy-Item build/pvz-mod.exe dist/
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
       with:
-        name: pvz-portable-windows-msvc-x64
+        name: pvz-mod-windows-msvc-x64
         path: dist/
 
   # build-switch:
@@ -162,7 +162,7 @@ jobs:
   #         cd openmpt
   #         make CONFIG=gcc SHARED_LIB=0 DYNLINK=0 EXAMPLES=0 OPENMPT123=0 TEST=0 PREFIX=$PORTLIBS_PREFIX install 
 
-  #     - name: Compile PvZ-Portable for Switch
+  #     - name: Compile PvZ-Mod for Switch
   #       shell: bash
   #       run: |
   #         source $DEVKITPRO/switchvars.sh
@@ -170,15 +170,15 @@ jobs:
   #         cd build
   #         aarch64-none-elf-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE=-O2
   #         make
-  #         aarch64-none-elf-strip pvz-portable.elf
+  #         aarch64-none-elf-strip pvz-mod.elf
 
   #     - name: Upload Artifact
   #       uses: actions/upload-artifact@v7
   #       with:
-  #         name: pvz-portable-switch
+  #         name: pvz-mod-switch
   #         path: |
-  #           ./build/pvz-portable.nro
-  #           ./build/pvz-portable.elf
+  #           ./build/pvz-mod.nro
+  #           ./build/pvz-mod.elf
 
   build-macos:
     name: Build for macOS (aarch64)
@@ -202,7 +202,7 @@ jobs:
           ninja \
           sdl2
 
-    - name: Build PvZ-Portable
+    - name: Build PvZ-Mod
       run: |
         mkdir build
         cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
@@ -210,18 +210,18 @@ jobs:
 
         mkdir -p dist
         mkdir -p dist/libs
-        cp build/pvz-portable dist/
-        strip -x dist/pvz-portable
+        cp build/pvz-mod dist/
+        strip -x dist/pvz-mod
 
         echo "Bundling dependencies..."
-        dylibbundler -of -b -x dist/pvz-portable -d dist/libs -p @executable_path/libs/
+        dylibbundler -of -b -x dist/pvz-mod -d dist/libs -p @executable_path/libs/
 
-        codesign --force --deep -s - dist/pvz-portable
+        codesign --force --deep -s - dist/pvz-mod
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
       with:
-        name: pvz-portable-macos
+        name: pvz-mod-macos
         path: dist/
 
   build-android:
@@ -343,12 +343,12 @@ jobs:
     - name: Copy APK
       run: |
         mkdir -p dist
-        find android -name "*.apk" -path "*/release/*" -exec cp {} dist/pvz-portable-android-arm64-v8a.apk \;
+        find android -name "*.apk" -path "*/release/*" -exec cp {} dist/pvz-mod-android-arm64-v8a.apk \;
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
       with:
-        name: pvz-portable-android
+        name: pvz-mod-android
         path: dist/
 
   build-ios:
@@ -366,7 +366,7 @@ jobs:
       with:
         vcpkgJsonGlob: vcpkg.json
 
-    - name: Build PvZ-Portable for iOS
+    - name: Build PvZ-Mod for iOS
       run: |
         BUILD_DIR=build-ios
 
@@ -387,17 +387,17 @@ jobs:
 
     - name: Create unsigned IPA
       run: |
-        APP_PATH=$(find build-ios -name "pvz-portable.app" -path "*Release*" | head -1)
+        APP_PATH=$(find build-ios -name "pvz-mod.app" -path "*Release*" | head -1)
         mkdir -p dist/Payload
         cp -R "$APP_PATH" dist/Payload/
         cd dist
-        zip -r -y pvz-portable-ios-arm64.ipa Payload/
+        zip -r -y pvz-mod-ios-arm64.ipa Payload/
         rm -rf Payload
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
       with:
-        name: pvz-portable-ios
+        name: pvz-mod-ios
         path: dist/
 
   build-wasm:
@@ -440,7 +440,7 @@ jobs:
           EXAMPLES=0 OPENMPT123=0 TEST=0 \
           PREFIX="${SYSROOT}" install
 
-    - name: Build PvZ-Portable for WebAssembly
+    - name: Build PvZ-Mod for WebAssembly
       run: |
         mkdir build-wasm
         emcmake cmake -G Ninja -B build-wasm -DCMAKE_BUILD_TYPE=Release -DLIMBO_PAGE=OFF
@@ -449,11 +449,11 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
       with:
-        name: pvz-portable-wasm
+        name: pvz-mod-wasm
         path: |
-          build-wasm/pvz-portable.html
-          build-wasm/pvz-portable.js
-          build-wasm/pvz-portable.wasm
+          build-wasm/pvz-mod.html
+          build-wasm/pvz-mod.js
+          build-wasm/pvz-mod.wasm
 
   release:
     name: Release
@@ -473,30 +473,30 @@ jobs:
         mkdir release_files
 
         echo "Preparing Arch Linux file..."
-        chmod +x artifacts/pvz-portable-archlinux/pvz-portable
-        mv artifacts/pvz-portable-archlinux/pvz-portable release_files/pvz-portable-archlinux-x86_64
+        chmod +x artifacts/pvz-mod-archlinux/pvz-mod
+        mv artifacts/pvz-mod-archlinux/pvz-mod release_files/pvz-mod-archlinux-x86_64
 
         echo "Preparing Windows MSVC file..."
-        mv artifacts/pvz-portable-windows-msvc-x64/pvz-portable.exe release_files/pvz-portable-windows-msvc-x64-static.exe
+        mv artifacts/pvz-mod-windows-msvc-x64/pvz-mod.exe release_files/pvz-mod-windows-msvc-x64-static.exe
 
         echo "Preparing Windows MSYS2 file..."
-        mv artifacts/pvz-portable-windows-msys2-ucrt64/pvz-portable.exe release_files/pvz-portable-windows-ucrt64-static.exe
+        mv artifacts/pvz-mod-windows-msys2-ucrt64/pvz-mod.exe release_files/pvz-mod-windows-ucrt64-static.exe
 
         echo "Preparing macOS file..."
-        cd artifacts/pvz-portable-macos
-        chmod +x pvz-portable
-        zip -r -y ../../release_files/pvz-portable-macos-aarch64.zip .
+        cd artifacts/pvz-mod-macos
+        chmod +x pvz-mod
+        zip -r -y ../../release_files/pvz-mod-macos-aarch64.zip .
         cd ../..
 
         echo "Preparing Android file..."
-        mv artifacts/pvz-portable-android/pvz-portable-android-arm64-v8a.apk release_files/pvz-portable-android-arm64-v8a.apk
+        mv artifacts/pvz-mod-android/pvz-mod-android-arm64-v8a.apk release_files/pvz-mod-android-arm64-v8a.apk
 
         echo "Preparing iOS file..."
-        mv artifacts/pvz-portable-ios/pvz-portable-ios-arm64.ipa release_files/pvz-portable-ios-arm64.ipa
+        mv artifacts/pvz-mod-ios/pvz-mod-ios-arm64.ipa release_files/pvz-mod-ios-arm64.ipa
 
         echo "Preparing WebAssembly file..."
-        cd artifacts/pvz-portable-wasm
-        zip -r ../../release_files/pvz-portable-wasm.zip .
+        cd artifacts/pvz-mod-wasm
+        zip -r ../../release_files/pvz-mod-wasm.zip .
         cd ../..
 
         echo "Final files:"

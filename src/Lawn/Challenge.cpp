@@ -1656,7 +1656,7 @@ void Challenge::UpdateConveyorBelt()
 		aConveyorSpeedMultiplier = 3.0f;
 	}
 	else if(mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3){
-		aConveyorSpeedMultiplier = 0.5f;
+		aConveyorSpeedMultiplier = 0.75f;
 	}
 	int aNumSeedsOnConveyor = mBoard->mSeedBank->GetNumSeedsOnConveyorBelt();
 	mConveyorBeltCounter = aConveyorSpeedMultiplier * (aNumSeedsOnConveyor > 8 ? 1000 : aNumSeedsOnConveyor > 6 ? 500 : aNumSeedsOnConveyor > 4 ? 425 : 400);
@@ -2737,6 +2737,7 @@ void Challenge::InitZombieWaves()
 	}
 	else if (aGameMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS)
 	{
+		aList[ZOMBIE_HYPNO_HEAD] = true;
 		aList[ZOMBIE_PEA_HEAD] = true;
 		aList[ZOMBIE_WALLNUT_HEAD] = true;
 	}

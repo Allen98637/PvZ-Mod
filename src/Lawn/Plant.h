@@ -163,6 +163,7 @@ public:
 
 class Coin;
 class Zombie;
+class PlantOrZombie;
 class Reanimation;
 class TodParticleSystem;
 
@@ -240,8 +241,8 @@ public:
     void                    Draw(Graphics* g);
     void                    MouseDown(int x, int y, int theClickCount);
     void                    DoSpecial();
-    void                    Fire(Zombie* theTargetZombie, int theRow, PlantWeapon thePlantWeapon = PlantWeapon::WEAPON_PRIMARY);
-    Zombie*                 FindTargetZombie(int theRow, PlantWeapon thePlantWeapon = PlantWeapon::WEAPON_PRIMARY);
+    void                    Fire(PlantOrZombie theTargetZombie, int theRow, PlantWeapon thePlantWeapon = PlantWeapon::WEAPON_PRIMARY);
+    PlantOrZombie           FindTargetZombie(int theRow, PlantWeapon thePlantWeapon = PlantWeapon::WEAPON_PRIMARY);
     void                    Die();
     void                    UpdateProductionPlant();
     void                    UpdateShooter();
@@ -340,6 +341,8 @@ public:
     void                    UpdateAnimSpeed();
     float                   GetAnimSpeed(float theRate);
     void                    ApplyChill(bool theIsIceTrap);
+    void                    HitIceTrap();
+    void                    StartMindControlled();
 };
 
 float                       PlantDrawHeightOffset(Board* theBoard, Plant* thePlant, SeedType theSeedType, int theCol, int theRow);

@@ -1648,7 +1648,7 @@ def parse_save_file(data: bytes) -> SaveFile:
     """Parse a v4 save file."""
     if len(data) < HEADER_SIZE:
         print(f"Error: File is too small ({len(data)} bytes). Expected at least {HEADER_SIZE} bytes.")
-        print("This does not appear to be a valid PvZ-Portable save file.")
+        print("This does not appear to be a valid PvZ-Mod save file.")
         sys.exit(1)
 
     # Parse header: magic(12) + version(4) + payloadSize(4) + payloadCrc(4)
@@ -1835,7 +1835,7 @@ def write_save_file(save: SaveFile) -> bytes:
 def export_to_yaml(save: SaveFile) -> str:
     """Export save file to YAML format (lossless)."""
     output = {
-        "_format": "PvZ-Portable Save v4",
+        "_format": "PvZ-Mod Save v4",
         "_version": save.version,
         "_chunk_order": save.chunk_order,
         "board": save.board,
@@ -1889,7 +1889,7 @@ def export_to_text(save: SaveFile) -> str:
     """Export save file to human-readable text format (summary only)."""
     lines = []
     lines.append("=" * 60)
-    lines.append("PvZ-Portable Mid-Level Save File (v4 Format)")
+    lines.append("PvZ-Mod Mid-Level Save File (v4 Format)")
     lines.append("=" * 60)
     lines.append("")
     
@@ -2084,7 +2084,7 @@ def main():
     global EXPAND_ZOMBIES_IN_WAVE
     
     parser = argparse.ArgumentParser(
-        description="PvZ-Portable Mid-Level Save File Converter for v4 Format",
+        description="PvZ-Mod Mid-Level Save File Converter for v4 Format",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:

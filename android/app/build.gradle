@@ -15,11 +15,11 @@ configurations.all {
 def prebuilt = project.hasProperty('usePrebuiltLibs') && project.usePrebuiltLibs.toBoolean()
 
 android {
-    namespace 'io.github.wszqkzqk.pvzportable'
+    namespace 'allen98637.pvzmod'
     compileSdk 36
 
     defaultConfig {
-        applicationId "io.github.wszqkzqk.pvzportable"
+        applicationId "allen98637.pvzmod"
         minSdk 28
         targetSdk 36
         versionCode 1

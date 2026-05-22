@@ -19,7 +19,7 @@
  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.wszqkzqk.pvzportable;
+package allen98637.pvzmod;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -112,7 +112,7 @@ public class ResourceImportActivity extends AppCompatActivity {
             dirPicker.launch(null)
         );
         btnExportSave.setOnClickListener(v ->
-            saveExporter.launch("pvz-portable-savedata.zip")
+            saveExporter.launch("pvz-mod-savedata.zip")
         );
         btnImportSaveZip.setOnClickListener(v ->
             saveZipImporter.launch(new String[]{"application/zip", "application/x-zip-compressed"})
@@ -152,7 +152,7 @@ public class ResourceImportActivity extends AppCompatActivity {
     }
 
     private void launchGame() {
-        Intent intent = new Intent(this, PvZPortableActivity.class);
+        Intent intent = new Intent(this, PvZModActivity.class);
         startActivity(intent);
         finish();
     }

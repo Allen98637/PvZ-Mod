@@ -84,7 +84,7 @@ void Projectile::ProjectileInitialize(int theX, int theY, int theRenderOrder, in
 	mDead = false;
 	mAttachmentID = AttachmentID::ATTACHMENTID_NULL;
 	mCobTargetRow = 0;
-	mTargetZombieID = ZombieID::ZOMBIEID_NULL;
+	mTargetID = {false, ZombieID::ZOMBIEID_NULL};
 	mOnHighGround = mBoard->mGridSquareType[aGridX][theRow] == GridSquareType::GRIDSQUARE_HIGH_GROUND;
 	if (mBoard->StageHasRoof())
 	{
@@ -95,9 +95,12 @@ void Projectile::ProjectileInitialize(int theX, int theY, int theRenderOrder, in
 	mRotationSpeed = 0.0f;
 	mWidth = 40;
 	mHeight = 40;
+	mPlantSide = !IsZombieProjectile();
 	mProjectileAge = 0;
 	mClickBackoffCounter = 0;
 	mAnimTicksPerFrame = 0;
+
+	InitSpeed();
 
 	switch (mProjectileType)
 	{
@@ -178,44 +181,6 @@ void Projectile::ProjectileInitialize(int theX, int theY, int theRenderOrder, in
 	mY = static_cast<int>(mPosY);
 }
 
-Plant* Projectile::FindCollisionTargetPlant()
-{
-	Rect aProjectileRect = GetProjectileRect();
-
-	Plant* aPlant = nullptr;
-	while (mBoard->IteratePlants(aPlant))
-	{
-		if (aPlant->mRow != mRow)
-			continue;
-
-		if (mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_PEA)
-		{
-			if (aPlant->mSeedType == SeedType::SEED_PUFFSHROOM ||
-				aPlant->mSeedType == SeedType::SEED_SUNSHROOM ||
-				aPlant->mSeedType == SeedType::SEED_POTATOMINE ||
-				aPlant->mSeedType == SeedType::SEED_SPIKEWEED ||
-				aPlant->mSeedType == SeedType::SEED_SPIKEROCK ||
-				aPlant->mSeedType == SeedType::SEED_LILYPAD)  // 僵尸豌豆不能击中低矮植物
-				continue;
-		}
-
-		Rect aPlantRect = aPlant->GetPlantRect();
-		if (GetRectOverlap(aProjectileRect, aPlantRect) > 8)
-		{
-			if (mMotionType == ProjectileMotion::MOTION_LOBBED)
-			{
-				return mBoard->GetTopPlantAt(aPlant->mPlantCol, aPlant->mRow, PlantPriority::TOPPLANT_CATAPULT_ORDER);
-			}
-			else
-			{
-				return mBoard->GetTopPlantAt(aPlant->mPlantCol, aPlant->mRow, PlantPriority::TOPPLANT_EATING_ORDER);
-			}
-		}
-	}
-
-	return nullptr;
-}
-
 bool Projectile::PeaAboutToHitTorchwood()
 {
 	if (mMotionType != ProjectileMotion::MOTION_STRAIGHT)
@@ -243,18 +208,20 @@ bool Projectile::PeaAboutToHitTorchwood()
 	return false;
 }
 
-Zombie* Projectile::FindCollisionTarget()
+PlantOrZombie Projectile::FindCollisionTarget()
 {
+	PlantOrZombie aBestEnemy;
 	if (PeaAboutToHitTorchwood())  // “卡火炬”的原理，这段代码在两版内测版中均不存在
-		return nullptr;
+		return aBestEnemy;
 
 	Rect aProjectileRect = GetProjectileRect();
-	Zombie* aBestZombie = nullptr;
 	int aMinX = 0;
+	int jjg = mVelX < 0?-1:1;
 
 	Zombie* aZombie = nullptr;
 	while (mBoard->IterateZombies(aZombie))
 	{
+		if(mPlantSide == aZombie->mMindControlled) continue;
 		if ((aZombie->mZombieType == ZombieType::ZOMBIE_BOSS || aZombie->mRow == mRow) && aZombie->EffectedByDamage(static_cast<unsigned int>(mDamageRangeFlags)))
 		{
 			if (aZombie->mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING_IN_POOL && mPosZ >= 45.0f)
@@ -270,16 +237,50 @@ Zombie* Projectile::FindCollisionTarget()
 			Rect aZombieRect = aZombie->GetZombieRect();
 			if (GetRectOverlap(aProjectileRect, aZombieRect) > 0)
 			{
-				if (aBestZombie == nullptr || aZombie->mX < aMinX)
+				if (aBestEnemy == nullptr || (aZombie->mX - aMinX) / jjg < 0)
 				{
-					aBestZombie = aZombie;
+					aBestEnemy = aZombie;
 					aMinX = aZombie->mX;
 				}
 			}
 		}
 	}
+	Plant* aPlant = nullptr;
+	while (mBoard->IteratePlants(aPlant))
+	{
+		if(mPlantSide != aPlant->mMindControlled) continue;
+		if (aPlant->mRow != mRow)
+			continue;
 
-	return aBestZombie;
+		if (mMotionType != ProjectileMotion::MOTION_LOBBED)
+		{
+			if (aPlant->mSeedType == SeedType::SEED_PUFFSHROOM ||
+				aPlant->mSeedType == SeedType::SEED_SUNSHROOM ||
+				aPlant->mSeedType == SeedType::SEED_POTATOMINE ||
+				aPlant->mSeedType == SeedType::SEED_SPIKEWEED ||
+				aPlant->mSeedType == SeedType::SEED_SPIKEROCK ||
+				aPlant->mSeedType == SeedType::SEED_LILYPAD)  // 僵尸豌豆不能击中低矮植物
+				continue;
+		}
+
+		Rect aPlantRect = aPlant->GetPlantRect();
+		if (GetRectOverlap(aProjectileRect, aPlantRect) > 8)
+		{
+			if(aBestEnemy == nullptr || (mBoard->GridToPixelX(aPlant->mPlantCol, aPlant->mRow) - aMinX) / jjg < 0){
+				if (mMotionType == ProjectileMotion::MOTION_LOBBED)
+				{
+					aBestEnemy = mBoard->GetTopPlantAt(aPlant->mPlantCol, aPlant->mRow, PlantPriority::TOPPLANT_CATAPULT_ORDER);
+				}
+				else
+				{
+					aBestEnemy = mBoard->GetTopPlantAt(aPlant->mPlantCol, aPlant->mRow, PlantPriority::TOPPLANT_EATING_ORDER);
+				}
+			}
+			break;
+		}
+	}
+
+	return aBestEnemy;
 }
 
 void Projectile::CheckForCollision()
@@ -298,14 +299,22 @@ void Projectile::CheckForCollision()
 
 	if (mMotionType == ProjectileMotion::MOTION_HOMING)
 	{
-		Zombie* aZombie = mBoard->ZombieTryToGet(mTargetZombieID);
-		if (aZombie && aZombie->EffectedByDamage(static_cast<unsigned int>(mDamageRangeFlags)))
+		PlantOrZombie aEnemy = mBoard->POZTryToGet(mTargetID);
+		if (aEnemy.mZombie && aEnemy.mZombie->EffectedByDamage(static_cast<unsigned int>(mDamageRangeFlags)))
 		{
 			Rect aProjectileRect = GetProjectileRect();
-			Rect aZombieRect = aZombie->GetZombieRect();
-			if (GetRectOverlap(aProjectileRect, aZombieRect) >= 0 && mPosY > aZombieRect.mY&& mPosY < aZombieRect.mY + aZombieRect.mHeight)
+			Rect aZombieRect = aEnemy.mZombie->GetZombieRect();
+			if (GetRectOverlap(aProjectileRect, aZombieRect) >= 0 && mPosY > aZombieRect.mY && mPosY < aZombieRect.mY + aZombieRect.mHeight)
 			{
-				DoImpact(aZombie);
+				DoImpact(aEnemy);
+			}
+		}
+		else if(aEnemy.mPlant){
+			Rect aProjectileRect = GetProjectileRect();
+			Rect aPlantRect = aEnemy.mPlant->GetPlantRect();
+			if (aProjectileRect.Intersects(aPlantRect))
+			{
+				DoImpact(aEnemy);
 			}
 		}
 		return;
@@ -327,25 +336,15 @@ void Projectile::CheckForCollision()
 		return;
 	}
 
-	if (IsZombieProjectile())
+	PlantOrZombie aEnemy = FindCollisionTarget();
+	if (aEnemy)
 	{
-		Plant* aPlant = FindCollisionTargetPlant();
-		if (aPlant)
-		{
-			DoImpactPlant(aPlant);
-		}
-		return;
-	}
-
-	Zombie* aZombie = FindCollisionTarget();
-	if (aZombie)
-	{
-		if (aZombie->mOnHighGround && CantHitHighGround())
+		if (aEnemy.mZombie && aEnemy.mZombie->mOnHighGround && CantHitHighGround())
 		{
 			return;
 		}
 
-		DoImpact(aZombie);
+		DoImpact(aEnemy);
 	}
 }
 
@@ -365,6 +364,7 @@ bool Projectile::CantHitHighGround()
 
 void Projectile::CheckForHighGround()
 {
+	PlantOrZombie nuul;
 	float aShadowDelta = mShadowY - mPosY;
 
 	if (mProjectileType == ProjectileType::PROJECTILE_PEA ||
@@ -375,20 +375,20 @@ void Projectile::CheckForHighGround()
 	{
 		if (aShadowDelta < 28.0f)
 		{
-			DoImpact(nullptr);
+			DoImpact(nuul);
 			return;
 		}
 	}
 
 	if (mProjectileType == ProjectileType::PROJECTILE_PUFF && aShadowDelta < 0.0f)
 	{
-		DoImpact(nullptr);
+		DoImpact(nuul);
 		return;
 	}
 
 	if (mProjectileType == ProjectileType::PROJECTILE_STAR && aShadowDelta < 23.0f)
 	{
-		DoImpact(nullptr);
+		DoImpact(nuul);
 		return;
 	}
 
@@ -397,33 +397,29 @@ void Projectile::CheckForHighGround()
 		int aGridX = mBoard->PixelToGridXKeepOnBoard(mPosX + 30, mPosY);
 		if (mBoard->mGridSquareType[aGridX][mRow] == GridSquareType::GRIDSQUARE_HIGH_GROUND)
 		{
-			DoImpact(nullptr);
+			DoImpact(nuul);
 		}
 	}
 }
 
-bool Projectile::IsSplashDamage(Zombie* theZombie)
+bool Projectile::IsSplashDamage(PlantOrZombie theEnemy)
 {
-	if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL && theZombie && theZombie->IsFireResistant())
+	if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL && theEnemy.mZombie && theEnemy.mZombie->IsFireResistant())
 		return false;
 
 	return
 		mProjectileType == ProjectileType::PROJECTILE_MELON ||
 		mProjectileType == ProjectileType::PROJECTILE_WINTERMELON ||
-		mProjectileType == ProjectileType::PROJECTILE_FIREBALL;
+		mProjectileType == ProjectileType::PROJECTILE_FIREBALL ||
+		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON;;
 }
 
-bool Projectile::IsSplashDamagePlant(Plant* thePlant)
-{
-	return
-		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON;
-}
-
-unsigned int Projectile::GetDamageFlags(Zombie* theZombie)
+unsigned int Projectile::GetDamageFlags(PlantOrZombie theEnemy)
 {
 	unsigned int aDamageFlags = 0U;
 
-	if (IsSplashDamage(theZombie))
+	if(!mPlantSide) SetBit(aDamageFlags, static_cast<int>(DamageRangeFlags::DAMAGES_ONLY_MINDCONTROLLED), true);
+	if (IsSplashDamage(theEnemy))
 	{
 		SetBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_BYPASSES_SHIELD), true);
 	}
@@ -440,7 +436,9 @@ unsigned int Projectile::GetDamageFlags(Zombie* theZombie)
 		SetBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_BYPASSES_SHIELD), mVelX < 1e-6f);
 	}
 
-	if (mProjectileType == ProjectileType::PROJECTILE_SNOWPEA || mProjectileType == ProjectileType::PROJECTILE_WINTERMELON)
+	if (mProjectileType == ProjectileType::PROJECTILE_SNOWPEA || mProjectileType == ProjectileType::PROJECTILE_WINTERMELON ||
+		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA
+	)
 	{
 		SetBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_FREEZE), true);
 	}
@@ -448,65 +446,77 @@ unsigned int Projectile::GetDamageFlags(Zombie* theZombie)
 	return aDamageFlags;
 }
 
-bool Projectile::IsZombieHitBySplash(Zombie* theZombie)
+bool Projectile::IsHitBySplash(PlantOrZombie theEnemy)
 {
 	Rect aProjectileRect = GetProjectileRect();
-	if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
-	{
-		aProjectileRect.mWidth = 100;
-	}
+	if(theEnemy.mZombie){
+		if(mPlantSide == theEnemy.mZombie->mMindControlled) return false;
+		if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
+		{
+			if(mVelX < 0) aProjectileRect.mX -= 100 - aProjectileRect.mWidth;
+			aProjectileRect.mWidth = 100;
+		}
 
-	int aRowDeviation = theZombie->mRow - mRow;
-	Rect aZombieRect = theZombie->GetZombieRect();
-	if (theZombie->IsFireResistant() && mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
-	{
-		return false;
-	}
-
-	if (theZombie->mZombieType == ZombieType::ZOMBIE_BOSS)
-	{
-		aRowDeviation = 0;
-	}
-	if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
-	{
-		if (aRowDeviation != 0)
+		int aRowDeviation = theEnemy.mZombie->mRow - mRow;
+		Rect aZombieRect = theEnemy.mZombie->GetZombieRect();
+		if (theEnemy.mZombie->IsFireResistant() && mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
 		{
 			return false;
 		}
-	}
-	else if (aRowDeviation > 1 || aRowDeviation < -1)
-	{
-		return false;
-	}
 
-	return theZombie->EffectedByDamage(static_cast<unsigned int>(mDamageRangeFlags)) && GetRectOverlap(aProjectileRect, aZombieRect) >= 0;
+		if (theEnemy.mZombie->mZombieType == ZombieType::ZOMBIE_BOSS)
+		{
+			aRowDeviation = 0;
+		}
+		if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
+		{
+			if (aRowDeviation != 0)
+			{
+				return false;
+			}
+		}
+		else if (aRowDeviation > 1 || aRowDeviation < -1)
+		{
+			return false;
+		}
+
+		return theEnemy.mZombie->EffectedByDamage(static_cast<unsigned int>(mDamageRangeFlags)) && GetRectOverlap(aProjectileRect, aZombieRect) >= 0;
+	}
+	else if(theEnemy.mPlant){
+		if(mPlantSide != theEnemy.mPlant->mMindControlled) return false;
+		int aRowDeviation = theEnemy.mPlant->mRow - mRow;
+		Rect aPlantRect = theEnemy.mPlant->GetPlantRect();
+		if (aRowDeviation > 1 || aRowDeviation < -1)
+		{
+			return false;
+		}
+
+		return GetRectOverlap(aProjectileRect, aPlantRect) >= 0;
+	}
+	return false;
 }
 
-bool Projectile::IsPlantHitBySplash(Plant* thePlant)
-{
-	Rect aProjectileRect = GetProjectileRect();
-
-	int aRowDeviation = thePlant->mRow - mRow;
-	Rect aPlantRect = thePlant->GetPlantRect();
-	if (aRowDeviation > 1 || aRowDeviation < -1)
-	{
-		return false;
-	}
-
-	return GetRectOverlap(aProjectileRect, aPlantRect) >= 0;
-}
-
-void Projectile::DoSplashDamage(Zombie* theZombie)
+void Projectile::DoSplashDamage(PlantOrZombie theEnemy)
 {
 	const ProjectileDefinition& aProjectileDef = GetProjectileDef();
 
-	int aZombiesGetSplashed = 0;
+	int aEnemiesGetSplashed = 0;
 	Zombie* aZombie = nullptr;
 	while (mBoard->IterateZombies(aZombie))
 	{
-		if (aZombie != theZombie && IsZombieHitBySplash(aZombie))
+		PlantOrZombie daZ(aZombie);
+		if (mPlantSide != aZombie->mMindControlled && aZombie != theEnemy && IsHitBySplash(daZ))
 		{
-			aZombiesGetSplashed++;
+			aEnemiesGetSplashed++;
+		}
+	}
+	Plant* aPlant = nullptr;
+	while (mBoard->IteratePlants(aPlant))
+	{
+		PlantOrZombie daP(aPlant);
+		if (mPlantSide == aPlant->mMindControlled && aPlant != theEnemy && IsHitBySplash(daP))
+		{
+			aEnemiesGetSplashed++;
 		}
 	}
 
@@ -517,7 +527,7 @@ void Projectile::DoSplashDamage(Zombie* theZombie)
 	{
 		aMaxSplashDamageAmount = aOriginalDamage;
 	}
-	int aSplashDamageAmount = aSplashDamage * aZombiesGetSplashed;
+	int aSplashDamageAmount = aSplashDamage * aEnemiesGetSplashed;
 	if (aSplashDamageAmount > aMaxSplashDamageAmount)
 	{
 		//aSplashDamage *= aMaxSplashDamageAmount / aSplashDamage;
@@ -528,10 +538,11 @@ void Projectile::DoSplashDamage(Zombie* theZombie)
 	aZombie = nullptr;
 	while (mBoard->IterateZombies(aZombie))
 	{
-		if (IsZombieHitBySplash(aZombie))
+		PlantOrZombie daP(aZombie);
+		if (IsHitBySplash(daP))
 		{
-			unsigned int aDamageFlags = GetDamageFlags(aZombie);
-			if (aZombie == theZombie)
+			unsigned int aDamageFlags = GetDamageFlags(daP);
+			if (aZombie == theEnemy)
 			{
 				aZombie->TakeDamage(aOriginalDamage, aDamageFlags);
 			}
@@ -541,53 +552,29 @@ void Projectile::DoSplashDamage(Zombie* theZombie)
 			}
 		}
 	}
-	if (theZombie && theZombie->mShieldType != ShieldType::SHIELDTYPE_NONE)
-    {
-        theZombie->TakeShieldDamage(aSplashDamage, DamageFlags::DAMAGE_HITS_SHIELD_AND_BODY);
-    }
-}
-
-void Projectile::DoSplashDamagePlant(Plant* thePlant){
-	const ProjectileDefinition& aProjectileDef = GetProjectileDef();
-
-	int aPlantsGetSplashed = 0;
-	Plant* aPlant = nullptr;
-	while (mBoard->IteratePlants(aPlant))
-	{
-		if (aPlant != thePlant && IsPlantHitBySplash(aPlant))
-		{
-			aPlantsGetSplashed++;
-		}
-	}
-
-	int aOriginalDamage = aProjectileDef.mDamage;
-	int aSplashDamage = aProjectileDef.mDamage / 3;
-	int aMaxSplashDamageAmount = aOriginalDamage * 7;
-	int aSplashDamageAmount = aSplashDamage * aPlantsGetSplashed;
-	if (aSplashDamageAmount > aMaxSplashDamageAmount)
-	{
-		//aSplashDamage *= aMaxSplashDamageAmount / aSplashDamage;
-		aSplashDamage = aOriginalDamage * aMaxSplashDamageAmount / (aSplashDamageAmount * 3);
-		aSplashDamage = std::max(aSplashDamage, 1);
-	}
-
 	aPlant = nullptr;
 	while (mBoard->IteratePlants(aPlant))
 	{
-		if (IsPlantHitBySplash(aPlant))
+		PlantOrZombie daP(aPlant);
+		if (IsHitBySplash(aPlant))
 		{
-			if (aPlant == thePlant)
+			unsigned int aDamageFlags = GetDamageFlags(theEnemy);
+			if (aPlant == theEnemy)
 			{
 				aPlant->mPlantHealth -= aOriginalDamage;
-				aPlant->mEatenFlashCountdown = std::max(aPlant->mEatenFlashCountdown, 25);
 			}
 			else
 			{
 				aPlant->mPlantHealth -= aSplashDamage;
-				aPlant->mEatenFlashCountdown = std::max(aPlant->mEatenFlashCountdown, 25);
 			}
+			aPlant->mEatenFlashCountdown = std::max(aPlant->mEatenFlashCountdown, 25);
+			if(TestBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_FREEZE))) aPlant->ApplyChill(false);
 		}
 	}
+	if (theEnemy.mZombie && theEnemy.mZombie->mShieldType != ShieldType::SHIELDTYPE_NONE)
+    {
+        theEnemy.mZombie->TakeShieldDamage(aSplashDamage, DamageFlags::DAMAGE_HITS_SHIELD_AND_BODY);
+    }
 }
 
 // GOTY @Patoke: 0x471B41
@@ -660,16 +647,8 @@ void Projectile::UpdateLobMotion()
 		}
 	}
 
-	Plant* aPlant = nullptr;
-	Zombie* aZombie = nullptr;
-	if (IsZombieProjectile())
-	{
-		aPlant = FindCollisionTargetPlant();
-	}
-	else
-	{
-		aZombie = FindCollisionTarget();
-	}
+	PlantOrZombie aEnemy;
+	aEnemy = FindCollisionTarget();
 
 	float aGroundZ = 80.0f;
 	if (mProjectileType == ProjectileType::PROJECTILE_COBBIG)
@@ -677,35 +656,12 @@ void Projectile::UpdateLobMotion()
 		aGroundZ = -40.0f;
 	}
 	bool hitGround = mPosZ > aGroundZ;
-	if (aZombie == nullptr && aPlant == nullptr && !hitGround)
+	if (!aEnemy && !hitGround)
 	{
 		return;
 	}
 
-	if (aPlant)
-	{
-		Plant* aUmbrellaPlant = mBoard->FindUmbrellaPlant(aPlant->mPlantCol, aPlant->mRow);
-		if (aUmbrellaPlant)
-		{
-			if (aUmbrellaPlant->mState == PlantState::STATE_UMBRELLA_REFLECTING)
-			{
-				mApp->PlayFoley(FoleyType::FOLEY_SPLAT);
-				int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1);
-				mApp->AddTodParticle(mPosX + 20.0f, mPosY + 20.0f, aRenderPosition, mUmbrellaParticle);
-				Die();
-			}
-			else if (aUmbrellaPlant->mState != PlantState::STATE_UMBRELLA_TRIGGERED)
-			{
-				mApp->PlayFoley(FoleyType::FOLEY_UMBRELLA);
-				aUmbrellaPlant->DoSpecial();
-			}
-		}
-		else
-		{
-			DoImpactPlant(aPlant);
-		}
-	}
-	else if (mProjectileType == ProjectileType::PROJECTILE_COBBIG)
+	if (mProjectileType == ProjectileType::PROJECTILE_COBBIG)
 	{
 		// @Patoke: implemented
 		int aBeforeGargantuarCount = mBoard->GetLiveGargantuarCount();
@@ -715,12 +671,12 @@ void Projectile::UpdateLobMotion()
 		if (mBoard->mGargantuarsKillsByCornCob >= 2)
 			ReportAchievement::GiveAchievement(mApp, PopcornParty, true);
 
-		DoImpact(nullptr);
+		DoImpact(PlantOrZombie());
 	}
-	else if(aZombie)
+	else if(aEnemy)
 	{
 		Rect theRect = GetProjectileRect();
-		Zombie* aUmbrellaZombie = mBoard->FindUmbrellaZombie(theRect, mRow, false);
+		Zombie* aUmbrellaZombie = mBoard->FindUmbrellaZombie(theRect, mRow, !mPlantSide);
 		if (aUmbrellaZombie)
 		{
 			if (aUmbrellaZombie->mZombotomyState == PlantState::STATE_UMBRELLA_REFLECTING)
@@ -737,11 +693,32 @@ void Projectile::UpdateLobMotion()
 			}
 		}
 		else{
-			DoImpact(aZombie);
+			int aCol;
+			if(aEnemy.mPlant) aCol = aEnemy.mPlant->mPlantCol;
+			else aCol = mBoard->PixelToGridX((theRect.mX + theRect.mWidth) / 2, (theRect.mY + theRect.mHeight) / 2);
+			Plant* aUmbrellaPlant = mBoard->FindUmbrellaPlant(aCol, mRow, mPlantSide);
+			if (aUmbrellaPlant)
+			{
+				if (aUmbrellaPlant->mState == PlantState::STATE_UMBRELLA_REFLECTING)
+				{
+					mApp->PlayFoley(FoleyType::FOLEY_SPLAT);
+					int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1);
+					mApp->AddTodParticle(mPosX + 20.0f, mPosY + 20.0f, aRenderPosition, mUmbrellaParticle);
+					Die();
+				}
+				else if (aUmbrellaPlant->mState != PlantState::STATE_UMBRELLA_TRIGGERED)
+				{
+					mApp->PlayFoley(FoleyType::FOLEY_UMBRELLA);
+					aUmbrellaPlant->DoSpecial();
+				}
+			}
+			else{
+				DoImpact(aEnemy);
+			}
 		}
 	}
 	else{
-		IsZombieProjectile()?DoImpactPlant(nullptr):DoImpact(nullptr);
+		DoImpact(aEnemy);
 	}
 }
 
@@ -749,18 +726,37 @@ void Projectile::UpdateNormalMotion()
 {
 	if (mMotionType == ProjectileMotion::MOTION_BACKWARDS)
 	{
-		mPosX -= 3.33f;
+		mVelX = mPlantSide?-3.33f:3.33f;
+		mPosX += mVelX;
 	}
 	else if (mMotionType == ProjectileMotion::MOTION_HOMING)
 	{
-		Zombie* aZombie = mBoard->ZombieTryToGet(mTargetZombieID);
-		if(!aZombie || !aZombie->mHasHead) aZombie = UpdateTargetZombie();
-		if (aZombie && aZombie->EffectedByDamage(static_cast<unsigned int>(mDamageRangeFlags)))
+		PlantOrZombie aZombie = mBoard->POZTryToGet(mTargetID);
+		if(!aZombie || (aZombie.mZombie && !aZombie.mZombie->mHasHead)) aZombie = UpdateTargetZombie();
+		if (aZombie.mZombie && aZombie.mZombie->EffectedByDamage(static_cast<unsigned int>(mDamageRangeFlags)))
 		{
-			Rect aZombieRect = aZombie->GetZombieRect();
-			mTargetZombieX = aZombie->ZombieTargetLeadX(0.0f);
-			mTargetZombieY = aZombieRect.mY + aZombieRect.mHeight / 2;
-			SexyVector2 aTargetCenter(mTargetZombieX, mTargetZombieY);
+			Rect aZombieRect = aZombie.mZombie->GetZombieRect();
+			mTargetX = aZombie.mZombie->ZombieTargetLeadX(0.0f);
+			mTargetY = aZombieRect.mY + aZombieRect.mHeight / 2;
+			SexyVector2 aTargetCenter(mTargetX, mTargetY);
+			SexyVector2 aProjectileCenter(mPosX + mWidth / 2, mPosY + mHeight / 2);
+			SexyVector2 aToTarget = (aTargetCenter - aProjectileCenter).Normalize();
+			SexyVector2 aMotion(mVelX, mVelY);
+
+			aMotion += aToTarget * (0.001f * mProjectileAge);
+			aMotion = aMotion.Normalize();
+			aMotion *= 2.0f;
+
+			mVelX = aMotion.x;
+			mVelY = aMotion.y;
+			mRotation = -atan2(mVelY, mVelX);
+		}
+		else if (aZombie.mPlant)
+		{
+			Rect aZombieRect = aZombie.mPlant->GetPlantRect();
+			mTargetX = aZombieRect.mX + aZombieRect.mWidth / 2;
+			mTargetY = aZombieRect.mY + aZombieRect.mHeight / 2;
+			SexyVector2 aTargetCenter(mTargetX, mTargetY);
 			SexyVector2 aProjectileCenter(mPosX + mWidth / 2, mPosY + mHeight / 2);
 			SexyVector2 aToTarget = (aTargetCenter - aProjectileCenter).Normalize();
 			SexyVector2 aMotion(mVelX, mVelY);
@@ -796,7 +792,8 @@ void Projectile::UpdateNormalMotion()
 		{
 			mPosY -= 0.5f;
 		}
-		mPosX += 3.33f;
+		mVelX = mPlantSide?3.33f:-3.33f;
+		mPosX += mVelX;
 	}
 	else if (mMotionType == ProjectileMotion::MOTION_FLOAT_OVER)
 	{
@@ -807,7 +804,8 @@ void Projectile::UpdateNormalMotion()
 			mPosY += mVelZ;
 			mRotation = 0.3f - 0.7f * mVelZ * PI * 0.25f;
 		}
-		mPosX += 0.4f;
+		mVelX = mPlantSide?0.4f:-0.4f;
+		mPosX += mVelX;
 	}
 	else if (mMotionType == ProjectileMotion::MOTION_BEE_BACKWARDS)
 	{
@@ -815,18 +813,21 @@ void Projectile::UpdateNormalMotion()
 		{
 			mPosY -= 0.5f;
 		}
-		mPosX -= 3.33f;
+		mVelX = mPlantSide?-3.33f:3.33f;
+		mPosX += mVelX;
 	}
 	else if (mMotionType == ProjectileMotion::MOTION_THREEPEATER)
 	{
-		mPosX += 3.33f;
+		mVelX = mPlantSide?3.33f:-3.33f;
+		mPosX += mVelX;
 		mPosY += mVelY;
 		mVelY *= 0.97f;
 		mShadowY += mVelY;
 	}
 	else
 	{
-		mPosX += 3.33f;
+		mVelX = mPlantSide?3.33f:-3.33f;
+		mPosX += mVelX;
 	}
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY)
@@ -847,29 +848,60 @@ void Projectile::UpdateNormalMotion()
 	CheckForHighGround();
 }
 
-Zombie* Projectile::UpdateTargetZombie(){
+void Projectile::InitSpeed(){
+	if(mMotionType == MOTION_LOBBED) return;
+	if (mMotionType == ProjectileMotion::MOTION_HOMING) return;
+	if (mMotionType == ProjectileMotion::MOTION_STAR) return;
+	if (mMotionType == ProjectileMotion::MOTION_BACKWARDS)
+		mVelX = mPlantSide?-3.33f:3.33f;
+	else if (mMotionType == ProjectileMotion::MOTION_BEE)
+		mVelX = mPlantSide?3.33f:-3.33f;
+	else if (mMotionType == ProjectileMotion::MOTION_FLOAT_OVER)
+		mVelX = mPlantSide?0.4f:-0.4f;
+	else if (mMotionType == ProjectileMotion::MOTION_BEE_BACKWARDS)
+		mVelX = mPlantSide?-3.33f:3.33f;
+	else if (mMotionType == ProjectileMotion::MOTION_THREEPEATER)
+		mVelX = mPlantSide?3.33f:-3.33f;
+	else
+		mVelX = mPlantSide?3.33f:-3.33f;
+}
+
+PlantOrZombie Projectile::UpdateTargetZombie(){
 	int aHighestWeight = 0;
-    Zombie* aBestZombie = nullptr;
+    PlantOrZombie aBestEnemy;
 
     Zombie* aZombie = nullptr;
     while (mBoard->IterateZombies(aZombie)){
+		if (!aZombie->EffectedByDamage(mDamageRangeFlags)) continue;
         Rect aZombieRect = aZombie->GetZombieRect();
-        int aWeight = -Distance2D(mTargetZombieX, mTargetZombieY, aZombieRect.mX + aZombieRect.mWidth / 2, aZombieRect.mY + aZombieRect.mHeight / 2);
+        int aWeight = -Distance2D(mTargetX, mTargetY, aZombieRect.mX + aZombieRect.mWidth / 2, aZombieRect.mY + aZombieRect.mHeight / 2);
         if(!aZombie->mHasHead) aWeight -= 10000;
         if (aZombie->IsFlying())
         {
             aWeight += 10000;  // 优先攻击飞行单位
         }
 
-        if (aBestZombie == nullptr || aWeight > aHighestWeight)
+        if (aBestEnemy == nullptr || aWeight > aHighestWeight)
         {
             aHighestWeight = aWeight;
-            aBestZombie = aZombie;
+            aBestEnemy = aZombie;
         }
 	}
-	if(aBestZombie != nullptr)
-		mTargetZombieID = mBoard->ZombieGetID(aBestZombie);
-	return aBestZombie;
+    Plant* aPlant = nullptr;
+	while (mBoard->IteratePlants(aPlant)){
+		if(aPlant->mMindControlled != mPlantSide) continue;
+        Rect aPlantRect = aPlant->GetPlantRect();
+        int aWeight = -Distance2D(mTargetX, mTargetY, aPlantRect.mX + aPlantRect.mWidth / 2, aPlantRect.mY + aPlantRect.mHeight / 2);
+
+        if (aBestEnemy == nullptr || aWeight > aHighestWeight)
+        {
+            aHighestWeight = aWeight;
+            aBestEnemy = aPlant;
+        }
+	}
+	if(aBestEnemy != nullptr)
+		mTargetID = mBoard->POZGetID(aBestEnemy);
+	return aBestEnemy;
 }
 
 void Projectile::UpdateMotion()
@@ -910,7 +942,7 @@ void Projectile::UpdateMotion()
 	mY = static_cast<int>(mPosY + mPosZ);
 }
 
-void Projectile::PlayImpactSound(Zombie* theZombie)
+void Projectile::PlayImpactSound(PlantOrZombie theEnemy)
 {
 	bool aPlayHelmSound = true;
 	bool aPlaySplatSound = true;
@@ -925,27 +957,29 @@ void Projectile::PlayImpactSound(Zombie* theZombie)
 		mApp->PlayFoley(FoleyType::FOLEY_BUTTER);
 		aPlaySplatSound = false;
 	}
-	else if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL && IsSplashDamage(theZombie))
+	else if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL && IsSplashDamage(theEnemy))
 	{
 		mApp->PlayFoley(FoleyType::FOLEY_IGNITE);
 		aPlayHelmSound = false;
 		aPlaySplatSound = false;
 	}
-	else if (mProjectileType == ProjectileType::PROJECTILE_MELON || mProjectileType == ProjectileType::PROJECTILE_WINTERMELON)
+	else if (mProjectileType == ProjectileType::PROJECTILE_MELON || mProjectileType == ProjectileType::PROJECTILE_WINTERMELON ||
+		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON
+	)
 	{
 		mApp->PlayFoley(FoleyType::FOLEY_MELONIMPACT);
 		aPlaySplatSound = false;
 	}
 
-	if (aPlayHelmSound && theZombie)
+	if (aPlayHelmSound && theEnemy.mZombie)
 	{
-		if (theZombie->mHelmType == HELMTYPE_PAIL)
+		if (theEnemy.mZombie->mHelmType == HELMTYPE_PAIL)
 		{
 			mApp->PlayFoley(FoleyType::FOLEY_SHIELD_HIT);
 			aPlaySplatSound = false;
 		}
-		else if (theZombie->mHelmType == HELMTYPE_TRAFFIC_CONE || theZombie->mHelmType == HELMTYPE_DIGGER || 
-			theZombie->mHelmType == HELMTYPE_FOOTBALL || theZombie->mHelmType == HELMTYPE_GIGA_FOOTBALL
+		else if (theEnemy.mZombie->mHelmType == HELMTYPE_TRAFFIC_CONE || theEnemy.mZombie->mHelmType == HELMTYPE_DIGGER || 
+			theEnemy.mZombie->mHelmType == HELMTYPE_FOOTBALL || theEnemy.mZombie->mHelmType == HELMTYPE_GIGA_FOOTBALL
 		){
 			mApp->PlayFoley(FoleyType::FOLEY_PLASTIC_HIT);
 		}
@@ -957,53 +991,31 @@ void Projectile::PlayImpactSound(Zombie* theZombie)
 	}
 }
 
-void Projectile::DoImpactPlant(Plant* thePlant){
-	if(IsSplashDamagePlant(thePlant)){
-		DoSplashDamagePlant(thePlant);
-	}
-	else if(thePlant){
-		thePlant->mPlantHealth -= GetProjectileDef().mDamage;
-		thePlant->mEatenFlashCountdown = std::max(thePlant->mEatenFlashCountdown, 25);
-		if(mProjectileType == PROJECTILE_ZOMBIE_SNOWPEA){
-			thePlant->ApplyChill(false);
-		}
-	}
-	mApp->PlayFoley(FoleyType::FOLEY_SPLAT);
-	switch (mProjectileType)
-	{
-	case ProjectileType::PROJECTILE_ZOMBIE_PEA:
-		mApp->AddTodParticle(mPosX - 3.0f, mPosY + 17.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PEA_SPLAT);
-		break;
-	case PROJECTILE_ZOMBIE_CABBAGE:
-		mApp->AddTodParticle(mPosX + 20.0f, mPosY + 23.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_CABBAGE_SPLAT);
-		break;
-	case PROJECTILE_ZOMBIE_MELON:
-		mApp->AddTodParticle(mPosX + 12.0f, mPosY + 30.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_MELONSPLASH);
-		break;
-	case ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA:
-		mApp->AddTodParticle(mPosX - 3.0f, mPosY + 17.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_SNOWPEA_SPLAT);
-		break;
-	}
-	Die();
-}
-
-void Projectile::DoImpact(Zombie* theZombie)
+void Projectile::DoImpact(PlantOrZombie theEnemy)
 {
-	PlayImpactSound(theZombie);
+	PlayImpactSound(theEnemy);
 
-	if (IsSplashDamage(theZombie))
+	unsigned int aDamageFlags = GetDamageFlags(theEnemy);
+	if (IsSplashDamage(theEnemy))
 	{
-		if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL && theZombie)
+		if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL && theEnemy.mZombie)
 		{
-			theZombie->RemoveColdEffects();
+			theEnemy.mZombie->RemoveColdEffects();
 		}
 
-		DoSplashDamage(theZombie);
+		DoSplashDamage(theEnemy);
 	}
-	else if (theZombie)
+	else if (theEnemy.mZombie)
 	{
-		unsigned int aDamageFlags = GetDamageFlags(theZombie);
-		theZombie->TakeDamage(GetProjectileDef().mDamage, aDamageFlags);
+		theEnemy.mZombie->TakeDamage(GetProjectileDef().mDamage, aDamageFlags);
+	}
+	else if(theEnemy.mPlant)
+	{
+		theEnemy.mPlant->mPlantHealth -= GetProjectileDef().mDamage;
+		theEnemy.mPlant->mEatenFlashCountdown = std::max(theEnemy.mPlant->mEatenFlashCountdown, 25);
+		if(TestBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_FREEZE))){
+			theEnemy.mPlant->ApplyChill(false);
+		}
 	}
 
 	float aLastPosX = mPosX - mVelX;
@@ -1014,7 +1026,6 @@ void Projectile::DoImpact(Zombie* theZombie)
 	switch (mProjectileType)
 	{
 	case ProjectileType::PROJECTILE_MELON:
-	case ProjectileType::PROJECTILE_ZOMBIE_MELON:
 		mApp->AddTodParticle(aLastPosX + 30.0f, aLastPosY + 30.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_MELONSPLASH);
 		break;
 	case ProjectileType::PROJECTILE_WINTERMELON:
@@ -1039,7 +1050,7 @@ void Projectile::DoImpact(Zombie* theZombie)
 		break;
 	case ProjectileType::PROJECTILE_FIREBALL:
 	{
-		if (IsSplashDamage(theZombie))
+		if (IsSplashDamage(theEnemy))
 		{
 			Reanimation* aFireReanim = mApp->AddReanimation(mPosX + 38.0f, mPosY - 20.0f, mRenderOrder + 1, ReanimationType::REANIM_JALAPENO_FIRE);
 			aFireReanim->mAnimTime = 0.25f;
@@ -1065,10 +1076,22 @@ void Projectile::DoImpact(Zombie* theZombie)
 		aSplatPosY = aLastPosY + 63.0f;
 		aEffect = ParticleEffect::PARTICLE_BUTTER_SPLAT;
 
-		if (theZombie)
+		if (theEnemy.mZombie)
 		{
-			theZombie->ApplyButter();
+			theEnemy.mZombie->ApplyButter();
 		}
+		break;
+	case ProjectileType::PROJECTILE_ZOMBIE_PEA:
+		mApp->AddTodParticle(mPosX - 3.0f, mPosY + 17.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PEA_SPLAT);
+		break;
+	case PROJECTILE_ZOMBIE_CABBAGE:
+		mApp->AddTodParticle(mPosX + 20.0f, mPosY + 23.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_CABBAGE_SPLAT);
+		break;
+	case PROJECTILE_ZOMBIE_MELON:
+		mApp->AddTodParticle(mPosX + 12.0f, mPosY + 30.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_MELONSPLASH);
+		break;
+	case ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA:
+		mApp->AddTodParticle(mPosX - 3.0f, mPosY + 17.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_SNOWPEA_SPLAT);
 		break;
 	default:
 		break;
@@ -1076,11 +1099,11 @@ void Projectile::DoImpact(Zombie* theZombie)
 
 	if (aEffect != ParticleEffect::PARTICLE_NONE)
 	{
-		if (theZombie)
+		if (theEnemy.mZombie)
 		{
-			float aPosX = aSplatPosX + 52.0f - theZombie->mX;
-			float aPosY = aSplatPosY - theZombie->mY;
-			if (theZombie->mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING_IN_POOL || theZombie->mZombiePhase == ZombiePhase::PHASE_DOLPHIN_WALKING_IN_POOL)
+			float aPosX = aSplatPosX + 52.0f - theEnemy.mZombie->mX;
+			float aPosY = aSplatPosY - theEnemy.mZombie->mY;
+			if (theEnemy.mZombie->mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING_IN_POOL || theEnemy.mZombie->mZombiePhase == ZombiePhase::PHASE_DOLPHIN_WALKING_IN_POOL)
 			{
 				aPosY += 60.0f;
 			}
@@ -1088,13 +1111,13 @@ void Projectile::DoImpact(Zombie* theZombie)
 			{
 				aPosX -= 80.0f;
 			}
-			else if (mPosX > theZombie->mX + 40 && mMotionType != ProjectileMotion::MOTION_LOBBED)
+			else if (mPosX > theEnemy.mZombie->mX + 40 && mMotionType != ProjectileMotion::MOTION_LOBBED)
 			{
 				aPosX -= 60.0f;
 			}
 
 			aPosY = ClampFloat(aPosY, 20.0f, 100.0f);
-			theZombie->AddAttachedParticle(aPosX, aPosY, aEffect);
+			theEnemy.mZombie->AddAttachedParticle(aPosX, aPosY, aEffect);
 		}
 		else
 		{
@@ -1137,7 +1160,16 @@ void Projectile::Update()
 	mRotation += mRotationSpeed;
 
 	UpdateMotion();
-	AttachmentUpdateAndMove(mAttachmentID, mPosX, mPosY + mPosZ);
+	if(mVelX >= 0){
+		AttachmentUpdateAndMove(mAttachmentID, mPosX, mPosY + mPosZ);
+	}
+	else{
+		SexyTransform2D aMatrix;
+		aMatrix.m00 = -1; aMatrix.m01 = 0;  aMatrix.m02 = mPosX;
+		aMatrix.m10 = 0;  aMatrix.m11 = 1;  aMatrix.m12 = mPosY + mPosZ;
+		aMatrix.m20 = 0;  aMatrix.m21 = 0;  aMatrix.m22 = 1;
+		AttachmentUpdateAndSetMatrix(mAttachmentID, aMatrix);
+	}
 }
 
 void Projectile::Draw(Graphics* g)
@@ -1210,8 +1242,10 @@ void Projectile::Draw(Graphics* g)
 	{
 		aMirror = true;
 	}
-	if(mProjectileType == PROJECTILE_ZOMBIE_MELON || mProjectileType == PROJECTILE_ZOMBIE_CABBAGE || 
-		mProjectileType == PROJECTILE_ZOMBIE_SNOWPEA
+	if(mProjectileType != PROJECTILE_PEA && mProjectileType != PROJECTILE_ZOMBIE_PEA &&
+		mProjectileType != PROJECTILE_SPIKE && mProjectileType != PROJECTILE_STAR &&
+		mProjectileType != PROJECTILE_BASKETBALL && mProjectileType != PROJECTILE_COBBIG &&
+		mVelX < 0
 	){
 		aSX *= -1;
 		aMirror = true;
@@ -1365,7 +1399,7 @@ Rect Projectile::GetProjectileRect()
 		return Rect(mX + 20, mY, 60, mHeight);
 	}
 	else if(mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON){
-		return Rect(mX - 80, mY, 60, mHeight);
+		return Rect(mX - 40, mY, 60, mHeight);
 	}
 	else if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
 	{

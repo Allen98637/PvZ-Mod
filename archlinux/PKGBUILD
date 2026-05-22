@@ -1,6 +1,6 @@
 # Maintainer: wszqkzqk <wszqkzqk@qq.com>
 
-pkgname=pvz-portable
+pkgname=pvz-mod
 pkgver=0.1.10
 pkgrel=1
 pkgdesc="A cross-platform community-driven reimplementation of Plants vs. Zombies: Game of the Year Edition, aiming to bring the 100% authentic PvZ experience to every platform."
@@ -29,8 +29,8 @@ source=(
     # IMPORTANT: You must create this file yourself using assets from your legally owned copy.
     # See archlinux/README.md for instructions.
     "Plants_vs._Zombies_1.2.0.1073_EN.zip"
-    "pvz-portable.sh"
-    "io.github.wszqkzqk.pvz-portable.desktop"
+    "pvz-mod.sh"
+    "allen98637.pvz-mod.desktop"
 )
 sha256sums=('SKIP'
             'SKIP'
@@ -50,15 +50,15 @@ build() {
 }
 
 package() {
-    mkdir -p "${pkgdir}/usr/share/pvz-portable"
-    install -Dm644 "main.pak" "${pkgdir}/usr/share/pvz-portable/main.pak"
-    cp -r "properties" "${pkgdir}/usr/share/pvz-portable"
+    mkdir -p "${pkgdir}/usr/share/pvz-mod"
+    install -Dm644 "main.pak" "${pkgdir}/usr/share/pvz-mod/main.pak"
+    cp -r "properties" "${pkgdir}/usr/share/pvz-mod"
 
-    install -Dm755 "build/pvz-portable" "${pkgdir}/usr/share/pvz-portable/pvz-portable"
-    install -Dm755 "pvz-portable.sh" "${pkgdir}/usr/bin/pvz-portable"
+    install -Dm755 "build/pvz-mod" "${pkgdir}/usr/share/pvz-mod/pvz-mod"
+    install -Dm755 "pvz-mod.sh" "${pkgdir}/usr/bin/pvz-mod"
 
     install -Dm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     install -Dm644 "${pkgname}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
-    install -Dm644 "io.github.wszqkzqk.pvz-portable.desktop" "${pkgdir}/usr/share/applications/io.github.wszqkzqk.pvz-portable.desktop"
-    install -Dm644 "${pkgname}/icon.png" "${pkgdir}/usr/share/pixmaps/io.github.wszqkzqk.pvz-portable.png"
+    install -Dm644 "allen98637.pvz-mod.desktop" "${pkgdir}/usr/share/applications/allen98637.pvz-mod.desktop"
+    install -Dm644 "${pkgname}/icon.png" "${pkgdir}/usr/share/pixmaps/allen98637.pvz-mod.png"
 }

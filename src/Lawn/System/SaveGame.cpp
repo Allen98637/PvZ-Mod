@@ -969,6 +969,7 @@ static void SyncProjectileTailPortable(PortableSaveContext& theContext, Projecti
 	theContext.SyncInt32(theProjectile.mAnimTicksPerFrame);
 	SyncEnum32(theContext, theProjectile.mMotionType);
 	SyncEnum32(theContext, theProjectile.mProjectileType);
+	theContext.SyncBool(theProjectile.mPlantSide);
 	theContext.SyncInt32(theProjectile.mProjectileAge);
 	theContext.SyncInt32(theProjectile.mClickBackoffCounter);
 	theContext.SyncFloat(theProjectile.mRotation);
@@ -979,7 +980,10 @@ static void SyncProjectileTailPortable(PortableSaveContext& theContext, Projecti
 	SyncEnum32(theContext, theProjectile.mAttachmentID);
 	theContext.SyncFloat(theProjectile.mCobTargetX);
 	theContext.SyncInt32(theProjectile.mCobTargetRow);
-	SyncEnumU32(theContext, theProjectile.mTargetZombieID);
+	theContext.SyncBool(theProjectile.mTargetID.mPlant);
+	SyncEnumU32(theContext, theProjectile.mTargetID.mID);
+	theContext.SyncInt32(theProjectile.mTargetX);
+	theContext.SyncInt32(theProjectile.mTargetY);
 	theContext.SyncInt32(theProjectile.mLastPortalX);
 }
 

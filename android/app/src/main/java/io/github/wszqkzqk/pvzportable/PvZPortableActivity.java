@@ -19,7 +19,7 @@
  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.wszqkzqk.pvzportable;
+package allen98637.pvzmod;
 
 import android.content.Intent;
 import android.os.Build;
@@ -35,8 +35,8 @@ import org.libsdl.app.SDLActivity;
 
 import java.io.File;
 
-public class PvZPortableActivity extends SDLActivity {
-    private static final String TAG = "PvZPortable";
+public class PvZModActivity extends SDLActivity {
+    private static final String TAG = "PvZMod";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

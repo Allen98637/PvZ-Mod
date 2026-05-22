@@ -764,6 +764,9 @@ enum ParticleEffect : int32_t
     PARTICLE_UMBRELLA_REFLECT_WINTERMELON,
     PARTICLE_UMBRELLA_REFLECT_CABBAGE2,
     PARTICLE_UMBRELLA_REFLECT_MELON2,
+    PARTICLE_FUMECLOUD2,
+    PARTICLE_PUFFSHROOM_MUZZLE2,
+    PARTICLE_SNOWPEA_PUFF2,
     NUM_PARTICLES
 };
 enum PlantPriority : int32_t
@@ -1429,6 +1432,7 @@ enum ZombieType : int32_t
     ZOMBIE_CABBAGE_HEAD,
     ZOMBIE_MELON_HEAD,
     ZOMBIE_SNOWPEA_HEAD,
+    ZOMBIE_HYPNO_HEAD,
     NUM_ZOMBIE_TYPES,
     ZOMBIE_CACHED_POLEVAULTER_WITH_POLE, 
     NUM_CACHED_ZOMBIE_TYPES
@@ -1468,3 +1472,8 @@ enum ParticleSystemID  : uint32_t { PARTICLESYSTEMID_NULL };
 enum PlantID           : uint32_t { PLANTID_NULL };
 enum ReanimationID     : uint32_t { REANIMATIONID_NULL };
 enum ZombieID          : uint32_t { ZOMBIEID_NULL };
+
+struct POZID{
+    bool        mPlant;
+    ZombieID    mID;
+};

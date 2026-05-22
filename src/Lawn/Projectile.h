@@ -26,8 +26,7 @@
 #include "../ConstEnums.h"
 #include "GameObject.h"
 
-class Plant;
-class Zombie;
+class PlantOrZombie;
 namespace Sexy
 {
     class Graphics;
@@ -42,25 +41,6 @@ public:
     int32_t                 mDamage;
 };
 extern ProjectileDefinition gProjectileDefinition[NUM_PROJECTILES];
-
-class PlantOrZombie{
-    public:
-        Plant*      mPlant;
-        Zombie*     mZombie;
-
-    public:
-        PlantOrZombie(){mPlant = nullptr; mZombie = nullptr;}
-        
-        bool                IsPlant(){return mPlant;}
-        bool                IsZombie(){return mZombie;}
-        bool                operator==(const Plant* daP) const {return daP == mPlant;}
-        bool                operator==(const Zombie* daZ) const {return daZ == mZombie;}
-        bool                operator==(std::nullptr_t) const noexcept {return !mPlant && !mZombie;}
-        PlantOrZombie&      operator=(Plant* thePlant) noexcept {mPlant = thePlant; mZombie = nullptr; return *this;}
-        PlantOrZombie&      operator=(Zombie* theZombie) noexcept {mZombie = theZombie; mPlant = nullptr; return *this;}
-        explicit operator   bool() const {return mPlant || mZombie;}
-    }
-};
 
 class Projectile : public GameObject
 {
@@ -80,6 +60,7 @@ public:
     int32_t                 mAnimTicksPerFrame;
     ProjectileMotion        mMotionType;
     ProjectileType          mProjectileType;
+    bool                    mPlantSide;
     int32_t                 mProjectileAge;
     int32_t                 mClickBackoffCounter;
     float                   mRotation;
@@ -91,9 +72,9 @@ public:
     ParticleEffect          mUmbrellaParticle;
     float                   mCobTargetX;
     int32_t                 mCobTargetRow;
-    ZombieID                mTargetZombieID;
-    int32_t                 mTargetZombieX;
-    int32_t                 mTargetZombieY;
+    POZID                   mTargetID;
+    int32_t                 mTargetX;
+    int32_t                 mTargetY;
     int32_t                 mLastPortalX;
 
 public:
@@ -105,29 +86,25 @@ public:
     void                    Draw(Graphics* g);
     void                    DrawShadow(Graphics* g);
     void                    Die();
-    void                    DoImpact(Zombie* theZombie);
-    void                    DoImpactPlant(Plant* thePlant);
+    void                    DoImpact(PlantOrZombie theEnemy);
     void                    UpdateMotion();
     void                    CheckForCollision();
-    Zombie*                 FindCollisionTarget();
+    PlantOrZombie          FindCollisionTarget();
     void                    UpdateLobMotion();
     void                    CheckForHighGround();
     bool                    CantHitHighGround();
-    void                    DoSplashDamage(Zombie* theZombie);
-    void                    DoSplashDamagePlant(Plant* thePlant);
+    void                    DoSplashDamage(PlantOrZombie theEnemy);
     ProjectileDefinition&   GetProjectileDef();
-    unsigned int            GetDamageFlags(Zombie* theZombie/* = nullptr*/);
+    unsigned int            GetDamageFlags(PlantOrZombie theEnemy);
     Rect                    GetProjectileRect();
     void                    UpdateNormalMotion();
-    Zombie*                 UpdateTargetZombie();
-    Plant*                  FindCollisionTargetPlant();
+    void                    InitSpeed();
+    PlantOrZombie           UpdateTargetZombie();
     void                    ConvertToFireball(int theGridX);
     void                    ConvertToPea(int theGridX);
-    bool                    IsSplashDamage(Zombie* theZombie/* = nullptr*/);
-    bool                    IsSplashDamagePlant(Plant* thePlant/* = nullptr*/);
-    void                    PlayImpactSound(Zombie* theZombie);
-    bool                    IsZombieHitBySplash(Zombie* theZombie);
-    bool                    IsPlantHitBySplash(Plant* theZombie);
+    bool                    IsSplashDamage(PlantOrZombie theEnemy);
+    void                    PlayImpactSound(PlantOrZombie theEnemy);
+    bool                    IsHitBySplash(PlantOrZombie theEnemy);
     bool                    PeaAboutToHitTorchwood();
     bool                    IsZombieProjectile();
 

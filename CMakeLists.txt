@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5...4.0)
 
-project(pvz-portable LANGUAGES C CXX ASM)
+project(pvz-mod LANGUAGES C CXX ASM)
 
 option(BUILD_STATIC "Static link for a standalone exe (Windows, non-MSVC)" OFF)
 if(BUILD_STATIC)
@@ -187,41 +187,41 @@ endif()
 
 # Android requires a shared library loaded by SDLActivity; other platforms use an executable.
 if(ANDROID)
-	add_library(pvz-portable SHARED ${SOURCES})
+	add_library(pvz-mod SHARED ${SOURCES})
 elseif(IOS)
-	add_executable(pvz-portable MACOSX_BUNDLE ${SOURCES})
+	add_executable(pvz-mod MACOSX_BUNDLE ${SOURCES})
 else()
-	add_executable(pvz-portable ${SOURCES})
+	add_executable(pvz-mod ${SOURCES})
 endif()
 
-target_include_directories(pvz-portable PRIVATE
+target_include_directories(pvz-mod PRIVATE
 	${PLAT_INCLUDES}
 	${PROJECT_SOURCE_DIR}/src
 	${PROJECT_SOURCE_DIR}/src/SexyAppFramework
 	${PROJECT_SOURCE_DIR}/src/SexyAppFramework/sound/SDL-Mixer-X/include
 	${SDL2_INCLUDE_DIRS}
 )
-target_compile_definitions(pvz-portable PRIVATE
+target_compile_definitions(pvz-mod PRIVATE
 	$<$<BOOL:${PVZ_DEBUG}>:_PVZ_DEBUG>
 	$<$<BOOL:${LIMBO_PAGE}>:_PVZ_LIMBO_PAGE>
 	$<$<BOOL:${DO_FIX_BUGS}>:DO_FIX_BUGS>
 )
-target_compile_features(pvz-portable PRIVATE cxx_std_20)
+target_compile_features(pvz-mod PRIVATE cxx_std_20)
 
 if (LOW_MEMORY)
-	target_compile_definitions(pvz-portable PRIVATE LOW_MEMORY)
+	target_compile_definitions(pvz-mod PRIVATE LOW_MEMORY)
 endif()
-target_compile_definitions(pvz-portable PRIVATE IMG_DOWNSCALE=${DOWNSCALE_COUNT})
+target_compile_definitions(pvz-mod PRIVATE IMG_DOWNSCALE=${DOWNSCALE_COUNT})
 
 if(EMSCRIPTEN)
-	set_property(TARGET pvz-portable APPEND PROPERTY LINK_DEPENDS
+	set_property(TARGET pvz-mod APPEND PROPERTY LINK_DEPENDS
 		"${CMAKE_CURRENT_SOURCE_DIR}/wasm/shell.html"
 	)
-	target_link_libraries(pvz-portable PRIVATE
+	target_link_libraries(pvz-mod PRIVATE
 		SDL2_mixer_ext_Static
 		${OPENMPT_LIB}
 	)
-	target_link_options(pvz-portable PRIVATE
+	target_link_options(pvz-mod PRIVATE
 		"SHELL:-sUSE_SDL=2"
 		"SHELL:-sUSE_ZLIB=1"
 		"SHELL:-sUSE_LIBPNG=1"
@@ -238,9 +238,9 @@ if(EMSCRIPTEN)
 		"SHELL:-lidbfs.js"
 		"SHELL:--shell-file ${CMAKE_CURRENT_SOURCE_DIR}/wasm/shell.html"
 	)
-	set_target_properties(pvz-portable PROPERTIES SUFFIX ".html")
+	set_target_properties(pvz-mod PROPERTIES SUFFIX ".html")
 else()
-	target_link_libraries(pvz-portable PRIVATE
+	target_link_libraries(pvz-mod PRIVATE
 		SDL2_mixer_ext_Static 
 		${OPENMPT_LIB} 
 		${MPG123_LIB} 
@@ -257,10 +257,10 @@ endif()
 
 if (WIN32)
 	if(MSVC)
-		target_compile_options(pvz-portable PRIVATE /utf-8)
+		target_compile_options(pvz-mod PRIVATE /utf-8)
 	endif()
 
-	target_sources(pvz-portable PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/SexyAppFramework/LawnProject.rc)
+	target_sources(pvz-mod PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/SexyAppFramework/LawnProject.rc)
 
 	set_source_files_properties(
 		${CMAKE_CURRENT_SOURCE_DIR}/src/SexyAppFramework/LawnProject.rc
@@ -269,48 +269,48 @@ if (WIN32)
 			OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/icon.ico"
 	)
 
-	target_link_libraries(pvz-portable PRIVATE ws2_32 user32 gdi32 winmm imm32 shlwapi)
-	target_compile_definitions(pvz-portable PRIVATE WINDOWS)
+	target_link_libraries(pvz-mod PRIVATE ws2_32 user32 gdi32 winmm imm32 shlwapi)
+	target_compile_definitions(pvz-mod PRIVATE WINDOWS)
 
 	if(NOT CONSOLE)
 		if(MSVC)
-			set_target_properties(pvz-portable PROPERTIES WIN32_EXECUTABLE TRUE)
+			set_target_properties(pvz-mod PROPERTIES WIN32_EXECUTABLE TRUE)
 		else()
-			target_link_options(pvz-portable PRIVATE -mwindows)
+			target_link_options(pvz-mod PRIVATE -mwindows)
 		endif()
 	endif()
 elseif (NINTENDO_SWITCH)
-	target_link_libraries(pvz-portable PRIVATE GLESv2 EGL glapi drm_nouveau)
+	target_link_libraries(pvz-mod PRIVATE GLESv2 EGL glapi drm_nouveau)
 
-	nx_generate_nacp(pvz-portable.nacp
-		NAME "PvZ Portable"
-		AUTHOR "wszqkzqk, etc., a community-driven port"
+	nx_generate_nacp(pvz-mod.nacp
+		NAME "PvZ Mod"
+		AUTHOR "allen98637, wszqkzqk, etc., a community-driven port"
 		VERSION "0.1"
 	)
 
-	nx_create_nro(pvz-portable
-		NACP pvz-portable.nacp
+	nx_create_nro(pvz-mod
+		NACP pvz-mod.nacp
 		ICON ${CMAKE_CURRENT_SOURCE_DIR}/icon-switch.jpg
 	)
 elseif (NINTENDO_3DS)
-	target_link_libraries(pvz-portable PRIVATE citro3d shaders)
+	target_link_libraries(pvz-mod PRIVATE citro3d shaders)
 
-	ctr_generate_smdh(pvz-portable.smdh
-		NAME "PvZ Portable"
+	ctr_generate_smdh(pvz-mod.smdh
+		NAME "PvZ Mod"
 		DESCRIPTION "A community-driven re-implementation of Plants vs. Zombies GOTY Edition"
-		AUTHOR "wszqkzqk, etc., a community-driven port"
+		AUTHOR "allen98637, wszqkzqk, etc., a community-driven port"
 		VERSION "0.1"
 		ICON "${CMAKE_CURRENT_SOURCE_DIR}/icon-3ds.png"
 	)
 
-	ctr_create_3dsx(pvz-portable
-		SMDH pvz-portable.smdh
+	ctr_create_3dsx(pvz-mod
+		SMDH pvz-mod.smdh
 	)
 elseif (ANDROID)
-	target_link_libraries(pvz-portable PRIVATE GLESv2 EGL android log)
-	set_target_properties(pvz-portable PROPERTIES OUTPUT_NAME "main")
+	target_link_libraries(pvz-mod PRIVATE GLESv2 EGL android log)
+	set_target_properties(pvz-mod PROPERTIES OUTPUT_NAME "main")
 elseif (IOS)
-	target_link_libraries(pvz-portable PRIVATE
+	target_link_libraries(pvz-mod PRIVATE
 		"-framework Foundation"
 		"-framework UIKit"
 		"-framework OpenGLES"
@@ -323,30 +323,30 @@ elseif (IOS)
 		"-framework Metal"
 	)
 
-	set_target_properties(pvz-portable PROPERTIES
+	set_target_properties(pvz-mod PROPERTIES
 		MACOSX_BUNDLE TRUE
-		MACOSX_BUNDLE_GUI_IDENTIFIER "io.github.wszqkzqk.pvz-portable"
-		MACOSX_BUNDLE_BUNDLE_NAME "PvZ Portable"
+		MACOSX_BUNDLE_GUI_IDENTIFIER "allen98637.pvz-mod"
+		MACOSX_BUNDLE_BUNDLE_NAME "PvZ Mod"
 		MACOSX_BUNDLE_BUNDLE_VERSION "0.1"
 		MACOSX_BUNDLE_SHORT_VERSION_STRING "0.1"
 		MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/ios/Info.plist.in"
 		XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
 		XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "15.0"
-		XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "io.github.wszqkzqk.pvz-portable"
+		XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "allen98637.pvz-mod"
 		XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "-"
 		XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
 	)
 
 	# Add launch storyboard to the bundle
 	if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ios/LaunchScreen.storyboard")
-		target_sources(pvz-portable PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ios/LaunchScreen.storyboard")
+		target_sources(pvz-mod PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ios/LaunchScreen.storyboard")
 		set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/ios/LaunchScreen.storyboard"
 			PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 	endif()
 
 	# Add asset catalog (app icon)
 	if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ios/Assets.xcassets")
-		target_sources(pvz-portable PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ios/Assets.xcassets")
+		target_sources(pvz-mod PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ios/Assets.xcassets")
 		set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/ios/Assets.xcassets"
 			PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 	endif()

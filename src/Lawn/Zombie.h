@@ -98,6 +98,7 @@ public:
 };
 
 class Plant;
+class PlantOrZombie;
 class Reanimation;
 class TodParticleSystem;
 class Zombie : public GameObject
@@ -203,6 +204,7 @@ public:
     void                            CheckIfPreyCaught();
     void                            EatZombie(Zombie* theZombie);
     void                            EatPlant(Plant* thePlant);
+    int                             DamagePerEat();
     void                            Update();
     void                            DieNoLoot();
     /*inline*/ void                 DieWithLoot();
@@ -430,10 +432,10 @@ public:
     static /*inline*/ bool			IsZombotany(ZombieType theZombieType);
     void                            UpdateZombieUmbrellaHead();
     void                            DoSpecial();
-    Plant*                          FindLobZombotanyTarget();
+    PlantOrZombie                   FindLobZombotanyTarget();
     void                            UpdateZombieCabbageHead();
     void                            UpdateZombieMelonHead();
-    Projectile*                     CreateLobProjectile(Plant* thePlant, ProjectileType aType, float aOriginX, float aOriginY);
+    Projectile*                     CreateLobProjectile(PlantOrZombie thePlant, ProjectileType aType, float aOriginX, float aOriginY);
     void                            UpdateHeadReanim(const char* theTrackName, ReanimLoopType theLoopType, int theBlendTime, float theAnimeRate);
     void                            UpdateZombieSnowPeaHead();
 };

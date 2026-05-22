@@ -55,27 +55,27 @@ This project supports the following platforms (including but not limited to):
 | macOS           | Executable dir (resources); per-user app-data for writable files | Works                                                                                  |
 | BSD Family      | Executable dir (resources); per-user app-data for writable files | Works (verified at least on FreeBSD)                                                                               |
 | Haiku           | Executable dir (resources); per-user app-data for writable files | Partially works: no music                                                              |
-| Android         | `Android/data/io.github.wszqkzqk.pvzportable/files/` | Works                                                                                  |
+| Android         | `Android/data/allen98637.pvzmod/files/` | Works                                                                                  |
 | iOS / iPadOS    | App Documents directory (Files app) | Works (sideload only; unsigned IPA)                                                    |
 | Web (WASM)      | Browser IndexedDB (saves); resources uploaded at runtime    | Works (requires a HTTP server) |
-| Nintendo Switch | sdmc:/switch/PvZPortable | Works on real hardware. Kenji-NX crashes on boot.                           |
-| Nintendo 3DS    | sdmc:/3ds/PvZPortable    | Might not have enough memory for Old 3DS and barely work on New 3DS (discontionued) |
+| Nintendo Switch | sdmc:/switch/PvZMod | Works on real hardware. Kenji-NX crashes on boot.                           |
+| Nintendo 3DS    | sdmc:/3ds/PvZMod    | Might not have enough memory for Old 3DS and barely work on New 3DS (discontionued) |
 
 To play the game, you need the game data from PvZ GOTY. Place `main.pak` and the `properties/` folder next to the `pvz-portable` executable (the game will search for resources relative to the executable's directory). You can also use extracted data instead of `main.pak` if you prefer.
 
 Note about writable data and caches:
 
 - The game will read resources (like `main.pak` and `properties/`) from the executable directory by default, so you can launch the binary from any working directory and it will still find them.
-- Per-user writable files (settings, savegames, compiled caches, screenshots) are stored in the **OS-recommended application data path**. With the current build these are under `io.github.wszqkzqk/PvZPortable` and include subfolders such as:
+- Per-user writable files (settings, savegames, compiled caches, screenshots) are stored in the **OS-recommended application data path**. With the current build these are under `allen98637/PvZMod` and include subfolders such as:
   - `userdata/` — Player save files.
   - `cache64/` if you use the 64-bit version or `cache32/` if you use the 32-bit version — Compiled binary caches (reanimation / compiled definitions). These caches are **local startup** artifacts (**native layout**), not portable files; when cache/schema checks fail, the game transparently recompiles from source data.
   - `registry.regemu` — Settings/registry emulation.
 
 Examples:
 
-- Linux: `~/.local/share/io.github.wszqkzqk/PvZPortable/`
-- Windows: `%APPDATA%\io.github.wszqkzqk\PvZPortable\`
-- macOS: `~/Library/Application Support/io.github.wszqkzqk/PvZPortable/`
+- Linux: `~/.local/share/allen98637/PvZMod/`
+- Windows: `%APPDATA%\allen98637\PvZMod\`
+- macOS: `~/Library/Application Support/allen98637/PvZMod/`
 
 You can customize these paths via command-line parameters:
 - `-resdir="<path>"`: Set the **resource directory** (where `main.pak` and `properties/` are located). This only affects where the game looks for resources, not where it saves data.
@@ -103,7 +103,7 @@ Long-press the app icon on your launcher to access the **Manage Data** shortcut,
 #### Notes
 
 - Requires Android 9.0+. The prebuilt APK is arm64-v8a only, but **you can build for other architectures** if needed.
-- All data is stored in `Android/data/io.github.wszqkzqk.pvzportable/files/`. No extra storage permissions are needed — the app uses the **Storage Access Framework (SAF)** for all imports and exports.
+- All data is stored in `Android/data/allen98637.pvzmod/files/`. No extra storage permissions are needed — the app uses the **Storage Access Framework (SAF)** for all imports and exports.
 - Save data is interchangeable with desktop versions. See the [save data section](#save-data-compatibility-user-data-and-mid-level-saves) chapter for details.
 - The Android port is part of this project's **cross-platform porting research**. It preserves the original game's 4:3 aspect ratio and mouse-based input model — **no touch-screen-specific UI optimizations have been made**. SDL2 automatically maps touch events to mouse input, so the game is playable but not designed for mobile ergonomics.
 
@@ -299,15 +299,15 @@ There's a Python script `scripts/pvzp-v4-converter.py` to inspect and modify `.v
 ```bash
 # Modify these paths as needed
 # View basic info
-python scripts/pvzp-v4-converter.py info ~/.local/io.github.wszqkzqk/PvZPortable/userdata/game1_13.v4
+python scripts/pvzp-v4-converter.py info ~/.local/allen98637/PvZMod/userdata/game1_13.v4
 
 # Export to YAML for editing
-python scripts/pvzp-v4-converter.py export ~/.local/io.github.wszqkzqk/PvZPortable/userdata/game1_13.v4 level.yaml
+python scripts/pvzp-v4-converter.py export ~/.local/allen98637/PvZMod/userdata/game1_13.v4 level.yaml
 
 # Import back to savegame
 # **BACKUP** your original .v4 file fist!
-mv ~/.local/io.github.wszqkzqk/PvZPortable/userdata/game1_13.v4 ~/.local/io.github.wszqkzqk/PvZPortable/userdata/game1_13.v4.bak
-python scripts/pvzp-v4-converter.py import level.yaml ~/.local/io.github.wszqkzqk/PvZPortable/userdata/game1_13.v4
+mv ~/.local/allen98637/PvZMod/userdata/game1_13.v4 ~/.local/allen98637/PvZMod/userdata/game1_13.v4.bak
+python scripts/pvzp-v4-converter.py import level.yaml ~/.local/allen98637/PvZMod/userdata/game1_13.v4
 ```
 
 ## Contributing

@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=PvZ Portable
+Name=PvZ Mod
 Comment=Community reimplementation of Plants vs. Zombies GOTY — 100% authentic PvZ experience
-Exec=/usr/bin/pvz-portable %U
-Icon=io.github.wszqkzqk.pvz-portable
+Exec=/usr/bin/pvz-mod %U
+Icon=allen98637.pvz-mod
 Terminal=false
 Type=Application
 Categories=Game;Application;

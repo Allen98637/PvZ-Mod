@@ -118,6 +118,28 @@ struct PlantsOnLawn
 	Plant*							mNormalPlant;
 };
 
+
+class PlantOrZombie{
+    public:
+        Plant*      mPlant;
+        Zombie*     mZombie;
+
+    public:
+        PlantOrZombie(){mPlant = nullptr; mZombie = nullptr;}
+        PlantOrZombie(Plant* daP){mPlant = daP; mZombie = nullptr;}
+        PlantOrZombie(Zombie* daZ){mPlant = nullptr; mZombie = daZ;}
+        
+        bool                IsPlant(){return mPlant;}
+        bool                IsZombie(){return mZombie;}
+        bool                operator==(const Plant* daP) const {return daP == mPlant;}
+        bool                operator==(const Zombie* daZ) const {return daZ == mZombie;}
+        bool                operator==(std::nullptr_t) const noexcept {return !mPlant && !mZombie;}
+        PlantOrZombie&      operator=(Plant* thePlant) noexcept {mPlant = thePlant; mZombie = nullptr; return *this;}
+        PlantOrZombie&      operator=(Zombie* theZombie) noexcept {mZombie = theZombie; mPlant = nullptr; return *this;}
+        PlantOrZombie&      operator=(std::nullptr_t) noexcept {mZombie = nullptr; mPlant = nullptr; return *this;}
+        explicit operator   bool() const {return mPlant || mZombie;}
+};
+
 struct BungeeDropGrid
 {
 	TodWeightedGridArray			mGridArray[MAX_GRID_SIZE_X * MAX_GRID_SIZE_Y];
@@ -364,6 +386,8 @@ public:
 	/*inline*/ ZombieID				ZombieGetID(Zombie* theZombie);
 	/*inline*/ Zombie*				ZombieGet(ZombieID theZombieID);
 	/*inline*/ Zombie*				ZombieTryToGet(ZombieID theZombieID);
+	/*inline*/ POZID				POZGetID(PlantOrZombie theTarget);
+	/*inline*/ PlantOrZombie		POZTryToGet(POZID thePOZID);
 	void							DrawDebugObjectRects(Graphics* g);
 	void							UpdateIce();
 	/*inline*/ int					GetIceZPos(int theRow);
@@ -387,7 +411,6 @@ public:
 	void							DrawUIBottom(Graphics* g);
 	void							DrawUITop(Graphics* g);
 	Zombie*							ZombieHitTest(int theMouseX, int theMouseY);
-	void							KillAllPlantsInRadius(int theX, int theY, int theRadius);
 	Plant*							GetPumpkinAt(int theGridX, int theGridY);
 	Plant*							GetFlowerPotAt(int theGridX, int theGridY);
 	Plant*							GetWaterPotAt(int theGridX, int theGridY);
@@ -416,7 +439,7 @@ public:
 	bool							BungeeIsTargetingCell(int theGridX, int theGridY);
 	/*inline*/ int					PlantingPixelToGridX(int theX, int theY, SeedType theSeedType);
 	/*inline*/ int					PlantingPixelToGridY(int theX, int theY, SeedType theSeedType);
-	Plant*							FindUmbrellaPlant(int theGridX, int theGridY);
+	Plant*							FindUmbrellaPlant(int theGridX, int theGridY, bool mindControlled);
 	Zombie*							FindUmbrellaZombie(Rect& theRect, int theRow, bool mindControlled);
 	void							SetTutorialState(TutorialState theTutorialState);
 	void							DoFwoosh(int theRow);

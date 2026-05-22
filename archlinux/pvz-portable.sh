@@ -5,4 +5,4 @@ if [ -n "$WAYLAND_DISPLAY" ] && [ -z "$SDL_VIDEODRIVER" ]; then
     export SDL_VIDEODRIVER="wayland,x11"
 fi
 
-exec /usr/share/pvz-portable/pvz-portable "$@"
+exec /usr/share/pvz-mod/pvz-mod "$@"

@@ -150,8 +150,8 @@ LawnApp::LawnApp()
 	mSfxVolume = 0.5525;
 	mAutoStartLoadingThread = false;
 	mDebugKeysEnabled = false;
-	mProdName = "io.github.wszqkzqk.pvz-portable";
-	std::string aTitleName = "PvZ Portable";
+	mProdName = "allen98637.pvz-mod";
+	std::string aTitleName = "PvZ Mod";
 	mTitle = aTitleName;
 	mCustomCursorsEnabled = false;
 	mPlayerInfo = nullptr;

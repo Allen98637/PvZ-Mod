@@ -68,7 +68,7 @@ void Sexy::PrintF(const char *text, ...)
 #if defined(__SWITCH__) || defined(__3DS__)
 	svcOutputDebugString(buffer.c_str(), buffer.size());
 #elif defined(__ANDROID__) && !defined(__TERMUX__)
-	__android_log_write(ANDROID_LOG_INFO, "PvZPortable", buffer.c_str());
+	__android_log_write(ANDROID_LOG_INFO, "PvZMod", buffer.c_str());
 #endif
 
 	std::fwrite(buffer.data(), 1, buffer.size(), stdout);

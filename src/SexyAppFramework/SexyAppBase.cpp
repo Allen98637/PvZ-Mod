@@ -173,9 +173,9 @@ SexyAppBase::SexyAppBase()
 #endif
 
 #ifdef __SWITCH__
-	mResourceDir = "sdmc:/switch/PvZPortable/";
+	mResourceDir = "sdmc:/switch/PvZMod/";
 #elif defined(__3DS__)
-	mResourceDir = "sdmc:/3ds/PvZPortable/";
+	mResourceDir = "sdmc:/3ds/PvZMod/";
 #elif defined(__ANDROID__) && !defined(__TERMUX__)
 	const char* aExtPath = SDL_AndroidGetExternalStoragePath();
 	if (aExtPath)
@@ -3332,6 +3332,7 @@ void SexyAppBase::Init()
 	}
 
 	gPakInterface->AddPakFile(GetResourcePath("main.pak"));
+	gPakInterface->AddPakFile(GetResourcePath("extra.pak"));
 
 	InitPropertiesHook();
 
@@ -3357,7 +3358,7 @@ void SexyAppBase::Init()
 	}
 #elif !defined(__SWITCH__) && !defined(__3DS__)
 	{
-		char* aPrefPath = SDL_GetPrefPath("io.github.wszqkzqk", "PvZPortable"); // Avoid conflict with official Plants vs. Zombies
+		char* aPrefPath = SDL_GetPrefPath("allen98637", "PvZMod"); // Avoid conflict with official Plants vs. Zombies
 		if (aPrefPath)
 		{
 			SetAppDataFolder(aPrefPath);
