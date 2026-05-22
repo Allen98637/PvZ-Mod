@@ -652,7 +652,6 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         // @Patoke: add scaling for new assets
         if (!IsOnBoard())
         {
-            // @Patoke: oops
             PlayZombieReanim("anim_armraise", ReanimLoopType::REANIM_LOOP, 0, 12.0f);
         }
         else
@@ -684,7 +683,6 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         break;
 
     case ZombieType::ZOMBIE_BACKUP_DANCER:
-        // @Patoke: add scaling for new assets
         mScaleZombie = 0.8f;
         if (!IsOnBoard())
         {
@@ -4087,14 +4085,12 @@ void Zombie::DropHead(unsigned int theDamageFlags)
     {
         if (mZombieType == ZombieType::ZOMBIE_DANCER)
         {
-            // @Patoke: added new assets
             ReanimShowPrefix("Zombie_disco_chops", RENDER_GROUP_HIDDEN);
             ReanimShowPrefix("Zombie_disco_glasses", RENDER_GROUP_HIDDEN);
             aParticle->OverrideImage(nullptr, IMAGE_ZOMBIEDANCERHEAD);
         }
         else if (mZombieType == ZombieType::ZOMBIE_BACKUP_DANCER)
         {
-            // @Patoke: added new assets
             ReanimShowPrefix("Zombie_disco_chops", RENDER_GROUP_HIDDEN);
             ReanimShowPrefix("Zombie_backup_stash", RENDER_GROUP_HIDDEN);
             aParticle->OverrideImage(nullptr, IMAGE_ZOMBIEBACKUPDANCERHEAD);

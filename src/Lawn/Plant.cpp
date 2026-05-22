@@ -4546,6 +4546,13 @@ void Plant::DrawSeedType(Graphics* g, SeedType theSeedType, SeedType theImitater
     if (Challenge::IsZombieSeedType(aSeedType))
     {
         ZombieType aZombieType = Challenge::IZombieSeedTypeToZombieType(aSeedType);
+        if (aZombieType == ZombieType::ZOMBIE_DANCER)
+        {
+            aSeedG.mScaleX *= 0.8f;
+            aSeedG.mScaleY *= 0.8f;
+            aOffsetX = 20.0f;
+            aOffsetY = 42.0f;
+        }
         gLawnApp->mReanimatorCache->DrawCachedZombie(&aSeedG, thePosX + aOffsetX, thePosY + aOffsetY, aZombieType);
     }
     else
