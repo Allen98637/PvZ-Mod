@@ -719,7 +719,8 @@ void Board::PickZombieWaves()
 			int aPlainZombiesNum = std::min(aZombiePoints, 8);
 			aZombiePoints *= 2.5f;
 
-			if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2 && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3)
+			if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2 && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3
+			 && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4)
 			{
 				for (int _i = 0; _i < aPlainZombiesNum; _i++)
 				{
@@ -1010,6 +1011,7 @@ void Board::PickBackground()
 	case GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_8:
 	case GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_9:
 	case GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS:
+	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3:
 		mBackground = BackgroundType::BACKGROUND_2_NIGHT;
 		break;
 
@@ -1043,7 +1045,7 @@ void Board::PickBackground()
 	case GameMode::GAMEMODE_CHALLENGE_POGO_PARTY:
 	case GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY:
 	case GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ:
-	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3:
+	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4:
 		mBackground = BackgroundType::BACKGROUND_5_ROOF;
 		break;
 
@@ -2523,6 +2525,12 @@ ZombieType Board::PickGraveRisingZombieType()
 	TodWeightedArray aZombieWeightArray[ZombieType::NUM_ZOMBIE_TYPES];
 	int aCount = 2;
 	if(mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3){
+		aZombieWeightArray[0].mItem = ZombieType::ZOMBIE_PEA_HEAD;
+		aZombieWeightArray[0].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_PEA_HEAD).mPickWeight;
+		aZombieWeightArray[1].mItem = ZombieType::ZOMBIE_WALLNUT_HEAD;
+		aZombieWeightArray[1].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_WALLNUT_HEAD).mPickWeight;
+	}
+	else if(mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4){
 		aZombieWeightArray[0].mItem = ZombieType::ZOMBIE_CABBAGE_HEAD;
 		aZombieWeightArray[0].mWeight = GetZombieDefinition(ZombieType::ZOMBIE_CABBAGE_HEAD).mPickWeight;
 		aZombieWeightArray[1].mItem = ZombieType::ZOMBIE_WALLNUT_HEAD;

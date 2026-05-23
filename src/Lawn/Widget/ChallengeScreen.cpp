@@ -125,6 +125,7 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_14,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  3,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_15,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  4,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  4,  "[WAR_AND_PEAS_3]" },
+	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   3,  0,  "[WAR_AND_PEAS_4]" },
 };
 
 // GOTY @Patoke: 0x430810
@@ -369,6 +370,8 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 			int aNumTrophies = mApp->GetNumTrophies(aDef.mPage);
 			if (aDef.mPage == CHALLENGE_PAGE_LIMBO)
 			{
+				if(aDef.mChallengeMode == GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2)
+					return mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE)?0:1;
 				return 0;
 			}
 			if (mApp->IsSurvivalEndless(aDef.mChallengeMode))
@@ -378,6 +381,9 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 			if (aDef.mPage == CHALLENGE_PAGE_SURVIVAL || aDef.mPage == CHALLENGE_PAGE_CHALLENGE)
 			{
 				aNumTrophies += 3;
+			}
+			else if(aDef.mPage == CHALLENGE_PAGE_CHALLENGE){
+				aNumTrophies += 3 + mApp->GetNumTrophies(CHALLENGE_PAGE_LIMBO);
 			}
 			else
 			{

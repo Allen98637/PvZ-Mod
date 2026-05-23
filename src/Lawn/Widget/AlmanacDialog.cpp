@@ -35,7 +35,7 @@
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "widget/WidgetManager.h"
 
-bool gZombieDefeated[NUM_ZOMBIE_TYPES] = { false };
+Rect gAlmanacRect(0, 81, 1080, 481);
 
 AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANAC, true, "Almanac", "", "", BUTTONS_NONE)
 {
@@ -99,6 +99,7 @@ AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANA
 	mZombieButton->Resize(487, 345, 210, 48);
 	mZombieButton->mDrawStoneButton = true;
 	mZombieButton->mParentWidget = this;
+	mScrollY = 0;
 
 	SetPage(ALMANAC_PAGE_INDEX);
 	if (!mApp->mBoard || !mApp->mBoard->mPaused)
@@ -212,6 +213,7 @@ void AlmanacDialog::SetPage(AlmanacPage thePage)
 			SetupZombie();
 		else return;
 
+		mScrollY = 0;
 		mIndexButton->mBtnNoDraw = false;
 		mPlantButton->mBtnNoDraw = true;
 		mZombieButton->mBtnNoDraw = true;
@@ -292,6 +294,7 @@ void AlmanacDialog::DrawPlants(Graphics* g)
 	TodDrawString(g, "[SUBURBAN_ALMANAC_PLANTS]", BOARD_WIDTH / 2, 48, Sexy::FONT_HOUSEOFTERROR20, Color(213, 159, 43), DrawStringJustification::DS_ALIGN_CENTER);
 
 	SeedType aSeedMouseOn = SeedHitTest(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY);
+	g->SetClipRect(gAlmanacRect);
 	for (SeedType aSeedType = SeedType::SEED_PEASHOOTER; aSeedType < NUM_ALMANAC_SEEDS; aSeedType = (SeedType)(aSeedType + 1))
 	{
 		int aPosX, aPosY;
@@ -336,6 +339,7 @@ void AlmanacDialog::DrawPlants(Graphics* g)
 			521, 107
 		);
 	}
+	g->ClearClipRect();
 	
 	if (mPlant)
 	{
@@ -366,6 +370,41 @@ void AlmanacDialog::DrawPlants(Graphics* g)
 	}
 }
 
+ZombieType gAlmanacZombieTypes[NUM_ALMANAC_ZOMBIES] = {
+    ZOMBIE_NORMAL,
+    ZOMBIE_FLAG,
+    ZOMBIE_TRAFFIC_CONE,
+    ZOMBIE_POLEVAULTER,
+    ZOMBIE_PAIL,
+    ZOMBIE_NEWSPAPER,
+    ZOMBIE_DOOR,
+    ZOMBIE_FOOTBALL,
+    ZOMBIE_DANCER,
+    ZOMBIE_BACKUP_DANCER,
+    ZOMBIE_DUCKY_TUBE,
+    ZOMBIE_SNORKEL,
+    ZOMBIE_ZAMBONI,
+    ZOMBIE_BOBSLED,
+    ZOMBIE_DOLPHIN_RIDER,
+    ZOMBIE_JACK_IN_THE_BOX,
+    ZOMBIE_BALLOON,
+    ZOMBIE_DIGGER,
+    ZOMBIE_POGO,
+    ZOMBIE_YETI,
+    ZOMBIE_BUNGEE,
+    ZOMBIE_LADDER,
+    ZOMBIE_CATAPULT,
+    ZOMBIE_GARGANTUAR,
+    ZOMBIE_IMP,
+    ZOMBIE_REDEYE_GARGANTUAR,
+    ZOMBIE_DOOR_PAIL,
+    ZOMBIE_GIGA_FOOTBALL,
+    ZOMBIE_JACKSON,
+    ZOMBIE_JACKSON_DANCER,
+    ZOMBIE_BLUEOON,
+    ZOMBIE_BOSS,
+};
+
 // GOTY @Patoke: 0x403DE0
 void AlmanacDialog::DrawZombies(Graphics* g)
 {
@@ -373,11 +412,12 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 	TodDrawString(g, "[SUBURBAN_ALMANAC_ZOMBIES]", BOARD_WIDTH / 2, 54, Sexy::FONT_DWARVENTODCRAFT24, Color(0, 196, 0), DS_ALIGN_CENTER);
 
 	ZombieType aZombieMouseOn = ZombieHitTest(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY);
+	g->SetClipRect(gAlmanacRect);
 	for (int i = 0; i < NUM_ALMANAC_ZOMBIES; i++)
 	{
-		ZombieType aZombieType = GetZombieType(i);
+		ZombieType aZombieType = gAlmanacZombieTypes[i];
 		int aPosX, aPosY;
-		GetZombiePosition(aZombieType, aPosX, aPosY);
+		GetZombiePosition(i, aPosX, aPosY);
 		if (aZombieType != ZombieType::ZOMBIE_INVALID)
 		{
 			if (!ZombieIsShown(aZombieType))
@@ -397,7 +437,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 
 				ZombieType aZombieTypeToDraw = aZombieType;
 				Graphics aZombieGraphics = Graphics(*g);
-				aZombieGraphics.SetClipRect(aPosX + 2, aPosY + 2, 72, 72);
+				aZombieGraphics.SetClipRect(gAlmanacRect.Intersection(Rect(aPosX + 2, aPosY + 2, 72, 72)));
 				aZombieGraphics.Translate(aPosX + 1, aPosY - 6);
 				aZombieGraphics.mScaleX = 0.5f;
 				aZombieGraphics.mScaleY = 0.5f;
@@ -410,10 +450,12 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 				case ZombieType::ZOMBIE_TRAFFIC_CONE:	aZombieGraphics.TranslateF(0, 12);	break;
 				case ZombieType::ZOMBIE_PAIL:			aZombieGraphics.TranslateF(0, 9);		break;
 				case ZombieType::ZOMBIE_FOOTBALL:		aZombieGraphics.TranslateF(-15, -1);	break;
+				case ZombieType::ZOMBIE_GIGA_FOOTBALL:		aZombieGraphics.TranslateF(-15, -1);	break;
 				case ZombieType::ZOMBIE_ZAMBONI:		aZombieGraphics.TranslateF(0, 3);		break;
 				case ZombieType::ZOMBIE_DOLPHIN_RIDER:	aZombieGraphics.TranslateF(-2, -10);	break;
 				case ZombieType::ZOMBIE_POGO:			aZombieGraphics.TranslateF(0, -3);	break;
 				case ZombieType::ZOMBIE_GARGANTUAR:		aZombieGraphics.TranslateF(15, 17);	break;
+				case ZombieType::ZOMBIE_REDEYE_GARGANTUAR:		aZombieGraphics.TranslateF(15, 17);	break;
 				case ZombieType::ZOMBIE_IMP:			aZombieGraphics.TranslateF(-8, -7);	break;
 				case ZombieType::ZOMBIE_BUNGEE:			aZombieGraphics.TranslateF(-4, 3);	break;
 				case ZombieType::ZOMBIE_DANCER:			aZombieGraphics.TranslateF(0, 15);	break;
@@ -446,6 +488,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 			}
 		}
 	}
+	g->ClearClipRect();
 
 	g->DrawImage(mZombie->mZombieType == ZombieType::ZOMBIE_ZAMBONI || mZombie->mZombieType == ZombieType::ZOMBIE_BOBSLED ?
 		Sexy::IMAGE_ALMANAC_GROUNDICE : Sexy::IMAGE_ALMANAC_GROUNDDAY, 518, 110);
@@ -458,8 +501,11 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 		{
 		case ZombieType::ZOMBIE_ZAMBONI:		aZombieGraphics.TranslateF(-30, 5);		break;
 		case ZombieType::ZOMBIE_GARGANTUAR:		aZombieGraphics.TranslateF(0, 40);		break;
+		case ZombieType::ZOMBIE_REDEYE_GARGANTUAR:		aZombieGraphics.TranslateF(0, 40);		break;
 		case ZombieType::ZOMBIE_FOOTBALL:		aZombieGraphics.TranslateF(-10, 0);		break;
+		case ZombieType::ZOMBIE_GIGA_FOOTBALL:		aZombieGraphics.TranslateF(-10, 0);		break;
 		case ZombieType::ZOMBIE_BALLOON:		aZombieGraphics.TranslateF(0, -20);		break;
+		case ZombieType::ZOMBIE_BLUEOON:		aZombieGraphics.TranslateF(0, -20);		break;
 		case ZombieType::ZOMBIE_BUNGEE:			aZombieGraphics.TranslateF(15, 0);		break;
 		case ZombieType::ZOMBIE_CATAPULT:		aZombieGraphics.TranslateF(-10, 0);		break;
 		case ZombieType::ZOMBIE_BOSS:			aZombieGraphics.TranslateF(-540, -175);	break;
@@ -536,12 +582,14 @@ void AlmanacDialog::Draw(Graphics* g)
 
 void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int& x, int& y)
 {
+	int aOrder = theSeedType;
+	if(theSeedType > SEED_IMITATER) aOrder -= 1;
 	if (theSeedType == SeedType::SEED_IMITATER)
 		x = 20, y = 23;
 	else
 	{
-		x = theSeedType % 8 * 52 + 26;
-		y = theSeedType / 8 * 78 + 92;
+		x = aOrder % 8 * 52 + 26;
+		y = aOrder / 8 * 78 + 92 + mScrollY;
 	}
 }
 
@@ -565,6 +613,11 @@ SeedType AlmanacDialog::SeedHitTest(int x, int y)
 
 bool AlmanacDialog::ZombieHasSilhouette(ZombieType theZombieType)
 {
+	if(theZombieType == ZOMBIE_REDEYE_GARGANTUAR){
+		int aLevel = mApp->mPlayerInfo->GetLevel() + mApp->mPlayerInfo->mFinishedAdventure * 50;
+		int aStart = GetZombieDefinition(ZOMBIE_REDEYE_GARGANTUAR).mStartingLevel;
+		return !mApp->mPlayerInfo->mZombieDefeated[ZOMBIE_REDEYE_GARGANTUAR] && aStart > aLevel;
+	}
 	// 除雪人僵尸以外的其他僵尸，或者雪人僵尸已经可以刷出（已经到达或完成冒险模式二周目 4-10 关卡），则不会显示为剪影
 	if (theZombieType != ZombieType::ZOMBIE_YETI || mApp->CanSpawnYetis())
 		return false;
@@ -584,28 +637,21 @@ bool AlmanacDialog::ZombieIsShown(ZombieType theZombieType)
 	// 或已得知其存在但未解锁其形象（已经完成冒险模式一周目 4-10 关卡，但未到达二周目 4-10 关卡）
 	if (theZombieType == ZombieType::ZOMBIE_YETI)
 		return mApp->CanSpawnYetis() || ZombieHasSilhouette(ZombieType::ZOMBIE_YETI);
-
-	// 对于冒险模式中出现的僵尸
-	if (theZombieType <= ZombieType::ZOMBIE_BOSS)
-	{
-		// 冒险模式一周目完成后，图鉴展示所有僵尸
-		if (mApp->HasFinishedAdventure())
-			return true;
-
-		int aLevel = mApp->mPlayerInfo->GetLevel();
-		int aStart = GetZombieDefinition(theZombieType).mStartingLevel;
-		// 要求已经达到僵尸首次出现的关卡
-		// 对于不能通过自然刷怪出现的僵尸（小鬼僵尸、雪橇僵尸小队、伴舞僵尸），额外要求已通过其首次出现的关卡或已击败过该僵尸
-		return aStart <= aLevel && (aStart != aLevel || !Board::IsZombieTypeSpawnedOnly(theZombieType) || gZombieDefeated[theZombieType]);
+		
+	int aLevel = mApp->mPlayerInfo->GetLevel() + mApp->mPlayerInfo->mFinishedAdventure * 50;
+	int aStart = GetZombieDefinition(theZombieType).mStartingLevel;
+	// 要求已经达到僵尸首次出现的关卡
+	// 对于不能通过自然刷怪出现的僵尸（小鬼僵尸、雪橇僵尸小队、伴舞僵尸），额外要求已通过其首次出现的关卡或已击败过该僵尸
+	if(theZombieType == ZOMBIE_REDEYE_GARGANTUAR){
+		return mApp->HasFinishedAdventure();
 	}
-
-	return false;
+	return aStart <= aLevel && (aStart != aLevel || !Board::IsZombieTypeSpawnedOnly(theZombieType) || mApp->mPlayerInfo->mZombieDefeated[theZombieType]);
 }
 
 // GOTY @Patoke: 0x404D50
 bool AlmanacDialog::ZombieHasDescription(ZombieType theZombieType)
 {
-	int aLevel = mApp->mPlayerInfo->GetLevel();
+	int aLevel = mApp->mPlayerInfo->GetLevel() + mApp->mPlayerInfo->mFinishedAdventure * 50;
 	int aStart = GetZombieDefinition(theZombieType).mStartingLevel;
 
 	// 对于雪人僵尸
@@ -618,23 +664,23 @@ bool AlmanacDialog::ZombieHasDescription(ZombieType theZombieType)
 		if (mApp->mPlayerInfo->mFinishedAdventure >= 2)
 			return true;
 	}
-	// 对于雪人僵尸外的其他僵尸，当冒险模式已完成时，总是显示僵尸的描述
-	else if (mApp->HasFinishedAdventure())
-		return true;
+	if(theZombieType == ZOMBIE_REDEYE_GARGANTUAR){
+		return aStart <= aLevel || mApp->mPlayerInfo->mZombieDefeated[theZombieType];
+	}
 
 	// 雪人僵尸在二周目 4-10 关卡至三周目之间，或其他僵尸在冒险模式一周目中的情况，
 	// 要求已经达到僵尸首次出现的关卡，且已通过其首次出现的关卡或已击败过该僵尸
-	return aStart <= aLevel && (aStart != aLevel || gZombieDefeated[theZombieType]);
+	return aStart <= aLevel && (aStart != aLevel || mApp->mPlayerInfo->mZombieDefeated[theZombieType]);
 }
 
-void AlmanacDialog::GetZombiePosition(ZombieType theZombieType, int& x, int& y)
+void AlmanacDialog::GetZombiePosition(int number, int& x, int& y)
 {
-	if (theZombieType == ZombieType::ZOMBIE_BOSS)
+	/*if (number == ZombieType::ZOMBIE_BOSS)
 		x = 192, y = 486;
-	else
+	else*/
 	{
-		x = theZombieType % 5 * 85 + 22;
-		y = theZombieType / 5 * 80 + 86;
+		x = number % 5 * 85 + 22;
+		y = number / 5 * 80 + 86 + mScrollY;
 	}
 }
 
@@ -645,12 +691,12 @@ ZombieType AlmanacDialog::ZombieHitTest(int x, int y)
 	{
 		for (int i = 0; i < NUM_ALMANAC_ZOMBIES; i++)
 		{
-			ZombieType aZombieType = GetZombieType(i);
+			ZombieType aZombieType = gAlmanacZombieTypes[i];
 			// @Patoke: added IsShown check
 			if (aZombieType != ZombieType::ZOMBIE_INVALID && ZombieIsShown(aZombieType))
 			{
 				int aZombieX, aZombieY;
-				GetZombiePosition(aZombieType, aZombieX, aZombieY);
+				GetZombiePosition(i, aZombieX, aZombieY);
 				if (Rect(aZombieX, aZombieY, 76, 76).Contains(x, y))
 					return aZombieType;
 			}
@@ -662,8 +708,10 @@ ZombieType AlmanacDialog::ZombieHitTest(int x, int y)
 void AlmanacDialog::MouseUp(int x, int y, int theClickCount)
 {
 	(void)x;(void)y;(void)theClickCount;
-	if (mPlantButton->IsMouseOver())		SetPage(ALMANAC_PAGE_PLANTS);
-	else if (mZombieButton->IsMouseOver())	SetPage(ALMANAC_PAGE_ZOMBIES);
+	if(gAlmanacRect.Contains(x, y)){
+		if (mPlantButton->IsMouseOver())		SetPage(ALMANAC_PAGE_PLANTS);
+		else if (mZombieButton->IsMouseOver())	SetPage(ALMANAC_PAGE_ZOMBIES);
+	}
 	else if (mCloseButton->IsMouseOver())	mApp->KillAlmanacDialog();
 	else if (mIndexButton->IsMouseOver())	SetPage(ALMANAC_PAGE_INDEX);
 }
@@ -693,13 +741,16 @@ void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 	}
 }
 
-void AlmanacInitForPlayer()
-{
-	for (int i = 0; i < ZombieType::NUM_ZOMBIE_TYPES; i++)
-		gZombieDefeated[i] = false;
-}
-
-void AlmanacPlayerDefeatedZombie(ZombieType theZombieType)
-{
-	gZombieDefeated[theZombieType] = true;
+void AlmanacDialog::MouseWheel(int theDelta){
+	Widget::MouseWheel(theDelta);
+	if (theDelta > 0){
+		mScrollY += 10;
+		if(mScrollY >= 0) mScrollY = 0;
+	}
+	else if(theDelta < 0){
+		mScrollY -= 10;
+		int Ymin = (gAlmanacRect.mY + gAlmanacRect.mHeight) - ((NUM_ALMANAC_ZOMBIES / 5) * 80 + 86 + 76);
+		if(mOpenPage == ALMANAC_PAGE_PLANTS) Ymin = (gAlmanacRect.mY + gAlmanacRect.mHeight) - (((NUM_ALMANAC_SEEDS - 1) / 8) * 78 + 92 + 70);
+		if(mScrollY <= Ymin) mScrollY = Ymin;
+	}
 }

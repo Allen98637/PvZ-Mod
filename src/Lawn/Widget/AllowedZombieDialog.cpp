@@ -51,6 +51,7 @@ ZombieType gChoosableZombieTypes[NUM_CHOOSABLE_ZOMBIES] = {
     ZOMBIE_BALLOON,
     ZOMBIE_DIGGER,
     ZOMBIE_POGO,
+    ZOMBIE_YETI,
     ZOMBIE_BUNGEE,
     ZOMBIE_LADDER,
     ZOMBIE_CATAPULT,
@@ -67,9 +68,12 @@ ZombieType gChoosableZombieTypes[NUM_CHOOSABLE_ZOMBIES] = {
     ZOMBIE_GATLING_HEAD,
     ZOMBIE_SQUASH_HEAD,
     ZOMBIE_TALLNUT_HEAD,
+    ZOMBIE_SNOWPEA_HEAD,
+    ZOMBIE_HYPNO_HEAD,
     ZOMBIE_CABBAGE_HEAD,
     ZOMBIE_UMBRELLA_HEAD,
     ZOMBIE_MELON_HEAD,
+    ZOMBIE_WINTERMELON_HEAD,
 };
 
 Rect ContentRect(50, 114, 680, 356);
@@ -181,7 +185,7 @@ void AllowedZombieDialog::DrawZombies(Graphics* g)
 				}
 				g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIEWINDOW, aPosX, aPosY);
 				g->SetColorizeImages(false);
-				if (i == aZombieMouseOn)
+				if (i == aZombieMouseOn && (!ZombieHasSilhouette(aZombieType) || aZombieType == ZOMBIE_REDEYE_GARGANTUAR))
 				{
 					g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
 					g->SetColor(Color(255, 255, 255, 48));
@@ -340,57 +344,34 @@ bool AllowedZombieDialog::ZombieIsShown(ZombieType theZombieType)
 	// 或已得知其存在但未解锁其形象（已经完成冒险模式一周目 4-10 关卡，但未到达二周目 4-10 关卡）
 	if (theZombieType == ZombieType::ZOMBIE_YETI)
 		return mApp->CanSpawnYetis() || ZombieHasSilhouette(ZombieType::ZOMBIE_YETI);
-
-	// 对于冒险模式中出现的僵尸
-	if (theZombieType <= ZombieType::ZOMBIE_BOSS)
-	{
-		// 冒险模式一周目完成后，图鉴展示所有僵尸
-		if (mApp->HasFinishedAdventure())
-			return true;
-
-		int aLevel = mApp->mPlayerInfo->GetLevel();
-		int aStart = GetZombieDefinition(theZombieType).mStartingLevel;
-		// 要求已经达到僵尸首次出现的关卡
-		// 对于不能通过自然刷怪出现的僵尸（小鬼僵尸、雪橇僵尸小队、伴舞僵尸），额外要求已通过其首次出现的关卡或已击败过该僵尸
-		return aStart <= aLevel && (aStart != aLevel || !Board::IsZombieTypeSpawnedOnly(theZombieType));
+		
+	int aLevel = mApp->mPlayerInfo->GetLevel() + mApp->mPlayerInfo->mFinishedAdventure * 50;
+	int aStart = GetZombieDefinition(theZombieType).mStartingLevel;
+	// 要求已经达到僵尸首次出现的关卡
+	// 对于不能通过自然刷怪出现的僵尸（小鬼僵尸、雪橇僵尸小队、伴舞僵尸），额外要求已通过其首次出现的关卡或已击败过该僵尸
+	if(theZombieType == ZOMBIE_REDEYE_GARGANTUAR){
+		return mApp->HasFinishedAdventure();
 	}
-
-	return true;
+	if(aStart == -1) return mApp->HasFinishedAdventure();
+	return aStart <= aLevel && (aStart != aLevel || !Board::IsZombieTypeSpawnedOnly(theZombieType) || mApp->mPlayerInfo->mZombieDefeated[theZombieType]);
 }
 
 bool AllowedZombieDialog::ZombieHasSilhouette(ZombieType theZombieType)
 {
+	int aStart = GetZombieDefinition(theZombieType).mStartingLevel;
+	if(theZombieType == ZOMBIE_REDEYE_GARGANTUAR){
+		int aLevel = mApp->mPlayerInfo->GetLevel() + mApp->mPlayerInfo->mFinishedAdventure * 50;
+		return !mApp->mPlayerInfo->mZombieDefeated[ZOMBIE_REDEYE_GARGANTUAR] && aStart > aLevel;
+	}
+	if (aStart == -1){
+		return !mApp->mPlayerInfo->mZombieDefeated[theZombieType];
+	}
 	// 除雪人僵尸以外的其他僵尸，或者雪人僵尸已经可以刷出（已经到达或完成冒险模式二周目 4-10 关卡），则不会显示为剪影
 	if (theZombieType != ZombieType::ZOMBIE_YETI || mApp->CanSpawnYetis())
 		return false;
 
 	// 排除上述情况后，若已完成雪人僵尸出现的关卡（冒险模式一周目 4-10 关卡），则雪人僵尸显示为剪影
 	return mApp->HasFinishedAdventure() || mApp->mPlayerInfo->GetLevel() > GetZombieDefinition(ZombieType::ZOMBIE_YETI).mStartingLevel;
-}
-
-// GOTY @Patoke: 0x404D50
-bool AllowedZombieDialog::ZombieHasDescription(ZombieType theZombieType)
-{
-	int aLevel = mApp->mPlayerInfo->GetLevel();
-	int aStart = GetZombieDefinition(theZombieType).mStartingLevel;
-
-	// 对于雪人僵尸
-	if (theZombieType == ZombieType::ZOMBIE_YETI)
-	{
-		// 当雪人僵尸不可在刷怪中出现时（冒险模式二周目 4-10 关卡之前），不显示僵尸描述
-		if (!mApp->CanSpawnYetis())
-			return false;
-		// 从第三周目开始，总是显示雪人僵尸的描述
-		if (mApp->mPlayerInfo->mFinishedAdventure >= 2)
-			return true;
-	}
-	// 对于雪人僵尸外的其他僵尸，当冒险模式已完成时，总是显示僵尸的描述
-	else if (mApp->HasFinishedAdventure())
-		return true;
-
-	// 雪人僵尸在二周目 4-10 关卡至三周目之间，或其他僵尸在冒险模式一周目中的情况，
-	// 要求已经达到僵尸首次出现的关卡，且已通过其首次出现的关卡或已击败过该僵尸
-	return aStart <= aLevel && (aStart != aLevel);
 }
 
 void AllowedZombieDialog::GetZombiePosition(int num, int& x, int& y)
@@ -429,6 +410,8 @@ void AllowedZombieDialog::MouseUp(int x, int y, int theClickCount)
 		if (aZombieType != ZombieType::ZOMBIE_INVALID)
 		{
 			mZombieAllowed[aZombieType] = !mZombieAllowed[aZombieType];
+			if(aZombieType != ZOMBIE_REDEYE_GARGANTUAR && (!ZombieIsShown(aZombieType) || ZombieHasSilhouette(aZombieType)))
+				mZombieAllowed[aZombieType] = false;
 			if(aZombieType == ZOMBIE_BOBSLED && mZombieAllowed[ZOMBIE_BOBSLED]) mZombieAllowed[ZOMBIE_ZAMBONI] = true;
 			if(aZombieType == ZOMBIE_ZAMBONI && !mZombieAllowed[ZOMBIE_ZAMBONI]) mZombieAllowed[ZOMBIE_BOBSLED] = false;
 			mApp->PlaySample(Sexy::SOUND_TAP);

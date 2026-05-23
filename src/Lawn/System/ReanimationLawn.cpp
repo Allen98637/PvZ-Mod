@@ -321,6 +321,15 @@ MemoryImage* ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 
 		aReanim.Draw(&aMemoryGraphics);
 	}
+	else if(theZombieType == ZombieType::ZOMBIE_JACKSON_DANCER){
+		Reanimation aReanim;
+		aReanim.ReanimationInitializeType(aPosX, aPosY, aZombieDef.mReanimationType);
+		aReanim.SetFramesForLayer("anim_idle");
+		aReanim.AssignRenderGroupToPrefix("anim_cone", RENDER_GROUP_HIDDEN);
+		aReanim.AssignRenderGroupToPrefix("anim_bucket", RENDER_GROUP_HIDDEN);
+		aReanim.AssignRenderGroupToPrefix("Zombie_duckytube", RENDER_GROUP_HIDDEN);
+		aReanim.Draw(&aMemoryGraphics);
+	}
 	else
 	{
 		const char* aTrackName = "anim_idle";

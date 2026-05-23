@@ -150,6 +150,7 @@ ParticleParams gLawnParticleArray[ParticleEffect::NUM_PARTICLES] = {
 	{ ParticleEffect::PARTICLE_FUMECLOUD2, "particles/FumeCloud2.xml" },
 	{ ParticleEffect::PARTICLE_PUFFSHROOM_MUZZLE2, "particles/PuffShroomMuzzle2.xml" },
 	{ ParticleEffect::PARTICLE_SNOWPEA_PUFF2, "particles/SnowPeaPuff2.xml" },
+	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_WINTERMELON2, "particles/UmbrellaReflectWinterMelon2.xml" },
 };  // 0x6A0FF0
 
 // (ecx = *theParticleFileName, *theParticleDef)  //esp -= 4

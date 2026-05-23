@@ -50,7 +50,8 @@ ProjectileDefinition gProjectileDefinition[] = {
 	{ ProjectileType::PROJECTILE_ZOMBIE_PEA,    0,  20  },
 	{ ProjectileType::PROJECTILE_ZOMBIE_CABBAGE,0,  40  },
 	{ ProjectileType::PROJECTILE_ZOMBIE_MELON,	0,  80  },
-	{ ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA,0,  20  }
+	{ ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA,0,  20  },
+	{ ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON,	0,  80  },
 };
 
 Projectile::Projectile()
@@ -127,6 +128,11 @@ void Projectile::ProjectileInitialize(int theX, int theY, int theRenderOrder, in
 		mRotation = 2 * PI / 5;  // DEG_TO_RAD(-72.0f);
 		mRotationSpeed = RandRangeFloat(0.08f, 0.02f);
 		mUmbrellaParticle = PARTICLE_UMBRELLA_REFLECT_MELON2;
+		break;
+	case ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON:
+		mRotation = 2 * PI / 5;  // DEG_TO_RAD(-72.0f);
+		mRotationSpeed = RandRangeFloat(0.08f, 0.02f);
+		mUmbrellaParticle = PARTICLE_UMBRELLA_REFLECT_WINTERMELON2;
 		break;
 	case ProjectileType::PROJECTILE_KERNEL:
 		mRotation = 0.0f;
@@ -208,7 +214,7 @@ bool Projectile::PeaAboutToHitTorchwood()
 	return false;
 }
 
-PlantOrZombie Projectile::FindCollisionTarget()
+PlantOrZombie Projectile::FindCollisionTarget(bool doPlant)
 {
 	PlantOrZombie aBestEnemy;
 	if (PeaAboutToHitTorchwood())  // “卡火炬”的原理，这段代码在两版内测版中均不存在
@@ -245,6 +251,9 @@ PlantOrZombie Projectile::FindCollisionTarget()
 			}
 		}
 	}
+
+	if(!doPlant) return aBestEnemy;
+
 	Plant* aPlant = nullptr;
 	while (mBoard->IteratePlants(aPlant))
 	{
@@ -336,7 +345,7 @@ void Projectile::CheckForCollision()
 		return;
 	}
 
-	PlantOrZombie aEnemy = FindCollisionTarget();
+	PlantOrZombie aEnemy = FindCollisionTarget(true);
 	if (aEnemy)
 	{
 		if (aEnemy.mZombie && aEnemy.mZombie->mOnHighGround && CantHitHighGround())
@@ -411,7 +420,8 @@ bool Projectile::IsSplashDamage(PlantOrZombie theEnemy)
 		mProjectileType == ProjectileType::PROJECTILE_MELON ||
 		mProjectileType == ProjectileType::PROJECTILE_WINTERMELON ||
 		mProjectileType == ProjectileType::PROJECTILE_FIREBALL ||
-		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON;;
+		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON ||
+		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON;;
 }
 
 unsigned int Projectile::GetDamageFlags(PlantOrZombie theEnemy)
@@ -437,7 +447,7 @@ unsigned int Projectile::GetDamageFlags(PlantOrZombie theEnemy)
 	}
 
 	if (mProjectileType == ProjectileType::PROJECTILE_SNOWPEA || mProjectileType == ProjectileType::PROJECTILE_WINTERMELON ||
-		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA
+		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA || mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON
 	)
 	{
 		SetBit(aDamageFlags, static_cast<int>(DamageFlags::DAMAGE_FREEZE), true);
@@ -605,6 +615,7 @@ void Projectile::UpdateLobMotion()
 	{
 		return;
 	}
+	float aMinCollisionZ = 0.0f;
 	if (mProjectileAge > 20)
 	{
 		if (isRising)
@@ -612,17 +623,16 @@ void Projectile::UpdateLobMotion()
 			return;
 		}
 
-		float aMinCollisionZ = 0.0f;
 		if (mProjectileType == ProjectileType::PROJECTILE_BUTTER)
 		{
 			aMinCollisionZ = -32.0f;
 		}
 		else if (mProjectileType == ProjectileType::PROJECTILE_BASKETBALL || mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_CABBAGE)
 		{
-			aMinCollisionZ = 60.0f;
+			aMinCollisionZ = -30.0f;
 		}
-		else if(mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON){
-			aMinCollisionZ = 55.0f;
+		else if(mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON || mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON){
+			aMinCollisionZ = -30.0f;
 		}
 		else if (mProjectileType == ProjectileType::PROJECTILE_MELON || mProjectileType == ProjectileType::PROJECTILE_WINTERMELON)
 		{
@@ -648,7 +658,7 @@ void Projectile::UpdateLobMotion()
 	}
 
 	PlantOrZombie aEnemy;
-	aEnemy = FindCollisionTarget();
+	aEnemy = FindCollisionTarget(mProjectileAge <= 20 || mPosZ > aMinCollisionZ + 90);
 
 	float aGroundZ = 80.0f;
 	if (mProjectileType == ProjectileType::PROJECTILE_COBBIG)
@@ -964,7 +974,7 @@ void Projectile::PlayImpactSound(PlantOrZombie theEnemy)
 		aPlaySplatSound = false;
 	}
 	else if (mProjectileType == ProjectileType::PROJECTILE_MELON || mProjectileType == ProjectileType::PROJECTILE_WINTERMELON ||
-		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON
+		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON || mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON
 	)
 	{
 		mApp->PlayFoley(FoleyType::FOLEY_MELONIMPACT);
@@ -1089,6 +1099,9 @@ void Projectile::DoImpact(PlantOrZombie theEnemy)
 		break;
 	case PROJECTILE_ZOMBIE_MELON:
 		mApp->AddTodParticle(mPosX + 12.0f, mPosY + 30.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_MELONSPLASH);
+		break;
+	case PROJECTILE_ZOMBIE_WINTERMELON:
+		mApp->AddTodParticle(mPosX + 12.0f, mPosY + 30.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_WINTERMELON);
 		break;
 	case ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA:
 		mApp->AddTodParticle(mPosX - 3.0f, mPosY + 17.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_SNOWPEA_SPLAT);
@@ -1228,6 +1241,7 @@ void Projectile::Draw(Graphics* g)
 		aScale = 1.0f;
 		break;
 	case ProjectileType::PROJECTILE_WINTERMELON:
+	case ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON:
 		aImage = IMAGE_REANIM_WINTERMELON_PROJECTILE;
 		aScale = 1.0f;
 		break;
@@ -1334,6 +1348,7 @@ void Projectile::DrawShadow(Graphics* g)
 	case ProjectileType::PROJECTILE_WINTERMELON:
 	case ProjectileType::PROJECTILE_ZOMBIE_CABBAGE:
 	case ProjectileType::PROJECTILE_ZOMBIE_MELON:
+	case ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON:
 		aOffsetX += 3.0f;
 		aOffsetY += 10.0f;
 		aScale = 1.6f;
@@ -1398,7 +1413,7 @@ Rect Projectile::GetProjectileRect()
 	{
 		return Rect(mX + 20, mY, 60, mHeight);
 	}
-	else if(mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON){
+	else if(mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_MELON || mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON){
 		return Rect(mX - 40, mY, 60, mHeight);
 	}
 	else if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
@@ -1460,5 +1475,5 @@ ProjectileDefinition& Projectile::GetProjectileDef()
 
 bool Projectile::IsZombieProjectile(){
 	return mProjectileType == PROJECTILE_BASKETBALL || mProjectileType == PROJECTILE_ZOMBIE_CABBAGE || mProjectileType == PROJECTILE_ZOMBIE_PEA || 
-	mProjectileType == PROJECTILE_ZOMBIE_MELON || mProjectileType == PROJECTILE_ZOMBIE_SNOWPEA;
+	mProjectileType == PROJECTILE_ZOMBIE_MELON || mProjectileType == PROJECTILE_ZOMBIE_SNOWPEA || mProjectileType == PROJECTILE_ZOMBIE_WINTERMELON;
 }

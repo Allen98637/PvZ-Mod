@@ -67,23 +67,24 @@ ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES] = {
     { ZOMBIE_GARGANTUAR,        REANIM_GARGANTUAR,          10,     48,     15,     1500,   "GARGANTUAR" },
     { ZOMBIE_IMP,               REANIM_IMP,                 10,     48,     1,      0,      "IMP" },
     { ZOMBIE_BOSS,              REANIM_BOSS,                10,     50,     1,      0,      "BOSS" },
-    { ZOMBIE_PEA_HEAD,          REANIM_ZOMBIE,              1,      99,     1,      4000,   "ZOMBIE" },
-    { ZOMBIE_WALLNUT_HEAD,      REANIM_ZOMBIE,              4,      99,     1,      3000,   "ZOMBIE" },
-    { ZOMBIE_JALAPENO_HEAD,     REANIM_ZOMBIE,              3,      99,     10,     1000,   "ZOMBIE" },
-    { ZOMBIE_GATLING_HEAD,      REANIM_ZOMBIE,              3,      99,     10,     2000,   "ZOMBIE" },
-    { ZOMBIE_SQUASH_HEAD,       REANIM_ZOMBIE,              3,      99,     10,     2000,   "ZOMBIE" },
-    { ZOMBIE_TALLNUT_HEAD,      REANIM_ZOMBIE,              4,      99,     10,     2000,   "ZOMBIE" },
-    { ZOMBIE_REDEYE_GARGANTUAR, REANIM_GARGANTUAR,          10,     48,     15,     6000,   "REDEYED_GARGANTUAR" },
-    { ZOMBIE_GIGA_FOOTBALL,     REANIM_ZOMBIE_FOOTBALL_GIGA,10,     48,     15,     4000,   "GIGA_FOOTBALL_ZOMBIE" },
-    { ZOMBIE_DOOR_PAIL,         REANIM_ZOMBIE,              5,      48,     7,     4000,   "DOOR_PAIL_ZOMBIE" },
-    { ZOMBIE_JACKSON,           REANIM_JACKSON,             10,     48,     15,      4000,   "JACKSON_ZOMBIE" },
-    { ZOMBIE_JACKSON_DANCER,    REANIM_ZOMBIE_DANCER,       1,      48,     1,      0,      "JACKSON_DANCER" },
-    { ZOMBIE_BLUEOON,           REANIM_BLUEOON,             5,      48,     15,     3000,   "BLUEOON_ZOMBIE" },
+    { ZOMBIE_PEA_HEAD,          REANIM_ZOMBIE,              1,      -1,     1,      4000,   "ZOMBIE" },
+    { ZOMBIE_WALLNUT_HEAD,      REANIM_ZOMBIE,              4,      -1,     1,      3000,   "ZOMBIE" },
+    { ZOMBIE_JALAPENO_HEAD,     REANIM_ZOMBIE,              3,      -1,     10,     1000,   "ZOMBIE" },
+    { ZOMBIE_GATLING_HEAD,      REANIM_ZOMBIE,              3,      -1,     10,     2000,   "ZOMBIE" },
+    { ZOMBIE_SQUASH_HEAD,       REANIM_ZOMBIE,              3,      -1,     10,     2000,   "ZOMBIE" },
+    { ZOMBIE_TALLNUT_HEAD,      REANIM_ZOMBIE,              4,      -1,     10,     2000,   "ZOMBIE" },
+    { ZOMBIE_REDEYE_GARGANTUAR, REANIM_GARGANTUAR,          10,     93,     15,     6000,   "REDEYED_GARGANTUAR" },
+    { ZOMBIE_GIGA_FOOTBALL,     REANIM_ZOMBIE_FOOTBALL_GIGA,10,     51,     15,     4000,   "GIGA_FOOTBALL_ZOMBIE" },
+    { ZOMBIE_DOOR_PAIL,         REANIM_ZOMBIE,              5,      51,     7,     4000,   "DOOR_PAIL_ZOMBIE" },
+    { ZOMBIE_JACKSON,           REANIM_JACKSON,             10,     51,     15,      4000,   "JACKSON_ZOMBIE" },
+    { ZOMBIE_JACKSON_DANCER,    REANIM_ZOMBIE_DANCER,       1,      51,     1,      0,      "ZOMBIE_JACKSON_DANCER" },
+    { ZOMBIE_BLUEOON,           REANIM_BLUEOON,             5,      51,     15,     3000,   "BLUEOON_ZOMBIE" },
     { ZOMBIE_UMBRELLA_HEAD,     REANIM_ZOMBIE,              3,      99,     10,     3000,   "ZOMBIE" },
     { ZOMBIE_CABBAGE_HEAD,     REANIM_ZOMBIE,               1,      99,     1,      4000,   "ZOMBIE" },
-    { ZOMBIE_MELON_HEAD,        REANIM_ZOMBIE,               3,      99,     5,      3000,   "ZOMBIE" },
-    { ZOMBIE_SNOWPEA_HEAD,      REANIM_ZOMBIE,               3,      99,     5,      3000,   "ZOMBIE" },
-    { ZOMBIE_HYPNO_HEAD,        REANIM_ZOMBIE,               1,      99,     1,      3000,   "ZOMBIE" },
+    { ZOMBIE_MELON_HEAD,        REANIM_ZOMBIE,               3,     -1,     5,      3000,   "ZOMBIE" },
+    { ZOMBIE_SNOWPEA_HEAD,      REANIM_ZOMBIE,               3,     -1,     5,      3000,   "ZOMBIE" },
+    { ZOMBIE_HYPNO_HEAD,        REANIM_ZOMBIE,               4,     -1,     10,      3000,   "ZOMBIE" },
+    { ZOMBIE_WINTERMELON_HEAD,  REANIM_ZOMBIE,               5,     -1,     10,      3000,   "ZOMBIE" },
 };
 
 static ZombieType gBossZombieList[] = {
@@ -949,8 +950,13 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         ReanimatorTrackInstance* aTrackInstance = aBodyReanim->GetTrackInstanceByName("anim_head1");
         aTrackInstance->mImageOverride = IMAGE_BLANK;
         Reanimation* aHeadReanim = mApp->AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_CABBAGEPULT);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf_tip_left", RENDER_GROUP_HIDDEN);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf_right_tip", RENDER_GROUP_HIDDEN);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf", RENDER_GROUP_HIDDEN);
+        aHeadReanim->AssignRenderGroupToPrefix("Cabbagepult_backleaf1", RENDER_GROUP_HIDDEN);
+        aHeadReanim->AssignRenderGroupToPrefix("Cabbagepult_backleaf2", RENDER_GROUP_HIDDEN);
         mSpecialHeadReanimID = mApp->ReanimationGetID(aHeadReanim);
-        UpdateHeadReanim("anim_head_idle", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
+        UpdateHeadReanim("anim_idle", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
         AttachEffect* aAttachEffect = AttachReanim(aTrackInstance->mAttachmentID, aHeadReanim, 0.0f, 0.0f);
         aBodyReanim->mFrameBasePose = 0;
         TodScaleRotateTransformMatrix(aAttachEffect->mOffset, 65.0f, -20.0f, 0.2f, -1.0f, 1.0f);
@@ -974,8 +980,11 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         ReanimatorTrackInstance* aTrackInstance = aBodyReanim->GetTrackInstanceByName("anim_head1");
         aTrackInstance->mImageOverride = IMAGE_BLANK;
         Reanimation* aHeadReanim = mApp->AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_MELONPULT);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf_tip_left", RENDER_GROUP_HIDDEN);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf_right_tip", RENDER_GROUP_HIDDEN);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf", RENDER_GROUP_HIDDEN);
         mSpecialHeadReanimID = mApp->ReanimationGetID(aHeadReanim);
-        UpdateHeadReanim("anim_head_idle", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
+        UpdateHeadReanim("anim_idle", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
         AttachEffect* aAttachEffect = AttachReanim(aTrackInstance->mAttachmentID, aHeadReanim, 0.0f, 0.0f);
         aBodyReanim->mFrameBasePose = 0;
         TodScaleRotateTransformMatrix(aAttachEffect->mOffset, 65.0f, -25.0f, 0.2f, -1.0f, 1.0f);
@@ -1030,6 +1039,35 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         aBodyReanim->mFrameBasePose = 0;
         TodScaleRotateTransformMatrix(aAttachEffect->mOffset, 55.0f, -15.0f, 0.2f, -0.75f, 0.75f);
 
+        mVariant = false;
+        break;
+    }
+    case ZombieType::ZOMBIE_WINTERMELON_HEAD:
+    {
+        LoadPlainZombieReanim();
+        ReanimShowPrefix("anim_hair", RENDER_GROUP_HIDDEN);
+        ReanimShowPrefix("anim_head2", RENDER_GROUP_HIDDEN);
+
+        Reanimation* aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
+        if (IsOnBoard())
+        {
+            aBodyReanim->SetFramesForLayer("anim_walk2");
+        }
+
+        ReanimatorTrackInstance* aTrackInstance = aBodyReanim->GetTrackInstanceByName("anim_head1");
+        aTrackInstance->mImageOverride = IMAGE_BLANK;
+        Reanimation* aHeadReanim = mApp->AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_WINTER_MELON);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf_tip_left", RENDER_GROUP_HIDDEN);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf_right_tip", RENDER_GROUP_HIDDEN);
+        aHeadReanim->AssignRenderGroupToPrefix("frontleaf", RENDER_GROUP_HIDDEN);
+        mSpecialHeadReanimID = mApp->ReanimationGetID(aHeadReanim);
+        UpdateHeadReanim("anim_idle", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
+        AttachEffect* aAttachEffect = AttachReanim(aTrackInstance->mAttachmentID, aHeadReanim, 0.0f, 0.0f);
+        aBodyReanim->mFrameBasePose = 0;
+        TodScaleRotateTransformMatrix(aAttachEffect->mOffset, 65.0f, -25.0f, 0.2f, -1.0f, 1.0f);
+
+        mPhaseCounter2 = 300;
+        mBodyHealth = 500;
         mVariant = false;
         break;
     }
@@ -1267,6 +1305,11 @@ void Zombie::SetupCachedLayers(Reanimation* aReanim, ZombieType theZombieType, R
             bReanim = new Reanimation();
             bReanim->ReanimationInitializeType(0, 0, ReanimationType::REANIM_CABBAGEPULT);//46.7, 48.8
             bReanim->SetFramesForLayer("anim_head_idle");
+            bReanim->AssignRenderGroupToPrefix("frontleaf_tip_left", RENDER_GROUP_HIDDEN);
+            bReanim->AssignRenderGroupToPrefix("frontleaf_right_tip", RENDER_GROUP_HIDDEN);
+            bReanim->AssignRenderGroupToPrefix("frontleaf", RENDER_GROUP_HIDDEN);
+            bReanim->AssignRenderGroupToPrefix("Cabbagepult_backleaf1", RENDER_GROUP_HIDDEN);
+            bReanim->AssignRenderGroupToPrefix("Cabbagepult_backleaf2", RENDER_GROUP_HIDDEN);
             TodScaleRotateTransformMatrix(bReanim->mOverlayMatrix, 105.0f, 20.0f, 0.2f, -1.0f, 1.0f); //65.0, -5.0
             break;
             break;
@@ -1279,9 +1322,24 @@ void Zombie::SetupCachedLayers(Reanimation* aReanim, ZombieType theZombieType, R
 
             bReanim = new Reanimation();
             bReanim->ReanimationInitializeType(0, 0, ReanimationType::REANIM_MELONPULT);//46.7, 48.8
-            bReanim->SetFramesForLayer("anim_head_idle");
+            bReanim->SetFramesForLayer("anim_idle");
+            bReanim->AssignRenderGroupToPrefix("frontleaf_tip_left", RENDER_GROUP_HIDDEN);
+            bReanim->AssignRenderGroupToPrefix("frontleaf_right_tip", RENDER_GROUP_HIDDEN);
+            bReanim->AssignRenderGroupToPrefix("frontleaf", RENDER_GROUP_HIDDEN);
             TodScaleRotateTransformMatrix(bReanim->mOverlayMatrix, 105.0f, 15.0f, 0.2f, -1.0f, 1.0f); //65.0, -5.0
             break;
+            break;
+        }
+        case ZombieType::ZOMBIE_SNOWPEA_HEAD:
+        {
+            aReanim->AssignRenderGroupToPrefix("anim_hair", RENDER_GROUP_HIDDEN);
+            aReanim->AssignRenderGroupToPrefix("anim_head", RENDER_GROUP_HIDDEN);
+            aReanim->AssignRenderGroupToPrefix("anim_head2", RENDER_GROUP_HIDDEN);
+
+            bReanim = new Reanimation();
+            bReanim->ReanimationInitializeType(0, 0, ReanimationType::REANIM_SNOWPEA);//46.7, 48.8
+            bReanim->SetFramesForLayer("anim_head_idle");
+            TodScaleRotateTransformMatrix(bReanim->mOverlayMatrix, 105.0f, 35.0f, 0.2f, -1.0f, 1.0f); //65.0, -5.0
             break;
         }
         case ZombieType::ZOMBIE_HYPNO_HEAD:
@@ -1294,6 +1352,22 @@ void Zombie::SetupCachedLayers(Reanimation* aReanim, ZombieType theZombieType, R
             bReanim->ReanimationInitializeType(0, 0, ReanimationType::REANIM_HYPNOSHROOM);
             bReanim->SetFramesForLayer("anim_idle");
             TodScaleRotateTransformMatrix(bReanim->mOverlayMatrix, 95.0f, 25.0f, 0.2f, -0.75f, 0.75f);
+            break;
+        }
+        case ZombieType::ZOMBIE_WINTERMELON_HEAD:
+        {
+            aReanim->AssignRenderGroupToPrefix("anim_hair", RENDER_GROUP_HIDDEN);
+            aReanim->AssignRenderGroupToPrefix("anim_head", RENDER_GROUP_HIDDEN);
+            aReanim->AssignRenderGroupToPrefix("anim_head2", RENDER_GROUP_HIDDEN);
+
+            bReanim = new Reanimation();
+            bReanim->ReanimationInitializeType(0, 0, ReanimationType::REANIM_WINTER_MELON);//46.7, 48.8
+            bReanim->SetFramesForLayer("anim_idle");
+            bReanim->AssignRenderGroupToPrefix("frontleaf_tip_left", RENDER_GROUP_HIDDEN);
+            bReanim->AssignRenderGroupToPrefix("frontleaf_right_tip", RENDER_GROUP_HIDDEN);
+            bReanim->AssignRenderGroupToPrefix("frontleaf", RENDER_GROUP_HIDDEN);
+            TodScaleRotateTransformMatrix(bReanim->mOverlayMatrix, 105.0f, 15.0f, 0.2f, -1.0f, 1.0f); //65.0, -5.0
+            break;
             break;
         }
         default:
@@ -2718,7 +2792,7 @@ void Zombie::UpdateZombieCabbageHead()
 
     if (mPhaseCounter2 == 32)
     {
-        UpdateHeadReanim("anim_head_shooting", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 35.0f);
+        UpdateHeadReanim("anim_shooting", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 35.0f);
     }
     else if (mPhaseCounter2 == 0)
     {
@@ -2749,7 +2823,7 @@ void Zombie::UpdateZombieCabbageHead()
     else if (mPhaseCounter2 > 32){
         Reanimation* aHeadReanim = mApp->ReanimationGet(mSpecialHeadReanimID);
         if(aHeadReanim->mLoopCount > 0){
-            UpdateHeadReanim("anim_head_idle", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 15.0f);
+            UpdateHeadReanim("anim_idle", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 15.0f);
         }
     }
 }
@@ -2761,7 +2835,7 @@ void Zombie::UpdateZombieMelonHead()
 
     if (mPhaseCounter2 == 36)
     {
-        UpdateHeadReanim("anim_head_shooting", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 35.0f);
+        UpdateHeadReanim("anim_shooting", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 35.0f);
     }
     else if (mPhaseCounter2 == 0)
     {
@@ -2778,11 +2852,16 @@ void Zombie::UpdateZombieMelonHead()
         if (mMindControlled)  // 魅惑修复
         {
             aOriginX += 90.0f * mScaleZombie;
-            Projectile* aProjectile = CreateLobProjectile(aPlant, PROJECTILE_MELON, aOriginX, aOriginY);
+            ProjectileType aTt = PROJECTILE_MELON;
+            if(mZombieType == ZOMBIE_WINTERMELON_HEAD) aTt = PROJECTILE_WINTERMELON;
+            Projectile* aProjectile = CreateLobProjectile(aPlant, aTt, aOriginX, aOriginY);
             aProjectile->mDamageRangeFlags = 13;
         }
         else
         {
+            
+            ProjectileType aTt = PROJECTILE_ZOMBIE_MELON;
+            if(mZombieType == ZOMBIE_WINTERMELON_HEAD) aTt = PROJECTILE_ZOMBIE_WINTERMELON;
             Projectile* aProjectile = CreateLobProjectile(aPlant, PROJECTILE_ZOMBIE_MELON, aOriginX, aOriginY);
             aProjectile->mDamageRangeFlags = 141;
         }
@@ -2792,7 +2871,7 @@ void Zombie::UpdateZombieMelonHead()
     else if (mPhaseCounter2 > 32){
         Reanimation* aHeadReanim = mApp->ReanimationGet(mSpecialHeadReanimID);
         if(aHeadReanim->mLoopCount > 0){
-            UpdateHeadReanim("anim_head_idle", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 15.0f);
+            UpdateHeadReanim("anim_idle", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 15.0f);
         }
     }
 }
@@ -5106,7 +5185,7 @@ void Zombie::UpdateActions()
     {
         if(mChilledCounter <= 0 || mZombieAge % 2 == 0) UpdateZombieCabbageHead();
     }
-    if (mZombieType == ZombieType::ZOMBIE_MELON_HEAD)
+    if (mZombieType == ZombieType::ZOMBIE_MELON_HEAD || mZombieType == ZombieType::ZOMBIE_WINTERMELON_HEAD)
     {
         if(mChilledCounter <= 0 || mZombieAge % 2 == 0) UpdateZombieMelonHead();
     }
@@ -7997,7 +8076,7 @@ void Zombie::DropLoot()
     if (!IsOnBoard())
         return;
 
-    AlmanacPlayerDefeatedZombie(mZombieType);
+    mApp->mPlayerInfo->mZombieDefeated[mZombieType] = true;
     if (mZombieType == ZombieType::ZOMBIE_YETI)
     {
         mBoard->mKilledYeti = true;
@@ -9009,7 +9088,8 @@ bool Zombie::IsZombotany(ZombieType theZombieType)
         theZombieType == ZombieType::ZOMBIE_CABBAGE_HEAD ||
         theZombieType == ZombieType::ZOMBIE_MELON_HEAD ||
         theZombieType == ZombieType::ZOMBIE_SNOWPEA_HEAD ||
-        theZombieType == ZombieType::ZOMBIE_HYPNO_HEAD;
+        theZombieType == ZombieType::ZOMBIE_HYPNO_HEAD ||
+        theZombieType == ZombieType::ZOMBIE_WINTERMELON_HEAD;
 }
 
 bool Zombie::ZombieTypeCanGoInPool(ZombieType theZombieType)
@@ -9032,7 +9112,8 @@ bool Zombie::ZombieTypeCanGoInPool(ZombieType theZombieType)
         theZombieType == ZombieType::ZOMBIE_CABBAGE_HEAD ||
         theZombieType == ZombieType::ZOMBIE_MELON_HEAD ||
         theZombieType == ZombieType::ZOMBIE_SNOWPEA_HEAD ||
-        theZombieType == ZombieType::ZOMBIE_HYPNO_HEAD;
+        theZombieType == ZombieType::ZOMBIE_HYPNO_HEAD ||
+        theZombieType == ZombieType::ZOMBIE_WINTERMELON_HEAD;
 }
 
 bool Zombie::ZombieTypeCanGoOnHighGround(ZombieType theZombieType)
@@ -9884,6 +9965,7 @@ void Zombie::UpdateDeath()
         case ZombieType::ZOMBIE_MELON_HEAD:
         case ZombieType::ZOMBIE_SNOWPEA_HEAD:
         case ZombieType::ZOMBIE_HYPNO_HEAD:
+        case ZombieType::ZOMBIE_WINTERMELON_HEAD:
             if (aBodyReanim->IsAnimPlaying("anim_superlongdeath"))
             {
                 aFallTime = 0.788f;

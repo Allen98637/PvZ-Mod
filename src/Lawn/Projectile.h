@@ -89,7 +89,7 @@ public:
     void                    DoImpact(PlantOrZombie theEnemy);
     void                    UpdateMotion();
     void                    CheckForCollision();
-    PlantOrZombie          FindCollisionTarget();
+    PlantOrZombie          FindCollisionTarget(bool doPlant);
     void                    UpdateLobMotion();
     void                    CheckForHighGround();
     bool                    CantHitHighGround();

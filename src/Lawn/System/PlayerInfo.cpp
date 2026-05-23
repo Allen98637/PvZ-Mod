@@ -157,6 +157,10 @@ void PlayerInfo::SyncDetails(DataSync& theSync)
 	theSync.SyncUInt32(mZombatarHeadCount);
 	theSync.SyncBytes(mZombatarTrailingUnknown, sizeof(mZombatarTrailingUnknown));
 	theSync.SyncUInt8(mZombatarCreatedBefore);
+	for (int i = 0; i < 100; i++)
+	{
+		theSync.SyncBool(mZombieDefeated[i]);
+	}
 }
 
 void PlayerInfo::LoadDetails()
@@ -245,6 +249,7 @@ void PlayerInfo::Reset()
 	mZombatarData.clear();
 	memset(mZombatarTrailingUnknown, 0, sizeof(mZombatarTrailingUnknown));
 	mZombatarCreatedBefore = 0;
+	memset(mZombieDefeated, 0, sizeof(mZombieDefeated));
 }
 
 void PlayerInfo::AddCoins(int theAmount)

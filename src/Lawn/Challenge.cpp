@@ -2554,6 +2554,7 @@ void Challenge::InitZombieWavesSurvival()
 			if (aRandZombie == ZOMBIE_BOBSLED && !mBoard->mZombieAllowed[ZOMBIE_ZAMBONI]) continue;
 		}
 		else{
+			if(GetZombieDefinition(aRandZombie).mStartingLevel > 50 || GetZombieDefinition(aRandZombie).mStartingLevel == -1) continue;
 			if (mBoard->StageHasRoof() && (aRandZombie == ZOMBIE_DIGGER || aRandZombie == ZOMBIE_DANCER))				continue;
 			if (mBoard->StageHasGraveStones() && aRandZombie == ZOMBIE_ZAMBONI)			continue;
 			if (!mBoard->StageHasRoof() && !mApp->IsSurvivalEndless(mApp->mGameMode) && aRandZombie == ZOMBIE_BUNGEE)	continue;
@@ -2737,7 +2738,6 @@ void Challenge::InitZombieWaves()
 	}
 	else if (aGameMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS)
 	{
-		aList[ZOMBIE_HYPNO_HEAD] = true;
 		aList[ZOMBIE_PEA_HEAD] = true;
 		aList[ZOMBIE_WALLNUT_HEAD] = true;
 	}
@@ -2752,13 +2752,27 @@ void Challenge::InitZombieWaves()
 	}
 	else if (aGameMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS_3)
 	{
+		aList[ZOMBIE_PEA_HEAD] = true;
+		aList[ZOMBIE_WALLNUT_HEAD] = true;
+		aList[ZOMBIE_JALAPENO_HEAD] = true;
+		aList[ZOMBIE_GATLING_HEAD] = true;
+		aList[ZOMBIE_SQUASH_HEAD] = true;
+		aList[ZOMBIE_TALLNUT_HEAD] = true;
+		aList[ZOMBIE_SNOWPEA_HEAD] = true;
+		aList[ZOMBIE_HYPNO_HEAD] = true;
+	}
+	else if (aGameMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS_4)
+	{
 		aList[ZOMBIE_CABBAGE_HEAD] = true;
 		aList[ZOMBIE_WALLNUT_HEAD] = true;
 		aList[ZOMBIE_JALAPENO_HEAD] = true;
 		aList[ZOMBIE_MELON_HEAD] = true;
+		aList[ZOMBIE_WINTERMELON_HEAD] = true;
 		aList[ZOMBIE_SQUASH_HEAD] = true;
 		aList[ZOMBIE_TALLNUT_HEAD] = true;
 		aList[ZOMBIE_UMBRELLA_HEAD] = true;
+		aList[ZOMBIE_GATLING_HEAD] = true;
+		aList[ZOMBIE_HYPNO_HEAD] = true;
 	}
 	else if (mApp->IsShovelLevel())
 	{

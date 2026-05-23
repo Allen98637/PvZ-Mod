@@ -572,7 +572,6 @@ void GameSelector::SyncProfile(bool theShowLoading)
 		AddTrophySparkle();
 
 	SyncButtons();
-	AlmanacInitForPlayer();
 	BoardInitForPlayer();
 	ReportAchievement::AchievementInitForPlayer(mApp); // @Patoke: add call
 }

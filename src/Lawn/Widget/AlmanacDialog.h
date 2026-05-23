@@ -24,8 +24,8 @@
 
 #include "LawnDialog.h"
 
-#define NUM_ALMANAC_SEEDS 49
-#define NUM_ALMANAC_ZOMBIES 26
+#define NUM_ALMANAC_SEEDS 51
+#define NUM_ALMANAC_ZOMBIES 32
 
 constexpr const float			ALMANAC_PLANT_POSITION_X		= 578.0f;
 constexpr const float			ALMANAC_PLANT_POSITION_Y		= 140.0f;
@@ -65,6 +65,7 @@ public:
 	Plant*						mPlant;
 	Zombie*						mZombie;
 	Zombie*						mZombiePerfTest[400];
+	int 						mScrollY;
 	
 public:
 	AlmanacDialog(LawnApp* theApp);
@@ -85,19 +86,16 @@ public:
 	/*inline*/ bool				ZombieHasSilhouette(ZombieType theZombieType);
 	bool						ZombieIsShown(ZombieType theZombieType);
 	bool						ZombieHasDescription(ZombieType theZombieType);
-	void						GetZombiePosition(ZombieType theZombieType, int& x, int& y);
+	void						GetZombiePosition(int number, int& x, int& y);
 	ZombieType					ZombieHitTest(int x, int y);
 	virtual void				MouseUp(int x, int y, int theClickCount);
 	virtual void				MouseDown(int x, int y, int theClickCount);
+    void            			MouseWheel(int theDelta);
 //	virtual void				KeyChar(char theChar);
 
 	static ZombieType			GetZombieType(int theIndex);
 	/*inline*/ void				ShowPlant(SeedType theSeedType);
 	/*inline*/ void				ShowZombie(ZombieType theZombieType);
 };
-extern bool gZombieDefeated[NUM_ZOMBIE_TYPES];
-
-/*inline*/ void					AlmanacInitForPlayer();
-/*inline*/ void					AlmanacPlayerDefeatedZombie(ZombieType theZombieType);
 
 #endif

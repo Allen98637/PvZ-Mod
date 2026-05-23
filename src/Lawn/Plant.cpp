@@ -415,6 +415,7 @@ void Plant::PlantInitialize(int theGridX, int theGridY, SeedType theSeedType, Se
     case SeedType::SEED_PUMPKINSTAIR:
     {
         mPlantHealth = 4000;
+        if(theSeedType == SEED_PUMPKINSTAIR) mPlantHealth = 2000;
         mWidth = 120;
 
         TOD_ASSERT(aBodyReanim);

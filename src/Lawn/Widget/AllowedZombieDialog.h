@@ -24,7 +24,7 @@
 
 #include "widget/Dialog.h"
 
-#define NUM_CHOOSABLE_ZOMBIES 32
+#define NUM_CHOOSABLE_ZOMBIES 36
 
 class Plant;
 class Zombie;
@@ -58,7 +58,6 @@ public:
 	void						Resize(int theX, int theY, int theWidth, int theHeight);
 	/*inline*/ bool				ZombieHasSilhouette(ZombieType theZombieType);
 	bool						ZombieIsShown(ZombieType theZombieType);
-	bool						ZombieHasDescription(ZombieType theZombieType);
 	void						GetZombiePosition(int num, int& x, int& y);
 	int							ZombieHitTest(int x, int y);
 	void						MouseUp(int x, int y, int theClickCount);

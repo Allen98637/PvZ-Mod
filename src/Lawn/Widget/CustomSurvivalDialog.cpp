@@ -56,9 +56,23 @@ CustomSurvivalDialog::CustomSurvivalDialog(LawnApp* theApp, int theMode, Dialog*
     mHeight = 584;
 
     for(int i = 0; i < NUM_ZOMBIE_TYPES; i++){
-        mZombieAllowed[i] = true;
         ZombieType aType = (ZombieType)i;
-        if(aType == ZOMBIE_BOSS || Zombie::IsZombotany(aType) || aType == ZOMBIE_BOBSLED) mZombieAllowed[i] = false;
+        int aLevel = mApp->mPlayerInfo->GetLevel() + mApp->mPlayerInfo->mFinishedAdventure * 50;
+        int aStart = GetZombieDefinition(aType).mStartingLevel;
+
+        if (aType == ZombieType::ZOMBIE_YETI)
+        {
+            if (!mApp->CanSpawnYetis())
+                mZombieAllowed[i] = false;
+            if (mApp->mPlayerInfo->mFinishedAdventure >= 2)
+                mZombieAllowed[i] = true;
+        }
+        else if(aType == ZOMBIE_REDEYE_GARGANTUAR){
+            mZombieAllowed[i] = true;
+        }
+        else
+            mZombieAllowed[i] = aStart <= aLevel && (aStart != aLevel || mApp->mPlayerInfo->mZombieDefeated[aType]);
+        if(aType == ZOMBIE_BOSS || aStart == -1 || aType == ZOMBIE_BOBSLED) mZombieAllowed[i] = false;
         if(GetZombieDefinition(aType).mPickWeight == 0 || aType == ZOMBIE_DUCKY_TUBE) mZombieAllowed[i] = false;
     }
     for(int i = NUM_ZOMBIE_TYPES; i < 100; i++) mZombieAllowed[i] = false;

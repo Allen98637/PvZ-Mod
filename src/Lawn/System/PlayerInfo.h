@@ -104,6 +104,7 @@ public:
     std::vector<unsigned char> mZombatarData;               // raw 0x48 * count
     unsigned char       mZombatarTrailingUnknown[0x14];     // unknown bytes after Zombatars
     unsigned char       mZombatarCreatedBefore;             // created at least one Zombatar (0/1)
+    bool                mZombieDefeated[100];
 
 public:
     PlayerInfo();
