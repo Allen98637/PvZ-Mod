@@ -189,8 +189,10 @@ Board::Board(LawnApp* theApp)
 	mMenuButton = new GameButton(0);
 	mMenuButton->mDrawStoneButton = true;
 	mStoreButton = nullptr;
+	mSpeedButton = nullptr;
 	mIgnoreMouseUp = false;
-
+	mSpeed = 1;
+	mTCounter = 0;
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
 		mMenuButton->SetLabel("[MAIN_MENU_BUTTON]");
@@ -207,6 +209,12 @@ Board::Board(LawnApp* theApp)
 	{
 		mMenuButton->SetLabel("[MENU_BUTTON]");
 		mMenuButton->Resize(681, -10, 117, 46);
+
+		
+		mSpeedButton = new GameButton(2);
+		mSpeedButton->mDrawStoneButton = true;
+		mSpeedButton->SetLabel("1x");
+		mSpeedButton->Resize(724, 38, 71, 46);
 	}
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND)
@@ -242,6 +250,10 @@ Board::~Board()
 	if (mStoreButton)
 	{
 		delete mStoreButton;
+	}
+	if (mSpeedButton)
+	{
+		delete mSpeedButton;
 	}
 	mZombies.DataArrayDispose();
 	mPlants.DataArrayDispose();
@@ -606,7 +618,7 @@ void Board::PutInMissingZombies(int theWaveNumber, ZombiePicker* theZombiePicker
 {
 	for (ZombieType aZombieType = ZombieType::ZOMBIE_NORMAL; aZombieType < ZombieType::NUM_ZOMBIE_TYPES; aZombieType = static_cast<ZombieType>(static_cast<int>(aZombieType) + 1))
 	{
-		if (theZombiePicker->mZombieTypeCount[aZombieType] <= 0 && aZombieType != ZombieType::ZOMBIE_YETI && CanZombieSpawnOnLevel(aZombieType, mLevel))
+		if (theZombiePicker->mZombieTypeCount[aZombieType] <= 0 && aZombieType != ZombieType::ZOMBIE_YETI && CanZombieSpawnOnLevel(aZombieType, mLevel, mApp->mPlayerInfo->mFinishedAdventure))
 		{
 			PutZombieInWave(aZombieType, theWaveNumber, theZombiePicker);
 		}
@@ -1238,7 +1250,7 @@ void Board::InitZombieWavesForLevel(int theForLevel)
 
 	for (int aZombieType = ZombieType::ZOMBIE_NORMAL; aZombieType < ZombieType::NUM_ZOMBIE_TYPES; aZombieType++)
 	{
-		mZombieAllowed[aZombieType] = CanZombieSpawnOnLevel(static_cast<ZombieType>(aZombieType), theForLevel);
+		mZombieAllowed[aZombieType] = CanZombieSpawnOnLevel(static_cast<ZombieType>(aZombieType), theForLevel, mApp->mPlayerInfo->mFinishedAdventure);
 	}
 }
 
@@ -1265,7 +1277,7 @@ bool Board::IsZombieWaveDistributionOk()
 
 	for (ZombieType aZombieType = ZombieType::ZOMBIE_NORMAL; aZombieType < ZombieType::NUM_ZOMBIE_TYPES; aZombieType = static_cast<ZombieType>(static_cast<int>(aZombieType) + 1))
 	{
-		if (aZombieType != ZombieType::ZOMBIE_YETI && CanZombieSpawnOnLevel(aZombieType, mLevel) && aZombieTypeCount[aZombieType] == 0)
+		if (aZombieType != ZombieType::ZOMBIE_YETI && CanZombieSpawnOnLevel(aZombieType, mLevel, mApp->mPlayerInfo->mFinishedAdventure) && aZombieTypeCount[aZombieType] == 0)
 		{
 			TodTraceAndLog("Didn't spawn required zombie %s, level %d", GetZombieDefinition(aZombieType).mZombieName, mLevel);
 			return false;
@@ -2485,21 +2497,26 @@ Projectile* Board::AddProjectile(int theX, int theY, int theRenderOrder, int the
 	return aProjectile;
 }
 
-bool Board::CanZombieSpawnOnLevel(ZombieType theZombieType, int theLevel)
+bool Board::CanZombieSpawnOnLevel(ZombieType theZombieType, int theLevel, int clearCount)
 {
 	const ZombieDefinition& aZombieDef = GetZombieDefinition(theZombieType);
+	if(aZombieDef.mStartingLevel == -1) return false;
 	if (theZombieType == ZombieType::ZOMBIE_YETI)
 	{
 		return gLawnApp->CanSpawnYetis();
 	}
 
-	if (theLevel < aZombieDef.mStartingLevel || aZombieDef.mPickWeight == 0)
+	int aLevel = theLevel + clearCount * 50;
+
+	if (aLevel < aZombieDef.mStartingLevel || aZombieDef.mPickWeight == 0)
 	{
 		return false;
 	}
 
 	TOD_ASSERT(gZombieAllowedLevels[theZombieType].mZombieType == theZombieType);
-	return gZombieAllowedLevels[theZombieType].mAllowedOnLevel[ClampInt(theLevel - 1, 0, 49)];
+	int num = gZombieAllowedLevels[theZombieType].mAllowedOnLevel[ClampInt(theLevel - 1, 0, 49)];
+	if (num == 0) return false;
+	return (clearCount + 1) >= num;
 }
 
 ZombieType Board::GetIntroducedZombieType()
@@ -2578,7 +2595,7 @@ ZombieType Board::PickZombieType(int theZombiePoints, int theWaveIndex, ZombiePi
 		// ================================================================================================
 		GameMode aGameMode = mApp->mGameMode;
 		// 蹦极僵尸在无尽模式中仅在旗帜波出现
-		if (aZombieType == ZombieType::ZOMBIE_BUNGEE && mApp->IsSurvivalEndless(aGameMode))
+		if (aZombieType == ZombieType::ZOMBIE_BUNGEE && mApp->IsSurvivalEndless(aGameMode) && (!mApp->IsSurvivalCustom(aGameMode) || !mCustomSurvivalOption.mAllowedZombie[99]))
 		{
 			if (!IsFlagWave(theWaveIndex))
 			{
@@ -3149,6 +3166,7 @@ void Board::UpdateCursor()
 	{
 	case GameObjectType::OBJECT_TYPE_MENU_BUTTON:
 	case GameObjectType::OBJECT_TYPE_STORE_BUTTON:
+	case GameObjectType::OBJECT_TYPE_SPEED_BUTTON:
 	case GameObjectType::OBJECT_TYPE_SHOVEL:
 	case GameObjectType::OBJECT_TYPE_WATERING_CAN:
 	case GameObjectType::OBJECT_TYPE_FERTILIZER:
@@ -4376,6 +4394,10 @@ bool Board::MouseHitTest(int x, int y, HitResult* theHitResult)
 		theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_STORE_BUTTON;
 		return true;
 	}
+	else if (mSpeedButton && mSpeedButton->IsMouseOver() && CanInteractWithBoardButtons()){
+		theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_SPEED_BUTTON;
+		return true;
+	}
 
 	Rect aShovelButtonRect = GetShovelButtonRect();
 	if (mSeedBank->MouseHitTest(x, y, theHitResult))
@@ -4628,6 +4650,9 @@ void Board::MouseDown(int x, int y, int theClickCount)
 	{
 		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
 	}
+	else if(mSpeedButton && mSpeedButton->IsMouseOver() && CanInteractWithBoardButtons() && theClickCount > 0){
+		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
+	}
 	else if (mStoreButton && mStoreButton->IsMouseOver() && CanInteractWithBoardButtons() && theClickCount > 0)
 	{
 		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
@@ -4865,6 +4890,25 @@ void Board::MouseUp(int x, int y, int theClickCount)
 			{
 				mApp->mBoardResult = BoardResult::BOARDRESULT_QUIT;
 				mApp->DoBackToMain();
+			}
+		}
+		if (mSpeedButton && mSpeedButton->IsMouseOver() && !mApp->GetDialog(Dialogs::DIALOG_GAME_OVER) && !mApp->GetDialog(Dialogs::DIALOG_LEVEL_COMPLETE))
+		{
+			if(std::abs(mSpeed - 1.0) < 1e-6){
+				mSpeed = 1.5;
+				mSpeedButton->SetLabel("1.5x");
+			}
+			else if(std::abs(mSpeed - 1.5) < 1e-6){
+				mSpeed = 2;
+				mSpeedButton->SetLabel("2x");
+			}
+			else if(std::abs(mSpeed - 2.0) < 1e-6){
+				mSpeed = 3;
+				mSpeedButton->SetLabel("3x");
+			}
+			else{
+				mSpeed = 1;
+				mSpeedButton->SetLabel("1x");
 			}
 		}
 		else if(mStoreButton && mStoreButton->IsMouseOver())
@@ -5996,6 +6040,10 @@ void Board::Update()
 		mMenuButton->mDisabled = aDisabled;
 	}
 	mMenuButton->Update();
+	if(mSpeedButton && !mSpeedButton->mBtnNoDraw){
+		mSpeedButton->mDisabled = aDisabled;
+		mSpeedButton->Update();
+	}
 	if (mStoreButton)
 	{
 		mStoreButton->mDisabled = aDisabled;
@@ -6053,14 +6101,21 @@ void Board::Update()
 		mPoolSparklyParticleID = mApp->ParticleGetID(aPoolParticle);
 	}
 
-	UpdateGridItems();
-	UpdateFwoosh();
-	UpdateGame();
-	UpdateFog();
-	mChallenge->Update();
-	UpdateLevelEndSequence();
-	mPrevMouseX = mApp->mWidgetManager->mLastMouseX;
-	mPrevMouseY = mApp->mWidgetManager->mLastMouseY;
+	int bb = mTCounter;
+	mTCounter += mSpeed;
+	int aTime = (int)mTCounter - bb;
+	if(mLevelAwardSpawned) aTime = 1;
+
+	for(int i = 0; i < aTime; i++){
+		UpdateGridItems();
+		UpdateFwoosh();
+		UpdateGame();
+		UpdateFog();
+		mChallenge->Update();
+		UpdateLevelEndSequence();
+		mPrevMouseX = mApp->mWidgetManager->mLastMouseX;
+		mPrevMouseY = mApp->mWidgetManager->mLastMouseY;
+	}
 }
 
 // GOTY @Patoke: 0x418940
@@ -7460,6 +7515,10 @@ void Board::DrawTopRightUI(Graphics* g)
 	{
 		g->SetColorizeImages(true);
 		g->SetColor(GetFlashingColor(mMainCounter, 75));
+	}
+	
+	if(mSpeedButton){
+		mSpeedButton->Draw(g);
 	}
 	mMenuButton->Draw(g);
 	g->SetColorizeImages(false);

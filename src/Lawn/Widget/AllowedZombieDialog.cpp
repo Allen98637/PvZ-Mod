@@ -51,7 +51,6 @@ ZombieType gChoosableZombieTypes[NUM_CHOOSABLE_ZOMBIES] = {
     ZOMBIE_BALLOON,
     ZOMBIE_DIGGER,
     ZOMBIE_POGO,
-    ZOMBIE_YETI,
     ZOMBIE_BUNGEE,
     ZOMBIE_LADDER,
     ZOMBIE_CATAPULT,
@@ -175,8 +174,14 @@ void AllowedZombieDialog::DrawZombies(Graphics* g)
 		GetZombiePosition(i, aPosX, aPosY);
 		if (aZombieType != ZombieType::ZOMBIE_INVALID)
 		{
-			if (!ZombieIsShown(aZombieType))
-				g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIEBLANK, aPosX, aPosY);
+			if (!ZombieIsShown(aZombieType)){
+				if(!chosen){
+					g->SetColor(Color(128, 128, 128));
+					g->SetColorizeImages(true);
+				}
+				g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIEWINDOW2, aPosX, aPosY);
+				g->SetColorizeImages(false);
+			}
 			else
 			{
 				if(!chosen){
@@ -185,7 +190,7 @@ void AllowedZombieDialog::DrawZombies(Graphics* g)
 				}
 				g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIEWINDOW, aPosX, aPosY);
 				g->SetColorizeImages(false);
-				if (i == aZombieMouseOn && (!ZombieHasSilhouette(aZombieType) || aZombieType == ZOMBIE_REDEYE_GARGANTUAR))
+				if (i == aZombieMouseOn)
 				{
 					g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
 					g->SetColor(Color(255, 255, 255, 48));
@@ -254,6 +259,10 @@ void AllowedZombieDialog::DrawZombies(Graphics* g)
 					g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIEWINDOW2, aPosX, aPosY);
 					g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
 					g->SetColorizeImages(false);
+				}
+
+				if(aZombieType == ZOMBIE_BUNGEE && !mZombieAllowed[99] && chosen){
+					g->DrawImageCel(Sexy::IMAGE_FLAGMETERPARTS, aPosX + 57, aPosY - 3, 2, 0);
 				}
 			}
 		}
@@ -389,6 +398,7 @@ int AllowedZombieDialog::ZombieHitTest(int x, int y)
 		for (int i = 0; i < NUM_CHOOSABLE_ZOMBIES; i++)
 		{
 			ZombieType aZombieType = gChoosableZombieTypes[i];
+			if (ZombieHasSilhouette(aZombieType) && aZombieType != ZOMBIE_REDEYE_GARGANTUAR) continue;
 			// @Patoke: added IsShown check
 			if (ZombieIsShown(aZombieType))
 			{
@@ -409,7 +419,13 @@ void AllowedZombieDialog::MouseUp(int x, int y, int theClickCount)
 		ZombieType aZombieType = gChoosableZombieTypes[pik];
 		if (aZombieType != ZombieType::ZOMBIE_INVALID)
 		{
-			mZombieAllowed[aZombieType] = !mZombieAllowed[aZombieType];
+			if(aZombieType == ZOMBIE_BUNGEE){
+				if(!mZombieAllowed[99] && mZombieAllowed[ZOMBIE_BUNGEE]) mZombieAllowed[99] = true;
+				else if(!mZombieAllowed[ZOMBIE_BUNGEE]){mZombieAllowed[ZOMBIE_BUNGEE] = true;mZombieAllowed[99] = false;}
+				else {mZombieAllowed[ZOMBIE_BUNGEE] = false;mZombieAllowed[99] = false;}
+			}
+			else mZombieAllowed[aZombieType] = !mZombieAllowed[aZombieType];
+
 			if(aZombieType != ZOMBIE_REDEYE_GARGANTUAR && (!ZombieIsShown(aZombieType) || ZombieHasSilhouette(aZombieType)))
 				mZombieAllowed[aZombieType] = false;
 			if(aZombieType == ZOMBIE_BOBSLED && mZombieAllowed[ZOMBIE_BOBSLED]) mZombieAllowed[ZOMBIE_ZAMBONI] = true;

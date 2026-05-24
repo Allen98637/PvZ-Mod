@@ -74,13 +74,13 @@ ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES] = {
     { ZOMBIE_SQUASH_HEAD,       REANIM_ZOMBIE,              3,      -1,     10,     2000,   "ZOMBIE" },
     { ZOMBIE_TALLNUT_HEAD,      REANIM_ZOMBIE,              4,      -1,     10,     2000,   "ZOMBIE" },
     { ZOMBIE_REDEYE_GARGANTUAR, REANIM_GARGANTUAR,          10,     93,     15,     6000,   "REDEYED_GARGANTUAR" },
-    { ZOMBIE_GIGA_FOOTBALL,     REANIM_ZOMBIE_FOOTBALL_GIGA,10,     51,     15,     4000,   "GIGA_FOOTBALL_ZOMBIE" },
+    { ZOMBIE_GIGA_FOOTBALL,     REANIM_ZOMBIE_FOOTBALL_GIGA,10,     56,     15,     4000,   "GIGA_FOOTBALL_ZOMBIE" },
     { ZOMBIE_DOOR_PAIL,         REANIM_ZOMBIE,              5,      51,     7,     4000,   "DOOR_PAIL_ZOMBIE" },
-    { ZOMBIE_JACKSON,           REANIM_JACKSON,             10,     51,     15,      4000,   "JACKSON_ZOMBIE" },
-    { ZOMBIE_JACKSON_DANCER,    REANIM_ZOMBIE_DANCER,       1,      51,     1,      0,      "ZOMBIE_JACKSON_DANCER" },
-    { ZOMBIE_BLUEOON,           REANIM_BLUEOON,             5,      51,     15,     3000,   "BLUEOON_ZOMBIE" },
-    { ZOMBIE_UMBRELLA_HEAD,     REANIM_ZOMBIE,              3,      99,     10,     3000,   "ZOMBIE" },
-    { ZOMBIE_CABBAGE_HEAD,     REANIM_ZOMBIE,               1,      99,     1,      4000,   "ZOMBIE" },
+    { ZOMBIE_JACKSON,           REANIM_JACKSON,             10,     61,     15,      4000,   "JACKSON_ZOMBIE" },
+    { ZOMBIE_JACKSON_DANCER,    REANIM_ZOMBIE_DANCER,       1,      61,     1,      0,      "ZOMBIE_JACKSON_DANCER" },
+    { ZOMBIE_BLUEOON,           REANIM_BLUEOON,             5,      71,     15,     3000,   "BLUEOON_ZOMBIE" },
+    { ZOMBIE_UMBRELLA_HEAD,     REANIM_ZOMBIE,              3,      -1,     10,     3000,   "ZOMBIE" },
+    { ZOMBIE_CABBAGE_HEAD,     REANIM_ZOMBIE,               1,      -1,     1,      4000,   "ZOMBIE" },
     { ZOMBIE_MELON_HEAD,        REANIM_ZOMBIE,               3,     -1,     5,      3000,   "ZOMBIE" },
     { ZOMBIE_SNOWPEA_HEAD,      REANIM_ZOMBIE,               3,     -1,     5,      3000,   "ZOMBIE" },
     { ZOMBIE_HYPNO_HEAD,        REANIM_ZOMBIE,               4,     -1,     10,      3000,   "ZOMBIE" },
@@ -1015,6 +1015,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         TodScaleRotateTransformMatrix(aAttachEffect->mOffset, 65.0f, -5.0f, 0.2f, -1.0f, 1.0f);
 
         mPhaseCounter2 = 150;
+        mBodyHealth = 500;
         mVariant = false;
         break;
     }
@@ -1367,7 +1368,6 @@ void Zombie::SetupCachedLayers(Reanimation* aReanim, ZombieType theZombieType, R
             bReanim->AssignRenderGroupToPrefix("frontleaf_right_tip", RENDER_GROUP_HIDDEN);
             bReanim->AssignRenderGroupToPrefix("frontleaf", RENDER_GROUP_HIDDEN);
             TodScaleRotateTransformMatrix(bReanim->mOverlayMatrix, 105.0f, 15.0f, 0.2f, -1.0f, 1.0f); //65.0, -5.0
-            break;
             break;
         }
         default:
@@ -2862,7 +2862,7 @@ void Zombie::UpdateZombieMelonHead()
             
             ProjectileType aTt = PROJECTILE_ZOMBIE_MELON;
             if(mZombieType == ZOMBIE_WINTERMELON_HEAD) aTt = PROJECTILE_ZOMBIE_WINTERMELON;
-            Projectile* aProjectile = CreateLobProjectile(aPlant, PROJECTILE_ZOMBIE_MELON, aOriginX, aOriginY);
+            Projectile* aProjectile = CreateLobProjectile(aPlant, aTt, aOriginX, aOriginY);
             aProjectile->mDamageRangeFlags = 141;
         }
 

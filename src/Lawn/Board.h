@@ -173,6 +173,7 @@ public:
 	SeedBank*						mSeedBank;
 	GameButton*						mMenuButton;
 	GameButton*						mStoreButton;
+	GameButton*						mSpeedButton;
 	bool							mIgnoreMouseUp;
 	ToolTipWidget*					mToolTip;
 	//_Font*							mDebugFont;
@@ -282,6 +283,8 @@ public:
 	uint32_t						mPottedPlantsCollected;
 	uint32_t						mChocolateCollected;
 	CustomSurvivalOption			mCustomSurvivalOption;
+	double							mSpeed;
+	double							mTCounter;
 
 public:
 	Board(LawnApp* theApp);
@@ -414,7 +417,7 @@ public:
 	Plant*							GetPumpkinAt(int theGridX, int theGridY);
 	Plant*							GetFlowerPotAt(int theGridX, int theGridY);
 	Plant*							GetWaterPotAt(int theGridX, int theGridY);
-	static bool						CanZombieSpawnOnLevel(ZombieType theZombieType, int theLevel);
+	static bool						CanZombieSpawnOnLevel(ZombieType theZombieType, int theLevel, int clearCount);
 	bool							IsZombieWaveDistributionOk();
 	void							PickBackground();
 	void							InitZombieWaves();

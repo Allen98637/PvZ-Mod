@@ -62,10 +62,7 @@ CustomSurvivalDialog::CustomSurvivalDialog(LawnApp* theApp, int theMode, Dialog*
 
         if (aType == ZombieType::ZOMBIE_YETI)
         {
-            if (!mApp->CanSpawnYetis())
-                mZombieAllowed[i] = false;
-            if (mApp->mPlayerInfo->mFinishedAdventure >= 2)
-                mZombieAllowed[i] = true;
+            mZombieAllowed[i] = mApp->CanSpawnYetis();
         }
         else if(aType == ZOMBIE_REDEYE_GARGANTUAR){
             mZombieAllowed[i] = true;
@@ -343,7 +340,7 @@ void CustomSurvivalDialog::ButtonDepress(int theId)
         }
         else{
             mApp->KillChallengeScreen();
-            mApp->PreNewGame((GameMode)(mChallengeMode + 1), options);
+            mApp->PreNewGame((GameMode)(mChallengeMode), options);
         }
         break;
     }

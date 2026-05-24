@@ -83,7 +83,7 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_CHALLENGE_SHOVEL,                     10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  3,  "[CAN_YOU_DIG_IT]" },
 	{ GameMode::GAMEMODE_CHALLENGE_STORMY_NIGHT,               13,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  4,  "[DARK_STORMY_NIGHT]" },
 	{ GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ,               9,   ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  0,  "[BUNGEE_BLITZ]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SQUIRREL,                   10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  1,  "Squirrel" },
+	{ GameMode::GAMEMODE_CHALLENGE_SQUIRREL,                   10,  ChallengePage::CHALLENGE_PAGE_NONE,        2,  1,  "Squirrel" },
 	{ GameMode::GAMEMODE_TREE_OF_WISDOM,                       10,  ChallengePage::CHALLENGE_PAGE_NONE,        2,  4,  "Tree of Wisdom" }, // @Patoke: replaced for english
 	{ GameMode::GAMEMODE_SCARY_POTTER_1,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  0,  "[SCARY_POTTER_1]" },
 	{ GameMode::GAMEMODE_SCARY_POTTER_2,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  1,  "[SCARY_POTTER_2]" },
@@ -107,8 +107,8 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS,              11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  4,  "[I_ZOMBIE_ENDLESS]" },
 	{ GameMode::GAMEMODE_UPSELL,                               10,  ChallengePage::CHALLENGE_PAGE_NONE,        3,  2,  "Upsell" },
 	{ GameMode::GAMEMODE_INTRO,                                10,  ChallengePage::CHALLENGE_PAGE_NONE,       2,  3,  "Intro" },
-	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3,          6,   ChallengePage::CHALLENGE_PAGE_LIMBO,   	   2,  2,  "[WALL_NUT_BOWLING_EXTREME]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2,           16,  ChallengePage::CHALLENGE_PAGE_LIMBO,   	2,  3,  "[WHACK_A_ZOMBIE]" },
+	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3,          6,   ChallengePage::CHALLENGE_PAGE_LIMBO,   	   2,  1,  "[WALL_NUT_BOWLING_EXTREME]" },
+	{ GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2,           16,  ChallengePage::CHALLENGE_PAGE_LIMBO,   	   2,  2,  "[WHACK_A_ZOMBIE_EXTREME]" },
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_1,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  0,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_2,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  1,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_3,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  2,  "[SURVIVAL_CUSTOM]" },
@@ -124,8 +124,8 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_13,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  2,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_14,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  3,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_15,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  4,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  4,  "[WAR_AND_PEAS_3]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   3,  0,  "[WAR_AND_PEAS_4]" },
+	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  3,  "[WAR_AND_PEAS_3]" },
+	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  4,  "[WAR_AND_PEAS_4]" },
 };
 
 // GOTY @Patoke: 0x430810
@@ -378,7 +378,7 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 			{
 				return 10 - aNumTrophies;
 			}
-			if (aDef.mPage == CHALLENGE_PAGE_SURVIVAL || aDef.mPage == CHALLENGE_PAGE_CHALLENGE)
+			if (aDef.mPage == CHALLENGE_PAGE_SURVIVAL)
 			{
 				aNumTrophies += 3;
 			}

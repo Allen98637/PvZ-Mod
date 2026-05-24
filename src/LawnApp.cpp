@@ -151,7 +151,7 @@ LawnApp::LawnApp()
 	mAutoStartLoadingThread = false;
 	mDebugKeysEnabled = false;
 	mProdName = "allen98637.pvz-mod";
-	std::string aTitleName = "PvZ Mod";
+	std::string aTitleName = "Plants vs. Zombies - Ordinary Mod";
 	mTitle = aTitleName;
 	mCustomCursorsEnabled = false;
 	mPlayerInfo = nullptr;

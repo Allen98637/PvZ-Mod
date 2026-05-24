@@ -691,6 +691,7 @@ void CutScene::StartLevelIntro()
 	mCutsceneTime = 0;
 	mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, -IMAGE_SEEDBANK->GetHeight());
 	mBoard->mMenuButton->mBtnNoDraw = true;
+	if(mBoard->mSpeedButton) mBoard->mSpeedButton->mBtnNoDraw = true;
 	mApp->mSeedChooserScreen->mMouseVisible = false;
 	mApp->mSeedChooserScreen->Move(0, SEED_CHOOSER_OFFSET_Y);
 	mApp->mSeedChooserScreen->mMenuButton->mBtnNoDraw = true;
@@ -1040,6 +1041,9 @@ void CutScene::CancelIntro()
 		if (mBoard->mTutorialState != TutorialState::TUTORIAL_ZEN_GARDEN_PICKUP_WATER)
 		{
 			mBoard->mMenuButton->mBtnNoDraw = false;
+			if(mBoard->mSpeedButton){
+				mBoard->mSpeedButton->mBtnNoDraw = false;
+			}
 		}
 		mApp->mSoundSystem->StopFoley(FoleyType::FOLEY_DIGGER);
 	}
@@ -1481,14 +1485,25 @@ void CutScene::Update()
 		}
 	}
 
+
 	// 过场结束的判定
 	int aTimeStart = TimeIntroEnd + mLawnMowerTime + mSodTime + mGraveStoneTime + mCrazyDaveTime + mFogTime + mBossTime + mReadySetPlantTime;
+	if(mCutsceneTime >= aTimeStart - mReadySetPlantTime && mBoard->ChooseSeedsOnCurrentLevel()){
+		if(mBoard->mSpeedButton){
+			mBoard->mSpeedButton->mBtnNoDraw = false;
+			mBoard->mSpeedButton->mY = TodAnimateCurve(mReadySetPlantTime / 3, 0, mCutsceneTime - aTimeStart + mReadySetPlantTime, 38, -50, TodCurves::CURVE_EASE_IN_OUT);
+		}
+	}
 	if (mCutsceneTime >= aTimeStart)
 	{
 		mBoard->RemoveCutsceneZombies();
 		if (mBoard->mTutorialState != TutorialState::TUTORIAL_ZEN_GARDEN_PICKUP_WATER)
 		{
 			mBoard->mMenuButton->mBtnNoDraw = false;
+			if(mBoard->mSpeedButton){
+				mBoard->mSpeedButton->mBtnNoDraw = false;
+				mBoard->mSpeedButton->mY = 38;
+			}
 		}
 
 		ShowShovel();
@@ -1503,6 +1518,7 @@ void CutScene::StartZombiesWon()
 {
 	mCutsceneTime = 0;
 	mBoard->mMenuButton->mBtnNoDraw = true;
+	if(mBoard->mSpeedButton) mBoard->mSpeedButton->mBtnNoDraw = true;
 	mBoard->mShowShovel = false;
 	mApp->mMusic->StopAllMusic();
 	mBoard->StopAllZombieSounds();

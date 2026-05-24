@@ -279,7 +279,15 @@ ZombieAllowedLevels gZombieAllowedLevels[NUM_ZOMBIE_TYPES] = {
 	{ ZOMBIE_TALLNUT_HEAD, {0} },
 	{ ZOMBIE_REDEYE_GARGANTUAR, {0} },
 	{ ZOMBIE_GIGA_FOOTBALL, {0} },
-	{ ZOMBIE_DOOR_PAIL, {0} },
+	{ ZOMBIE_DOOR_PAIL, 
+		{
+			2, 2, 2, 2, 0, 2, 2, 2, 2, 2,
+			0, 0, 2, 0, 0, 0, 2, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			2, 0, 0, 2, 0, 0, 2, 2, 2, 0,
+		}
+	},
 	{ ZOMBIE_JACKSON, {0} },
 	{ ZOMBIE_JACKSON_DANCER, {0} },
 	{ ZOMBIE_BLUEOON, {0} },
@@ -468,7 +476,7 @@ void Challenge::StartLevel()
 		mBoard->mZombieCountDownStart = mBoard->mZombieCountDown;
 		mBoard->mSeedBank->AddSeed(SEED_WALLNUT);
 		mConveyorBeltCounter = 400;
-		if(aGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3) mConveyorBeltCounter = 200;
+		if(aGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3) mConveyorBeltCounter = 300;
 		mShowBowlingLine = true;
 	}
 	if (aGameMode == GAMEMODE_CHALLENGE_SHOVEL || aGameMode == GAMEMODE_CHALLENGE_SQUIRREL)
@@ -2532,6 +2540,7 @@ void Challenge::InitZombieWavesSurvival()
 			
 			if(GetZombieDefinition(aType).mPickWeight == 0)					continue;
 			if (!mBoard->mCustomSurvivalOption.mAllowedZombie[aType])				continue;
+			if (aType == ZOMBIE_YETI) continue;
 			preZom[aPCount++] = aType;
 		}
 		if(aPCount <= aCapacity){
@@ -2546,7 +2555,8 @@ void Challenge::InitZombieWavesSurvival()
 		ZombieType aRandZombie = (ZombieType)aLevelRNG.Next((unsigned long)NUM_ZOMBIE_TYPES);
 		if (mBoard->mZombieAllowed[aRandZombie])																	continue;
 		if (mBoard->IsZombieTypePoolOnly(aRandZombie) && !mBoard->StageHasPool())									continue;
-		if (mBoard->GetSurvivalFlagsCompleted() < 10 && aRandZombie == ZOMBIE_REDEYE_GARGANTUAR)		continue;						
+		if (mBoard->GetSurvivalFlagsCompleted() < 10 && aRandZombie == ZOMBIE_REDEYE_GARGANTUAR)		continue;
+		if (aRandZombie == ZOMBIE_YETI) continue;
 		
 		if(mApp->IsSurvivalCustom(mApp->mGameMode)){
 			if(GetZombieDefinition(aRandZombie).mPickWeight == 0)					continue;
@@ -2554,7 +2564,7 @@ void Challenge::InitZombieWavesSurvival()
 			if (aRandZombie == ZOMBIE_BOBSLED && !mBoard->mZombieAllowed[ZOMBIE_ZAMBONI]) continue;
 		}
 		else{
-			if(GetZombieDefinition(aRandZombie).mStartingLevel > 50 || GetZombieDefinition(aRandZombie).mStartingLevel == -1) continue;
+			if((GetZombieDefinition(aRandZombie).mStartingLevel > 50 || GetZombieDefinition(aRandZombie).mStartingLevel == -1) && aRandZombie != ZOMBIE_REDEYE_GARGANTUAR) continue;
 			if (mBoard->StageHasRoof() && (aRandZombie == ZOMBIE_DIGGER || aRandZombie == ZOMBIE_DANCER))				continue;
 			if (mBoard->StageHasGraveStones() && aRandZombie == ZOMBIE_ZAMBONI)			continue;
 			if (!mBoard->StageHasRoof() && !mApp->IsSurvivalEndless(mApp->mGameMode) && aRandZombie == ZOMBIE_BUNGEE)	continue;
