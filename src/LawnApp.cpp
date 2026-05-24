@@ -721,6 +721,20 @@ void LawnApp::EndLevel()
 	mBoard->mCutScene->StartLevelIntro();
 }
 
+void LawnApp::EndLevel(CustomSurvivalOption options)
+{
+	KillBoard();
+	mFirstTimeGameSelector = true;
+
+	MakeNewBoard();
+	mBoard->mCustomSurvivalOption = options;
+	mBoard->InitLevel();
+	mBoardResult = BoardResult::BOARDRESULT_NONE;
+	mGameScene = GameScenes::SCENE_LEVEL_INTRO;
+	ShowSeedChooserScreen();
+	mBoard->mCutScene->StartLevelIntro();
+}
+
 void LawnApp::DoBackToMain()
 {
 	mMusic->StopAllMusic();

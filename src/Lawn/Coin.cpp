@@ -1408,7 +1408,7 @@ void Coin::MouseDown(int x, int y, int theClickCount)
         return;
     }
 
-    if (theClickCount >= 0 && !mIsBeingCollected && (!IsLevelAward() || theClickCount != 999))
+    if (theClickCount >= 0 && !mIsBeingCollected && (!NeedClick() || theClickCount != 999))
     {
         PlayCollectSound();
         Collect();
@@ -1418,6 +1418,10 @@ void Coin::MouseDown(int x, int y, int theClickCount)
             mBoard->DisplayAdvice("[ADVICE_CLICKED_ON_SUN]", MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1_STAY, AdviceType::ADVICE_CLICKED_ON_SUN);
         }
     }
+}
+
+bool Coin::NeedClick(){
+    return IsLevelAward() || mType == COIN_FINAL_SEED_PACKET || mType == COIN_USABLE_SEED_PACKET;
 }
 
 // GOTY @Patoke: 0x435B20

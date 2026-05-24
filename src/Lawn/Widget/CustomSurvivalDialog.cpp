@@ -330,13 +330,23 @@ void CustomSurvivalDialog::ButtonDepress(int theId)
         options.mFog = mFogCheckbox->mChecked;
         options.mStorm = mStormCheckbox->mChecked;
         if(mNoD){
-            mApp->mMusic->StopAllMusic();
-            mApp->mSoundSystem->CancelPausedFoley();
-            mApp->KillNewOptionsDialog();
-            mApp->KillDialog(Dialogs::DIALOG_CONTINUE);
-            mApp->mBoardResult = BoardResult::BOARDRESULT_RESTART;
-            mApp->mSawYeti = mApp->mBoard->mKilledYeti;
-            mApp->PreNewGame(mApp->mGameMode, options);
+            switch(mNoD->mId){
+                case Dialogs::DIALOG_GAME_OVER:{
+                    mApp->KillDialog(Dialogs::DIALOG_GAME_OVER);
+                    mApp->EndLevel(options);
+                    break;
+                }
+                default:{
+                    mApp->mMusic->StopAllMusic();
+                    mApp->mSoundSystem->CancelPausedFoley();
+                    mApp->KillNewOptionsDialog();
+                    mApp->KillDialog(Dialogs::DIALOG_CONTINUE);
+                    mApp->mBoardResult = BoardResult::BOARDRESULT_RESTART;
+                    mApp->mSawYeti = mApp->mBoard->mKilledYeti;
+                    mApp->PreNewGame(mApp->mGameMode, options);
+                    break;
+                }
+            }
         }
         else{
             mApp->KillChallengeScreen();

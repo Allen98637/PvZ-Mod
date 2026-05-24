@@ -2550,8 +2550,10 @@ void Challenge::InitZombieWavesSurvival()
 			aCapacity = 0;
 		}
 	}
-	while (aCapacity > 0)
+	int loopCount = 0;
+	while (aCapacity > 0 && loopCount <= 50000)
 	{
+		loopCount++;
 		ZombieType aRandZombie = (ZombieType)aLevelRNG.Next((unsigned long)NUM_ZOMBIE_TYPES);
 		if (mBoard->mZombieAllowed[aRandZombie])																	continue;
 		if (mBoard->IsZombieTypePoolOnly(aRandZombie) && !mBoard->StageHasPool())									continue;

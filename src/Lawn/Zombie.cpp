@@ -9105,8 +9105,7 @@ bool Zombie::ZombieTypeCanGoInPool(ZombieType theZombieType)
         theZombieType == ZombieType::ZOMBIE_WALLNUT_HEAD || 
         theZombieType == ZombieType::ZOMBIE_JALAPENO_HEAD || 
         theZombieType == ZombieType::ZOMBIE_GATLING_HEAD || 
-        theZombieType == ZombieType::ZOMBIE_TALLNUT_HEAD || 
-        theZombieType == ZombieType::ZOMBIE_DOOR_PAIL || 
+        theZombieType == ZombieType::ZOMBIE_TALLNUT_HEAD ||
         theZombieType == ZombieType::ZOMBIE_JACKSON_DANCER ||
         theZombieType == ZombieType::ZOMBIE_UMBRELLA_HEAD ||
         theZombieType == ZombieType::ZOMBIE_CABBAGE_HEAD ||

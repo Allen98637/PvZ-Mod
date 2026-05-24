@@ -94,6 +94,7 @@ public:
     bool                    IsPresentWithAdvice();
     void                    PlayLaunchSound();
     void                    PlayGroundSound();
+    bool                    NeedClick();
 
     static /*inline*/ bool  IsMoney(CoinType theType);
 };

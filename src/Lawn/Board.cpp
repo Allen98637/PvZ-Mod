@@ -6104,7 +6104,7 @@ void Board::Update()
 	int bb = mTCounter;
 	mTCounter += mSpeed;
 	int aTime = (int)mTCounter - bb;
-	if(mLevelAwardSpawned) aTime = 1;
+	if(mLevelAwardSpawned || mApp->mSeedChooserScreen) aTime = 1;
 
 	for(int i = 0; i < aTime; i++){
 		UpdateGridItems();

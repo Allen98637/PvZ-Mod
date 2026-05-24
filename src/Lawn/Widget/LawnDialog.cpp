@@ -31,6 +31,8 @@
 #include "../../Sexy.TodLib/EffectSystem.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "graphics/ImageFont.h"
+#include "CustomSurvivalDialog.h"
+#include "widget/WidgetManager.h"
 
 
 LawnDialog::LawnDialog(LawnApp* theApp, int theId, bool isModal, const std::string& theDialogHeader, const std::string& theDialogLines, const std::string& theDialogFooter, int theButtonMode) :
@@ -503,8 +505,16 @@ void GameOverDialog::ButtonDepress(int theId)
     }
     else if (theId == Dialog::ID_FOOTER)
     {
-        mApp->KillDialog(Dialogs::DIALOG_GAME_OVER);
-        mApp->EndLevel();
+        if(mApp->IsSurvivalCustom(mApp->mGameMode)){
+            CustomSurvivalDialog* aDialog = new CustomSurvivalDialog(mApp, mApp->mGameMode, this);
+            mApp->CenterDialog(aDialog, aDialog->mWidth, aDialog->mHeight);
+            mApp->AddDialog(Dialogs::DIALOG_CustomSurvival, aDialog);
+            mWidgetManager->SetFocus(aDialog);
+        }
+        else{
+            mApp->KillDialog(Dialogs::DIALOG_GAME_OVER);
+            mApp->EndLevel();
+        }
     }
 }
 

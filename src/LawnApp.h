@@ -264,6 +264,7 @@ public:
 	void							KillStoreScreen();
 	bool							HasSeedType(SeedType theSeedType);
 	/*inline*/ void					EndLevel();
+	/*inline*/ void					EndLevel(CustomSurvivalOption options);
 	inline bool						IsIceDemo() { return false; }
 	/*inline*/ bool					IsShovelLevel();
 	/*inline*/ bool					IsWallnutBowlingLevel();
