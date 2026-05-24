@@ -207,6 +207,7 @@ target_compile_definitions(pvz-mod PRIVATE
 	$<$<BOOL:${DO_FIX_BUGS}>:DO_FIX_BUGS>
 )
 target_compile_features(pvz-mod PRIVATE cxx_std_20)
+set_target_properties(pvz-mod PROPERTIES CXX_EXTENSIONS OFF)
 
 if (LOW_MEMORY)
 	target_compile_definitions(pvz-mod PRIVATE LOW_MEMORY)
