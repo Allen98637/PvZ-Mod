@@ -383,7 +383,7 @@ void Challenge::InitLevel()
 		mChallengeStateCounter = 100;
 		mApp->PlayFoley(FOLEY_RAIN);
 	}
-	if (mApp->IsFinalBossLevel() && !mApp->OverrideConveyor())
+	if (mApp->IsFinalBossLevel() && !mApp->OverrideConveyor()  && mApp->mGameMode != GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4)
 	{
 		mBoard->mSeedBank->AddSeed(SEED_CABBAGEPULT);
 		mBoard->mSeedBank->AddSeed(SEED_JALAPENO);
@@ -1748,7 +1748,7 @@ void Challenge::UpdateConveyorBelt()
 		aSeedPickArray[7].mItem = SEED_PUMPKINSHELL;
 		aSeedPickArray[7].mWeight = 10;
 	}
-	else if (mApp->IsFinalBossLevel())
+	else if (mApp->IsFinalBossLevel() && mApp->mGameMode != GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4)
 	{
 		aSeedPickCount = 6;
 		aSeedPickArray[0].mItem = SEED_FLOWERPOT;
@@ -1770,7 +1770,8 @@ void Challenge::UpdateConveyorBelt()
 		aSeedPickArray[0].mItem = SEED_PEASHOOTER;
 		aSeedPickArray[0].mWeight = 100;
 	}
-	else if (mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2 || mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3)
+	else if (mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2 || mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3 || 
+		mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4)
 	{
 		aSeedPickCount = 3;
 		aSeedPickArray[0].mItem = SEED_WALLNUT;
@@ -1900,7 +1901,7 @@ void Challenge::UpdateConveyorBelt()
 			aSeedPick.mWeight = TodAnimateCurve(0, mApp->mGameMode == GAMEMODE_CHALLENGE_COLUMN ? 45 : 35, aTotalCount, aSeedPick.mWeight, 1, CURVE_LINEAR);
 		}
 
-		if (mApp->IsFinalBossLevel())
+		if (mApp->IsFinalBossLevel() && mApp->mGameMode != GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4)
 		{
 			if (aSeedType == SEED_MELONPULT || aSeedType == SEED_KERNELPULT || aSeedType == SEED_CABBAGEPULT)
 			{

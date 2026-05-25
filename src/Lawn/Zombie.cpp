@@ -742,6 +742,9 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
     case ZombieType::ZOMBIE_BOSS:
         mPosX = 0.0f;
         mPosY = 0.0f;
+        if(mBoard->StageHasPool()) mPosY = 10.0f;
+        else if(!mBoard->StageHasRoof()) mPosY = 40.0f;
+
         mZombieRect = Rect(700, 80, 90, 430);
         mZombieAttackRect = Rect(0, 0, 0, 0);
         aRenderLayer = RenderLayer::RENDER_LAYER_TOP;
@@ -2509,52 +2512,46 @@ void Zombie::UpdateZombieGargantuar()
         Reanimation* aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
         if (aBodyReanim->ShouldTriggerTimedEvent(0.64f))
         {
-            if (mMindControlled)  // 魅惑巨人砸僵尸
+            Plant* aPlant = FindPlantTarget(ZombieAttackType::ATTACKTYPE_CHEW);
+            if (aPlant)
             {
-                Zombie* aZombie = FindZombieTarget();
-                if (aZombie)
+                if (aPlant->mSeedType == SeedType::SEED_SPIKEROCK)
                 {
-                    int aDamage = mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR ? 1000 : 500;
-                    aZombie->TakeDamage(aDamage, 0U);
-                }
-            }
-            else
-            {
-                Plant* aPlant = FindPlantTarget(ZombieAttackType::ATTACKTYPE_CHEW);
-                if (aPlant)
-                {
-                    if (aPlant->mSeedType == SeedType::SEED_SPIKEROCK)
-                    {
-                        TakeDamage(20, 32U);
-                        aPlant->SpikeRockTakeDamage();
-                        if (aPlant->mPlantHealth <= 0)
-                        {
-                            SquishAllInSquare(aPlant->mPlantCol, aPlant->mRow, ZombieAttackType::ATTACKTYPE_CHEW);
-                        }
-                    }
-                    else
+                    TakeDamage(20, 32U);
+                    aPlant->SpikeRockTakeDamage();
+                    if (aPlant->mPlantHealth <= 0)
                     {
                         SquishAllInSquare(aPlant->mPlantCol, aPlant->mRow, ZombieAttackType::ATTACKTYPE_CHEW);
                     }
                 }
-
-                if (mApp->IsScaryPotterLevel())
+                else
                 {
-                    int aGridX = mBoard->PixelToGridX(mPosX, mPosY);
-                    GridItem* aScaryPot = mBoard->GetScaryPotAt(aGridX, mRow);
-                    if (aScaryPot)
-                    {
-                        mBoard->mChallenge->ScaryPotterOpenPot(aScaryPot);
-                    }
+                    SquishAllInSquare(aPlant->mPlantCol, aPlant->mRow, ZombieAttackType::ATTACKTYPE_CHEW);
                 }
+            }
+            Zombie* aZombie = FindZombieTarget();
+            if (aZombie)
+            {
+                int aDamage = mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR ? 1000 : 500;
+                aZombie->TakeDamage(aDamage, 0U);
+            }
 
-                if (mApp->IsIZombieLevel())
+            if (mApp->IsScaryPotterLevel())
+            {
+                int aGridX = mBoard->PixelToGridX(mPosX, mPosY);
+                GridItem* aScaryPot = mBoard->GetScaryPotAt(aGridX, mRow);
+                if (aScaryPot)
                 {
-                    GridItem* aBrain = mBoard->mChallenge->IZombieGetBrainTarget(this);
-                    if (aBrain)
-                    {
-                        mBoard->mChallenge->IZombieSquishBrain(aBrain);
-                    }
+                    mBoard->mChallenge->ScaryPotterOpenPot(aScaryPot);
+                }
+            }
+
+            if (mApp->IsIZombieLevel())
+            {
+                GridItem* aBrain = mBoard->mChallenge->IZombieGetBrainTarget(this);
+                if (aBrain)
+                {
+                    mBoard->mChallenge->IZombieSquishBrain(aBrain);
                 }
             }
 
@@ -2648,14 +2645,10 @@ void Zombie::UpdateZombieGargantuar()
         return;
     }
 
-    bool doSmash = false;
-    if (mMindControlled)
+    bool doSmash = FindPlantTarget(ZombieAttackType::ATTACKTYPE_CHEW);
+    if (!doSmash)
     {
         doSmash = FindZombieTarget() != nullptr;
-    }
-    else if (FindPlantTarget(ZombieAttackType::ATTACKTYPE_CHEW))
-    {
-        doSmash = true;
     }
     else if (mApp->IsScaryPotterLevel())
     {
@@ -7150,15 +7143,24 @@ void Zombie::SquishAllInSquare(int theX, int theY, ZombieAttackType theAttackTyp
     Plant* aPlant = nullptr;
     while (mBoard->IteratePlants(aPlant))
     {
-        if (aPlant->mRow == theY && aPlant->mPlantCol == theX)
+        bool doSquish = false;
+        if (aPlant->mRow == theY)
         {
             if (theAttackType == ZombieAttackType::ATTACKTYPE_DRIVE_OVER && aPlant->IsSpiky())
             {
                 continue;
             }
-
-            if (aPlant->mSeedType != SeedType::SEED_SPIKEROCK)
-            {
+            if(mApp->IsWallnutBowlingLevel()){
+                int aX = mBoard->GridToPixelX(theX, theY);
+                doSquish = std::min(aX + 80, aPlant->mX + aPlant->mWidth) > std::max(aX, aPlant->mX);
+            }
+            else if(aPlant->mPlantCol == theX){
+                if (aPlant->mSeedType != SeedType::SEED_SPIKEROCK)
+                {
+                    doSquish = true;
+                }
+            }
+            if(doSquish){
                 mBoard->mPlantsEaten++;
                 aPlant->Squish();
             }
@@ -10579,6 +10581,8 @@ void Zombie::DrawBossFireBall(Graphics* g)
         g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
         aFireBallReanim->DrawRenderGroup(g, RENDER_GROUP_BOSS_FIREBALL_TOP);
     }
+
+    g->Translate(mX, mY);
 }
 
 void Zombie::DrawBossBackArm(Graphics* g, const ZombieDrawPosition& theDrawPos)

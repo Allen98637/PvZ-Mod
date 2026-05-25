@@ -747,7 +747,7 @@ void Board::PickZombieWaves()
 		{
 			aZombiePoints *= 6;
 		}
-		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3){
+		else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3){
 			aZombiePoints *= 3;
 		}
 		else if (mApp->IsLittleTroubleLevel() || mApp->IsWallnutBowlingLevel())
@@ -991,6 +991,7 @@ void Board::PickBackground()
 	case GameMode::GAMEMODE_CHALLENGE_ICE:
 	case GameMode::GAMEMODE_CHALLENGE_SHOVEL:
 	case GameMode::GAMEMODE_CHALLENGE_SQUIRREL:
+	case GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4:
 		mBackground = BackgroundType::BACKGROUND_1_DAY;
 		break;
 
@@ -6285,6 +6286,10 @@ void Board::AddBossRenderItem(RenderItem* theRenderList, int& theCurRenderItem, 
 			{
 				aFrontLegRow = 4;
 			}
+			else if (theBossZombie->mTargetRow == 4)
+			{
+				aFrontLegRow = 5;
+			}
 		}
 	}
 
@@ -6300,7 +6305,7 @@ void Board::AddBossRenderItem(RenderItem* theRenderList, int& theCurRenderItem, 
 	theCurRenderItem++;
 	aItem = &theRenderList[theCurRenderItem];
 	aItem->mRenderObjectType = RenderObjectType::RENDER_ITEM_BOSS_PART;
-	aItem->mZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_BOSS, 4, 2);
+	aItem->mZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_BOSS, 5, 2);
 	aItem->mBossPart = BossPart::BOSS_PART_MAIN;
 	theCurRenderItem++;
 	aItem = &theRenderList[theCurRenderItem];

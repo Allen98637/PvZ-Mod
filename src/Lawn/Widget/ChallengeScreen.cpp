@@ -126,6 +126,7 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_15,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  4,  "[SURVIVAL_CUSTOM]" },
 	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  3,  "[WAR_AND_PEAS_3]" },
 	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  4,  "[WAR_AND_PEAS_4]" },
+	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4,          6,   ChallengePage::CHALLENGE_PAGE_LIMBO,   	   3,  0,  "[WALL_NUT_BOWLING_BOSS]" },
 };
 
 // GOTY @Patoke: 0x430810

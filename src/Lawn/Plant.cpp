@@ -2542,7 +2542,9 @@ void Plant::Squish()
     if (!mIsAsleep)
     {
         if (mSeedType == SeedType::SEED_CHERRYBOMB || mSeedType == SeedType::SEED_JALAPENO ||
-            mSeedType == SeedType::SEED_DOOMSHROOM || mSeedType == SeedType::SEED_ICESHROOM)
+            mSeedType == SeedType::SEED_DOOMSHROOM || mSeedType == SeedType::SEED_ICESHROOM||
+             mSeedType == SeedType::SEED_EXPLODE_O_NUT
+        )
         {
             DoSpecial();
             return;
@@ -2736,8 +2738,12 @@ void Plant::UpdateBowling()
             mApp->PlayFoley(FoleyType::FOLEY_BOWLINGIMPACT);
             mBoard->ShakeBoard(1, -2);
         }
-    }
 
+        if(aZombie.mZombie->mZombieType == ZOMBIE_BOSS){
+            Die();
+            return;
+        }
+    }
     if (aNewState == PlantState::STATE_BOWLING_UP)
     {
         mRow--;
@@ -4846,6 +4852,21 @@ void Plant::DoSpecial()
 
         break;
     }
+    case SeedType::SEED_EXPLODE_O_NUT:{
+        int aPosX = mX + mWidth / 2;
+        int aPosY = mY + mHeight / 2;
+
+        mApp->PlayFoley(FoleyType::FOLEY_CHERRYBOMB);
+        mApp->PlaySample(SOUND_BOWLINGIMPACT2);
+
+        int aDamageRangeFlags = GetDamageRangeFlags(PlantWeapon::WEAPON_PRIMARY) | 32U;
+        mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, 90, 1, true, aDamageRangeFlags);
+        mApp->AddTodParticle(aPosX, aPosY, static_cast<int>(RenderLayer::RENDER_LAYER_TOP), ParticleEffect::PARTICLE_POWIE);
+        mBoard->ShakeBoard(3, -4);
+
+        Die();
+        break;
+    }
     default:
         break;
     }
@@ -5481,7 +5502,7 @@ void Plant::Die()
         }
     }
 
-    if(IsOnBoard()){
+    if(IsOnBoard() && !NotOnGround()){
         PlantsOnLawn aPlantOnLawn;
 	    mBoard->GetPlantsOnLawn(mPlantCol, mRow, &aPlantOnLawn);
         if(aPlantOnLawn.mUnderPlant2 == this){

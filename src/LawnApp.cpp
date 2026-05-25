@@ -2259,7 +2259,7 @@ bool LawnApp::IsWallnutBowlingLevel()
 		return false;
 
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING || mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2 || 
-		mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3)
+		mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3 || mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4)
 		return true;
 
 	return IsAdventureMode() && mBoard->mLevel == 5;
@@ -2348,6 +2348,9 @@ bool LawnApp::IsFinalBossLevel()
 	if(IsMiddleBossLevel()) return true;
 
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_FINAL_BOSS)
+		return true;
+	
+	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4)
 		return true;
 
 	return IsAdventureMode() && mBoard->mLevel == 50;
