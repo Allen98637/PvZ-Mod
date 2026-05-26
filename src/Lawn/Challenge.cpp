@@ -2592,6 +2592,7 @@ void Challenge::InitZombieWavesWallnutEndless()
 		//if (mBoard->GetSurvivalFlagsCompleted() < 10 && aZombieType == ZOMBIE_REDEYE_GARGANTUAR)			continue;
 		if (Zombie::IsZombotany(aZombieType) || aZombieDef.mPickWeight == 0
 		)	continue;
+		if(mApp->mGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4 && mBoard->IsZombieTypeSpawnedOnly(aZombieType)) continue;
 
 		mBoard->mZombieAllowed[aZombieType] = true;
 	}
@@ -2812,7 +2813,7 @@ void Challenge::InitZombieWaves()
 			aList[ZOMBIE_DANCER] = true;
 			aList[ZOMBIE_DOOR] = true;
 		}
-		else if(aGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3){
+		else if(aGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3 || aGameMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4){
 			InitZombieWavesWallnutEndless();
 		}
 	}

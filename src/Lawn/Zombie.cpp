@@ -10678,10 +10678,22 @@ void Zombie::BossSpawnAttack()
     {
         mTargetType = ZombieType::ZOMBIE_PAIL;
     }
-    else
-    {
+    else if(mApp->IsAdventureMode() || mApp->mGameMode == GAMEMODE_CHALLENGE_FINAL_BOSS)
+    {   
         int aZombieTypeCount = LENGTH(gBossZombieList);
         mTargetType = TodPickFromArray(gBossZombieList, aZombieTypeCount);
+    }
+    else{
+        int ztc = 0;
+        ZombieType aTypes[100];
+        for(int i = 0; i < NUM_ZOMBIE_TYPES; i++){
+            ZombieType aType = static_cast<ZombieType>(i);
+            if(aType == ZOMBIE_YETI || aType == ZOMBIE_BUNGEE) continue;
+            if(mBoard->mZombieAllowed[i]){
+                aTypes[ztc++] = aType;
+            }
+        }
+        mTargetType = TodPickFromArray(aTypes, ztc);
     }
     mTargetRow = mBoard->PickRowForNewZombie(mTargetType);
 
