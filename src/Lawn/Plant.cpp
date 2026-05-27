@@ -4340,6 +4340,39 @@ void Plant::DrawShadow(Sexy::Graphics* g, float theOffsetX, float theOffsetY)
     }
 }
 
+void Plant::DrawIceTrap(Graphics* g, float theOffsetX, float theOffsetY, bool theFront)
+{
+    if (mSeedType == SEED_LILYPAD)
+        return;
+
+    float aScale = 1.0f;
+    
+    float aIceOffsetX = 13.0f;
+    float aIceOffsetY = 51.0f;
+
+    switch(mSeedType){
+    default:
+        break;
+    }
+
+    TodDrawImageScaledF(g, theFront ? IMAGE_ICETRAP : IMAGE_ICETRAP2, theOffsetX + aIceOffsetX, theOffsetY + aIceOffsetY, aScale, aScale);
+}
+
+void Plant::DrawButter(Graphics* g, float theOffsetX, float theOffsetY)
+{
+    float aOffsetX = theOffsetX + 11.0f;
+    float aOffsetY = theOffsetY + 21.0f;
+    float aScale = 1.0f;
+
+    switch (mSeedType)
+    {
+    default:
+        break;
+    }
+
+    TodDrawImageScaledF(g, IMAGE_REANIM_CORNPULT_BUTTER_SPLAT, aOffsetX, aOffsetY, aScale, aScale);
+}
+
 // GOTY @Patoke: 0x469500
 void Plant::Draw(Graphics* g)
 {
@@ -4353,6 +4386,10 @@ void Plant::Draw(Graphics* g)
     int aImageIndex = mFrame;
     Image* aPlantImage = Plant::GetImage(mSeedType);
 
+    if (mIceTrapCounter > 0)
+    {
+        DrawIceTrap(g, aOffsetX, aOffsetY, false);
+    }
     if (mSquished)
     {
         if (mSeedType == SeedType::SEED_FLOWERPOT)
@@ -4510,6 +4547,14 @@ void Plant::Draw(Graphics* g)
             DrawMagnetItems(g);
         }
     }
+    if (mIceTrapCounter > 0)
+    {
+        DrawIceTrap(g, aOffsetX, aOffsetY, true);
+    }
+    if (mButteredCounter > 0)
+    {
+        DrawButter(g, aOffsetX, aOffsetY);
+    }
 }
 
 // GOTY @Patoke: 0x469AF0
@@ -4653,6 +4698,10 @@ void Plant::HitIceTrap()
     if (mChilledCounter > 0 || mIceTrapCounter != 0)
     {
         cold = true;
+    }
+
+    if(mSeedType == SEED_LILYPAD){
+        mIceTrapCounter = 300;
     }
     else if (cold)
     {

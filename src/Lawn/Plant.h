@@ -296,6 +296,8 @@ public:
     void                    SetSleeping(bool theIsAsleep);
     void                    UpdateShooting();
     void                    DrawShadow(Graphics* g, float theOffsetX, float theOffsetY);
+    void                    DrawIceTrap(Graphics* g, float theOffsetX, float theOffsetY, bool theFront);
+    void                    DrawButter(Graphics* g, float theOffsetX, float theOffsetY);
     void                    UpdateScaredyShroom();
     int                     DistanceToClosestZombie();
     void                    UpdateSpikeweed();
