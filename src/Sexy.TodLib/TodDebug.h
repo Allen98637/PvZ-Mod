@@ -49,7 +49,7 @@ void				TodAssertFailed(const char* theCondition, const char* theFile, int theLi
 /*inline*/ void		TodFree(void* theBlock);
 void				TodAssertInitForApp();
 
-#ifdef _PVZ_DEBUG
+#ifdef PVZ_DEBUG
 #define TOD_ASSERT(condition, ...) { \
 if (!bool(condition)) { TodAssertFailed(""#condition, __FILE__, __LINE__, ##__VA_ARGS__); \
 /*if (IsDebuggerPresent()) { __debugbreak(); }*/\

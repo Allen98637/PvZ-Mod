@@ -166,7 +166,7 @@ SexyAppBase::SexyAppBase()
 
 	mNotifyGameMessage = 0;
 
-#ifdef _PVZ_DEBUG
+#ifdef PVZ_DEBUG
 	mOnlyAllowOneCopyToRun = false;
 #else
 	mOnlyAllowOneCopyToRun = true;

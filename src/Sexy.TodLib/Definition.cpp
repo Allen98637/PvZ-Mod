@@ -1328,7 +1328,7 @@ bool DefinitionCompileFile(const std::string theXMLFilePath, const std::string& 
 // (void* def, *defMap, string& xmlFilePath)  //esp -= 0xC
 bool DefinitionCompileAndLoad(const std::string& theXMLFilePath, DefMap* theDefMap, void* theDefinition)
 {
-#ifdef _PVZ_DEBUG
+#ifdef PVZ_DEBUG
     const bool aRequireCompiledUpToDate = true;
 #else
     const bool aRequireCompiledUpToDate = false;
@@ -1352,7 +1352,7 @@ bool DefinitionCompileAndLoad(const std::string& theXMLFilePath, DefMap* theDefM
     if (aResult)
         return true;
 
-#ifndef _PVZ_DEBUG
+#ifndef PVZ_DEBUG
     TodErrorMessageBox(StrFormat("missing resource %s", aCompiledFilePath.c_str()).c_str(), "Error");
     exit(0);
 #endif
