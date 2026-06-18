@@ -2443,18 +2443,14 @@ void SexyAppBase::ProcessSafeDeleteList()
 {
 	MTAutoDisallowRand aDisallowRand;
 
-	WidgetSafeDeleteList::iterator anItr = mSafeDeleteList.begin();
-	while (anItr != mSafeDeleteList.end())
-	{
-		WidgetSafeDeleteInfo* aWidgetSafeDeleteInfo = &(*anItr);
-		if (mUpdateAppDepth <= aWidgetSafeDeleteInfo->mUpdateAppDepth)
+	std::erase_if(mSafeDeleteList, [&](const WidgetSafeDeleteInfo& theInfo) {
+		if (mUpdateAppDepth <= theInfo.mUpdateAppDepth)
 		{
-			delete aWidgetSafeDeleteInfo->mWidget;
-			anItr = mSafeDeleteList.erase(anItr);
+			delete theInfo.mWidget;
+			return true;
 		}
-		else
-			++anItr;
-	}	
+		return false;
+	});
 }
 
 void SexyAppBase::UpdateFTimeAcc()
