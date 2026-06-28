@@ -313,7 +313,7 @@ bool XMLParser::OpenFile(const std::string& theFileName)
 	return true;
 }
 
-void XMLParser::SetStringSource(const std::string& theString)
+void XMLParser::SetStringSource(std::string_view theString)
 {
 	Init();
 

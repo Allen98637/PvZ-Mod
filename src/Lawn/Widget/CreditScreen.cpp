@@ -768,7 +768,7 @@ static int DrawCreditsContent(Graphics* g, int theYPos, bool theDraw)
             if (aRoles.size() > 1)
             {
                 if (theDraw && aYPos > -aLineHeight && aYPos < BOARD_HEIGHT + aLineHeight)
-                    TodDrawString(g, aRoles.substr(1), BOARD_WIDTH / 2, aYPos, aCreditsFont, Color::White, DrawStringJustification::DS_ALIGN_CENTER);
+                    TodDrawString(g, std::string_view(aRoles).substr(1), BOARD_WIDTH / 2, aYPos, aCreditsFont, Color::White, DrawStringJustification::DS_ALIGN_CENTER);
             }
             aYPos += aLineHeight + 10;
             continue;
@@ -788,7 +788,7 @@ static int DrawCreditsContent(Graphics* g, int theYPos, bool theDraw)
                 size_t aRoleEnd = aRoles.find('\n', aRolePos);
                 if (aRoleEnd == std::string::npos) aRoleEnd = aRoles.size();
                 if (aVisible && aRoleEnd > aRolePos)
-                    TodDrawString(g, aRoles.substr(aRolePos, aRoleEnd - aRolePos), ROLES_RIGHT_X, aYPos, aCreditsFont, Color::White, DrawStringJustification::DS_ALIGN_RIGHT);
+                    TodDrawString(g, std::string_view(aRoles).substr(aRolePos, aRoleEnd - aRolePos), ROLES_RIGHT_X, aYPos, aCreditsFont, Color::White, DrawStringJustification::DS_ALIGN_RIGHT);
                 aRolePos = aRoleEnd + 1;
             }
             if (aNamePos < aNames.size())
@@ -796,7 +796,7 @@ static int DrawCreditsContent(Graphics* g, int theYPos, bool theDraw)
                 size_t aNameEnd = aNames.find('\n', aNamePos);
                 if (aNameEnd == std::string::npos) aNameEnd = aNames.size();
                 if (aVisible && aNameEnd > aNamePos)
-                    TodDrawString(g, aNames.substr(aNamePos, aNameEnd - aNamePos), NAMES_LEFT_X, aYPos, aCreditsFont, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+                    TodDrawString(g, std::string_view(aNames).substr(aNamePos, aNameEnd - aNamePos), NAMES_LEFT_X, aYPos, aCreditsFont, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
                 aNamePos = aNameEnd + 1;
             }
             aYPos += aLineHeight;

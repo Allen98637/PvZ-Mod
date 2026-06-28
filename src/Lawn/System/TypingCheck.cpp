@@ -22,12 +22,12 @@
 #include "TypingCheck.h"
 using namespace Sexy;
 
-TypingCheck::TypingCheck(const std::string& thePhrase)
+TypingCheck::TypingCheck(std::string_view thePhrase)
 {
 	SetPhrase(thePhrase);
 }
 
-void TypingCheck::SetPhrase(const std::string& thePhrase)
+void TypingCheck::SetPhrase(std::string_view thePhrase)
 {
 	for (size_t i = 0; i < thePhrase.size(); i++)
 		AddChar(thePhrase[i]);

@@ -48,7 +48,7 @@ public:
 	void					SeekFront() const;
 	void					Clear();
 
-	void					FromWebString(const std::string& theString);
+	void					FromWebString(std::string_view theString);
 	void					WriteByte(uchar theByte);
 	void					WriteNumBits(int theNum, int theBits);
 	static int				GetBitsRequired(int theNum, bool isSigned);

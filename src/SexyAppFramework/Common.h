@@ -134,10 +134,10 @@ extern std::string	VFormat(const char* fmt, va_list argPtr);
 extern std::string	StrFormat(const char* fmt ...);
 std::string			GetAppDataFolder();
 void				SetAppDataFolder(const std::string& thePath);
-std::string			GetAppDataPath(const std::string& theRelativePath);
+std::string			GetAppDataPath(std::string_view theRelativePath);
 const std::string&	GetResourceFolder();
 void				SetResourceFolder(const std::string& thePath);
-std::string			GetResourcePath(const std::string& theRelativePath);
+std::string			GetResourcePath(std::string_view theRelativePath);
 std::string			StringToUpper(const std::string& theString);
 std::string			StringToLower(const std::string& theString);
 std::string			Upper(const std::string& theData);
@@ -152,15 +152,15 @@ std::string			Evaluate(const std::string& theString, const DefinesMap& theDefine
 std::string			XMLDecodeString(const std::string& theString);
 std::string			XMLEncodeString(const std::string& theString);
 
-bool				Deltree(const std::string& thePath);
-bool				FileExists(const std::string& theFileName);
-void				MkDir(const std::string& theDir);
-std::string			GetFileName(const std::string& thePath, bool noExtension = false);
-std::string			GetFileDir(const std::string& thePath, bool withSlash = false);
-std::string			RemoveTrailingSlash(const std::string& theDirectory);
+bool				Deltree(std::string_view thePath);
+bool				FileExists(std::string_view theFileName);
+void				MkDir(std::string_view theDir);
+std::string			GetFileName(std::string_view thePath, bool noExtension = false);
+std::string			GetFileDir(std::string_view thePath, bool withSlash = false);
+std::string			RemoveTrailingSlash(std::string_view theDirectory);
 std::string			GetCurDir();
-std::string			GetFullPath(const std::string& theRelPath);
-std::string			GetPathFrom(const std::string& theRelPath, const std::string& theDir);
+std::string			GetFullPath(std::string_view theRelPath);
+std::string			GetPathFrom(std::string_view theRelPath, std::string_view theDir);
 bool				IsPathRooted(std::string_view thePath);
 bool				AllowAllAccess(const std::string& theFileName);
 
@@ -171,17 +171,17 @@ void				SMemRStr(void*& _Src, std::string& theString);
 void				SMemW(void*& _Dst, const void* _Src, size_t _Size);
 void				SMemWStr(void*& _Dst, const std::string& theString);
 
-inline void			inlineLTrim(std::string &theData, const std::string& theChars = " \t\r\n")
+inline void			inlineLTrim(std::string &theData, std::string_view theChars = " \t\r\n")
 {
     theData.erase(0, theData.find_first_not_of(theChars));
 }
 
-inline void			inlineRTrim(std::string &theData, const std::string& theChars = " \t\r\n")
+inline void			inlineRTrim(std::string &theData, std::string_view theChars = " \t\r\n")
 {
     theData.resize(theData.find_last_not_of(theChars) + 1);
 }
 
-inline void			inlineTrim(std::string &theData, const std::string& theChars = " \t\r\n")
+inline void			inlineTrim(std::string &theData, std::string_view theChars = " \t\r\n")
 {
 	inlineRTrim(theData, theChars);
 	inlineLTrim(theData, theChars);

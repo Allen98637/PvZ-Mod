@@ -182,7 +182,7 @@ bool                    DefinitionReadImageField(XMLParser* theXmlParser, Image*
 bool                    DefinitionReadFontField(XMLParser* theXmlParser, _Font** theFont);
 bool                    DefinitionReadField(XMLParser* theXmlParser, const DefMap* theDefMap, void* theDefinition, bool* theDone);
 bool                    DefinitionWriteCompiledFile(const std::string& theCompiledFilePath, const DefMap* theDefMap, void* theDefinition);
-bool                    DefinitionCompileFile(const std::string theXMLFilePath, const std::string& theCompiledFilePath, const DefMap* theDefMap, void* theDefinition);
+bool                    DefinitionCompileFile(const std::string& theXMLFilePath, const std::string& theCompiledFilePath, const DefMap* theDefMap, void* theDefinition);
 
 void                    DefMapWriteToCache(void*& theWritePtr, const DefMap* theDefMap, void* theDefinition);
 void                    DefWriteToCacheString(void*& theWritePtr, const char** theValue);

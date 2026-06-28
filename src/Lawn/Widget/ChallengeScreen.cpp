@@ -523,11 +523,11 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 					aLine2Len = 0;
 				}
 
-				TodDrawString(g, aName.substr(0, aLine1Len), aPosX + 52, aPosY + 88, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
+				TodDrawString(g, std::string_view(aName).substr(0, aLine1Len), aPosX + 52, aPosY + 88, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 				if (aLine2Len > 0)
 				{
 					const int aLine2Offset = (aName[aSplitBytePos] == ' ') ? aSplitBytePos + 1 : aSplitBytePos;
-					TodDrawString(g, aName.substr(aLine2Offset, aLine2Len), aPosX + 52, aPosY + 102, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
+					TodDrawString(g, std::string_view(aName).substr(aLine2Offset, aLine2Len), aPosX + 52, aPosY + 102, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 				}
 			}
 

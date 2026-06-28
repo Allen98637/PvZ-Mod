@@ -542,9 +542,9 @@ void DataWriter::WriteDouble(double theDouble)
 	WriteBytes(&aRaw, sizeof(uint64_t));
 }
 
-void DataWriter::WriteString(const std::string& theStr)
+void DataWriter::WriteString(std::string_view theStr)
 {
 	uint16_t aStrLen = static_cast<uint16_t>(theStr.length());
 	WriteUInt16(aStrLen);
-	WriteBytes(theStr.c_str(), static_cast<uint32_t>(aStrLen));
+	WriteBytes(theStr.data(), static_cast<uint32_t>(aStrLen));
 }

@@ -33,9 +33,9 @@ protected:
 
 public:
 	TypingCheck() : mPhrase() { }
-	TypingCheck(const std::string& thePhrase);
+	TypingCheck(std::string_view thePhrase);
 
-	void			SetPhrase(const std::string& thePhrase);
+	void			SetPhrase(std::string_view thePhrase);
 	/*inline*/ void	AddKeyCode(Sexy::KeyCode theKeyCode);
 	void			AddChar(char theChar);
 	/*inline*/ bool	Check();

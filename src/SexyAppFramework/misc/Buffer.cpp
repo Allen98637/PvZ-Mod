@@ -216,7 +216,7 @@ bool Buffer::ToUTF8String(std::string* theString) const
 	return false;
 }
 
-void Buffer::FromWebString(const std::string& theString)
+void Buffer::FromWebString(std::string_view theString)
 {
 	Clear();
 

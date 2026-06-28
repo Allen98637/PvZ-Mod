@@ -1301,7 +1301,7 @@ bool DefinitionWriteCompiledFile(const std::string& theCompiledFilePath, const D
     return false;
 }
 
-bool DefinitionCompileFile(const std::string theXMLFilePath, const std::string& theCompiledFilePath, const DefMap* theDefMap, void* theDefinition)
+bool DefinitionCompileFile(const std::string& theXMLFilePath, const std::string& theCompiledFilePath, const DefMap* theDefMap, void* theDefinition)
 {
     XMLParser aXMLParser = XMLParser();
     if (!aXMLParser.OpenFile(theXMLFilePath))
