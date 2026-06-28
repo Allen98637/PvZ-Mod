@@ -77,10 +77,10 @@ typedef std::list<Dialog*> DialogList;
 //typedef std::list<MSG> WindowsMessageList;
 //typedef std::basic_string<TCHAR> tstring; // string of TCHARs
 
-typedef std::map<std::string, bool> StringBoolMap;
-typedef std::map<std::string, int> StringIntMap;
-typedef std::map<std::string, double> StringDoubleMap;
-typedef std::map<std::string, std::vector<std::string>> StringStringVectorMap;
+typedef std::map<std::string, bool, std::less<>> StringBoolMap;
+typedef std::map<std::string, int, std::less<>> StringIntMap;
+typedef std::map<std::string, double, std::less<>> StringDoubleMap;
+typedef std::map<std::string, std::vector<std::string>, std::less<>> StringStringVectorMap;
 
 enum
 {
@@ -532,16 +532,16 @@ public:
 	void					LoadResourceManifest();
 	void					ShowResourceError(bool doExit = false);
 	
-	bool					GetBoolean(const std::string& theId);
-	bool					GetBoolean(const std::string& theId, bool theDefault);	
-	int						GetInteger(const std::string& theId);
-	int						GetInteger(const std::string& theId, int theDefault);
-	double					GetDouble(const std::string& theId);
-	double					GetDouble(const std::string& theId, double theDefault);
+	bool					GetBoolean(std::string_view theId);
+	bool					GetBoolean(std::string_view theId, bool theDefault);
+	int						GetInteger(std::string_view theId);
+	int						GetInteger(std::string_view theId, int theDefault);
+	double					GetDouble(std::string_view theId);
+	double					GetDouble(std::string_view theId, double theDefault);
 	std::string				GetString(std::string_view theId);
 	std::string				GetString(std::string_view theId, std::string_view theDefault);
 
-	std::vector<std::string>	GetStringVector(const std::string& theId);
+	std::vector<std::string>	GetStringVector(std::string_view theId);
 
 	void					SetBoolean(const std::string& theId, bool theValue);
 	void					SetInteger(const std::string& theId, int theValue);

@@ -3002,64 +3002,64 @@ void SexyAppBase::ShowResourceError(bool doExit)
 		DoExit(0);
 }
 
-bool SexyAppBase::GetBoolean(const std::string& theId)
+bool SexyAppBase::GetBoolean(std::string_view theId)
 {
 	StringBoolMap::iterator anItr = mBoolProperties.find(theId);
 	DBG_ASSERTE(anItr != mBoolProperties.end());
-	
-	if (anItr != mBoolProperties.end())	
+
+	if (anItr != mBoolProperties.end())
 		return anItr->second;
 	else
 		return false;
 }
 
-bool SexyAppBase::GetBoolean(const std::string& theId, bool theDefault)
+bool SexyAppBase::GetBoolean(std::string_view theId, bool theDefault)
 {
-	StringBoolMap::iterator anItr = mBoolProperties.find(theId);	
-	
-	if (anItr != mBoolProperties.end())	
+	StringBoolMap::iterator anItr = mBoolProperties.find(theId);
+
+	if (anItr != mBoolProperties.end())
 		return anItr->second;
 	else
-		return theDefault;	
+		return theDefault;
 }
 
-int SexyAppBase::GetInteger(const std::string& theId)
+int SexyAppBase::GetInteger(std::string_view theId)
 {
 	StringIntMap::iterator anItr = mIntProperties.find(theId);
 	DBG_ASSERTE(anItr != mIntProperties.end());
-	
-	if (anItr != mIntProperties.end())	
+
+	if (anItr != mIntProperties.end())
 		return anItr->second;
 	else
 		return false;
 }
 
-int SexyAppBase::GetInteger(const std::string& theId, int theDefault)
+int SexyAppBase::GetInteger(std::string_view theId, int theDefault)
 {
-	StringIntMap::iterator anItr = mIntProperties.find(theId);	
-	
-	if (anItr != mIntProperties.end())	
+	StringIntMap::iterator anItr = mIntProperties.find(theId);
+
+	if (anItr != mIntProperties.end())
 		return anItr->second;
 	else
-		return theDefault;	
+		return theDefault;
 }
 
-double SexyAppBase::GetDouble(const std::string& theId)
+double SexyAppBase::GetDouble(std::string_view theId)
 {
 	StringDoubleMap::iterator anItr = mDoubleProperties.find(theId);
 	DBG_ASSERTE(anItr != mDoubleProperties.end());
-	
+
 	if (anItr != mDoubleProperties.end())
 		return anItr->second;
 	else
 		return false;
 }
 
-double SexyAppBase::GetDouble(const std::string& theId, double theDefault)
+double SexyAppBase::GetDouble(std::string_view theId, double theDefault)
 {
-	StringDoubleMap::iterator anItr = mDoubleProperties.find(theId);	
-	
-	if (anItr != mDoubleProperties.end())	
+	StringDoubleMap::iterator anItr = mDoubleProperties.find(theId);
+
+	if (anItr != mDoubleProperties.end())
 		return anItr->second;
 	else
 		return theDefault;
@@ -3086,7 +3086,7 @@ std::string SexyAppBase::GetString(std::string_view theId, std::string_view theD
 		return std::string(theDefault);	
 }
 
-std::vector<std::string> SexyAppBase::GetStringVector(const std::string& theId)
+std::vector<std::string> SexyAppBase::GetStringVector(std::string_view theId)
 {
 	StringStringVectorMap::iterator anItr = mStringVectorProperties.find(theId);
 	DBG_ASSERTE(anItr != mStringVectorProperties.end());
