@@ -68,7 +68,7 @@ public:
 
 	/*inline*/ bool		IsPaperNote();
 	void				Resize(int theX, int theY, int theWidth, int theHeight) override { Widget::Resize(theX, theY, theWidth, theHeight); }
-	static void			DrawBottom(Graphics* g, const std::string& theTitle, const std::string& theAward, const std::string& theMessage);
+	static void			DrawBottom(Graphics* g, std::string_view theTitle, std::string_view theAward, std::string_view theMessage);
 	void				DrawAwardSeed(Graphics* g);
 	void				Draw(Graphics* g) override;
 	void				Update() override;

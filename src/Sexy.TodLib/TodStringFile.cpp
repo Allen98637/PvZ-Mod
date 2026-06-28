@@ -496,7 +496,7 @@ int TodDrawStringWrappedHelper(Graphics* g, const std::string& theText, const Re
 }
 
 // GOTY @Patoke: 0x5246A0
-void TodDrawStringWrapped(Graphics* g, const std::string& theText, const Rect& theRect, _Font* theFont, const Color& theColor, DrawStringJustification theJustification)
+void TodDrawStringWrapped(Graphics* g, std::string_view theText, const Rect& theRect, _Font* theFont, const Color& theColor, DrawStringJustification theJustification)
 {
 	std::string aTextFinal = TodStringTranslate(theText);
 	Rect aRectTodUse = theRect;
