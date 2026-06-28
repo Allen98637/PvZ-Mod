@@ -2673,7 +2673,7 @@ void LawnApp::CrazyDaveTalkMessage(const std::string& theMessage)
 
 	int aWordsCount = 0;
 	bool isControlWord = false;
-	for (size_t i = 0; i < theMessage.size(); i++)
+	for (size_t i = 0; i < theMessage.size(); i++)  // byte count tracks CJK talk duration better than code points
 	{
 		if (theMessage[i] == '{')
 		{

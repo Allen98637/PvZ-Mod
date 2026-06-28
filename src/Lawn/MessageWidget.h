@@ -46,6 +46,8 @@ public:
 	int32_t				mDuration;
 	MessageStyle		mMessageStyle;
 	ReanimationID		mTextReanimID[MAX_MESSAGE_LENGTH];
+	int32_t				mTextReanimByteOffset[MAX_MESSAGE_LENGTH];
+	int32_t				mTextReanimCount;
 	ReanimationType		mReanimType;
 	int32_t				mSlideOffTime;
 	char				mLabelNext[MAX_MESSAGE_LENGTH];

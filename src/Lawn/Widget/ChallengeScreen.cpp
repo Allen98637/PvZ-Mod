@@ -462,36 +462,72 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 				aName = "?";
 			}
 
-			int aNameLen = aName.size();
-			int aAutoWrapNum = mApp->GetInteger("CHALLENGE_SCREEN_BUTTON_AUTO_WRAP_NUM", 13);
-			if (aNameLen < aAutoWrapNum)
+			// std::string::size() counts bytes; use the UTF-8 code-point count for the wrap decision.
+			int aNameCharLen = 0;
+			for (size_t aOffset = 0; ; )
+			{
+				char32_t aChar = 0;
+				if (!UTF8DecodeNext(aName, aOffset, aChar))
+					break;
+				aNameCharLen++;
+			}
+
+			const int aAutoWrapNum = mApp->GetInteger("CHALLENGE_SCREEN_BUTTON_AUTO_WRAP_NUM", 13);
+			if (aNameCharLen < aAutoWrapNum)
 			{
 				TodDrawString(g, aName, aPosX + 52, aPosY + 96, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 			}
 			else
 			{
-				// 先尝试在名称字符串的后半段取空格以将字符串分隔为两行，若后半段中无空格则在整个字符串中寻找空格
-				int aHalfPos = (mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameLen / 2 - 1);
-				const char* aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
-				if (aSpacedChar == nullptr)
+				// Split at a space in the second half, else any space; if none, the whole name stays on one line.
+				const int aHalfPosChar = (mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameCharLen / 2 - 1);
+				size_t aSplitBytePos = std::string::npos;
+				size_t aFallbackSpacePos = std::string::npos;
 				{
-					aSpacedChar = strchr(aName.c_str(), ' ');
+					size_t aOffset = 0;
+					char32_t aChar = 0;
+					int aCharIdx = 0;
+					while (true)
+					{
+						const size_t aCharStart = aOffset;
+						if (!UTF8DecodeNext(aName, aOffset, aChar))
+							break;
+						if (aChar == U' ')
+						{
+							if (aCharIdx >= aHalfPosChar)
+							{
+								aSplitBytePos = aCharStart;
+								break;
+							}
+							if (aFallbackSpacePos == std::string::npos)
+								aFallbackSpacePos = aCharStart;
+						}
+						aCharIdx++;
+					}
+					if (aSplitBytePos == std::string::npos)
+						aSplitBytePos = aFallbackSpacePos;
 				}
 
-				// 分别计算取得两行文本的长度
-				int aLine1Len = aNameLen;
-				int aLine2Len = 0;
-				if (aSpacedChar != nullptr)
+				int aLine1Len;
+				int aLine2Len;
+				if (aSplitBytePos != std::string::npos)
 				{
-					aLine1Len = aSpacedChar - aName.c_str();
-					aLine2Len = aNameLen - aLine1Len - 1;
+					aLine1Len = aSplitBytePos;
+					aLine2Len = aName.size() - aSplitBytePos;
+					if (aName[aSplitBytePos] == ' ')
+						aLine2Len--;
+				}
+				else
+				{
+					aLine1Len = aName.size();
+					aLine2Len = 0;
 				}
 
-				// 分别绘制两行文本字符串
 				TodDrawString(g, aName.substr(0, aLine1Len), aPosX + 52, aPosY + 88, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 				if (aLine2Len > 0)
 				{
-					TodDrawString(g, aName.substr(aLine1Len + 1, aLine2Len), aPosX + 52, aPosY + 102, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
+					const int aLine2Offset = (aName[aSplitBytePos] == ' ') ? aSplitBytePos + 1 : aSplitBytePos;
+					TodDrawString(g, aName.substr(aLine2Offset, aLine2Len), aPosX + 52, aPosY + 102, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 				}
 			}
 
