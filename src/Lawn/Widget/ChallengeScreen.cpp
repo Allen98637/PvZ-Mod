@@ -142,9 +142,6 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	mUnlockState = UNLOCK_OFF;
 	mUnlockChallengeIndex = -1;
 	mUnlockStateCounter = 0;
-	mLimboPageUnlocked = false;
-	mClickCount = 0;
-	mLastClickTime = 0;
 	mLoadedResourceNames.push_back("DelayLoad_ChallengeScreen");
 	mPageButtonCount = 0;
 
@@ -415,8 +412,7 @@ void ChallengeScreen::UpdateButtons()
 	{
 		ButtonWidget* aPageButton = mPageButton[aPage];
 
-		if (mLimboPageUnlocked && aPage == CHALLENGE_PAGE_LIMBO)
-			aPageButton->mVisible = true;
+		aPageButton->mVisible = true;
 
 		if (mPages[aPage] == mPageIndex)
 		{
@@ -774,26 +770,4 @@ void ChallengeScreen::UpdateToolTip()
 	}
 
 	mToolTip->mVisible = false;
-}
-
-void ChallengeScreen::MouseDown(int x, int y, int theClickCount)
-{
-	Widget::MouseDown(x, y, theClickCount);
-
-	if (mLimboPageUnlocked)
-		return;
-
-	constexpr int MAX_GAP_MS = 200;
-	constexpr int CLICKS_NEEDED = 5;
-
-	uint32_t aNow = SDL_GetTicks();
-	if (aNow - mLastClickTime > MAX_GAP_MS)
-		mClickCount = 0;
-	mLastClickTime = aNow;
-	mClickCount++;
-	if (mClickCount >= CLICKS_NEEDED)
-	{
-		mLimboPageUnlocked = true;
-		UpdateButtons();
-	}
 }
