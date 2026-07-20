@@ -24,10 +24,8 @@
 
 #include "Buffer.h"
 #include <SDL_stdinc.h>
+#include <array>
 #define POLYNOMIAL 0x04c11db7L
-
-static bool 	bCrcTableGenerated = false;
-static uint32_t crc_table[256];
 
 using namespace Sexy;
 
@@ -59,25 +57,25 @@ static constexpr char32_t WIN1252_TO_UNICODE[32] = {
 //----------------------------------------------------------------------------
 // Generate the table of CRC remainders for all possible bytes.
 //----------------------------------------------------------------------------
-static void GenerateCRCTable(void)
+static constexpr std::array<uint32_t, 256> GenerateCRCTable()
 {
-	bCrcTableGenerated = true;
-
-	int i, j;
-	uint32_t crc_accum;
-	for (i = 0;  i < 256;  i++)
+	std::array<uint32_t, 256> table{};
+	for (int i = 0; i < 256; i++)
 	{
-		crc_accum = ((uint32_t) i << 24);
-		for ( j = 0;  j < 8;  j++ )
+		uint32_t crc_accum = ((uint32_t) i << 24);
+		for (int j = 0; j < 8; j++)
 		{
 			if (crc_accum & 0x80000000L)
 				crc_accum = (crc_accum << 1) ^ POLYNOMIAL;
 			else
 				crc_accum = (crc_accum << 1);
 		}
-		crc_table[i] = crc_accum;
+		table[i] = crc_accum;
 	}
+	return table;
 }
+
+static constexpr std::array<uint32_t, 256> crc_table = GenerateCRCTable();
 
 //----------------------------------------------------------------------------
 // Update the CRC on the data block one byte at a time.
@@ -86,9 +84,6 @@ static uint32_t UpdateCRC(uint32_t crc_accum,
 						const char *data_blk_ptr,
 						int data_blk_size)
 {
-	if (!bCrcTableGenerated)
-		GenerateCRCTable();
-	
 	int i, j;
 	for (j = 0; j < data_blk_size; j++)
 	{
@@ -221,7 +216,7 @@ bool Buffer::ToUTF8String(std::string* theString) const
 	return false;
 }
 
-void Buffer::FromWebString(const std::string& theString)
+void Buffer::FromWebString(std::string_view theString)
 {
 	Clear();
 

@@ -45,7 +45,7 @@ protected:
 	void					Fail(const std::string& theErrorText);
 
 	bool					ParseSingleElement(std::string* theString);
-	bool					ParseStringArray(StringVector* theStringVector);
+	bool					ParseStringArray(std::vector<std::string>* theStringVector);
 	bool					ParseProperties();
 	bool					DoParseProperties();
 

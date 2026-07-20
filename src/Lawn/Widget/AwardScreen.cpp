@@ -273,7 +273,7 @@ bool AwardScreen::IsPaperNote()
 	return mApp->IsAdventureMode() && (aLevel == 10 || aLevel == 20 || aLevel == 30 || aLevel == 40 || aLevel == 50);
 }
 
-void AwardScreen::DrawBottom(Graphics* g, const std::string& theTitle, const std::string& theAward, const std::string& theMessage)
+void AwardScreen::DrawBottom(Graphics* g, std::string_view theTitle, std::string_view theAward, std::string_view theMessage)
 {
 	g->DrawImage(Sexy::IMAGE_AWARDSCREEN_BACK, 0, 0);
 	TodDrawString(g, theTitle, BOARD_WIDTH / 2, 58, Sexy::FONT_DWARVENTODCRAFT24, Color(213, 159, 43), DS_ALIGN_CENTER);
@@ -462,10 +462,26 @@ void AwardScreen::Update()
 	if (mFadeInCounter > 0) mFadeInCounter--;
 }
 
-void AwardScreen::KeyChar(char theChar)
+void AwardScreen::KeyDown(KeyCode theKey)
 {
-	if (theChar == ' ' || theChar == '\r' || theChar == '\u001B')
+	if (theKey == KeyCode::KEYCODE_SPACE || theKey == KeyCode::KEYCODE_RETURN)
+	{
 		StartButtonPressed();
+		return;
+	}
+
+	if (theKey == KeyCode::KEYCODE_ESCAPE)
+	{
+		if (!mMenuButton->mDisabled && !mMenuButton->mBtnNoDraw)
+		{
+			mApp->KillAwardScreen();
+			mApp->ShowGameSelector();
+		}
+		else
+		{
+			StartButtonPressed();
+		}
+	}
 }
 
 // GOTY @Patoke: 0x409530
@@ -612,11 +628,11 @@ void AwardScreen::DrawAchievements(Graphics* g) {
 
 	g->DrawImage(IMAGE_CHALLENGE_BACKGROUND, 0, 0);
 
-	TodDrawString(g, "ACHIEVEMENTS", BOARD_WIDTH / 2, 58, FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
+	TodDrawString(g, mApp->GetString("ACHIEVEMENTS_TITLE", "ACHIEVEMENTS"), BOARD_WIDTH / 2, 58, FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 
 	for (size_t i = 0; i < mAchievementItems.size(); i++) {
-		std::string aAchievementName = gAchievementList[mAchievementItems[i].mId].name;
-		std::string aAchievementDesc = gAchievementList[mAchievementItems[i].mId].description;
+		std::string aAchievementName = std::string(gAchievementList[mAchievementItems[i].mId].name);
+		std::string aAchievementDesc = std::string(gAchievementList[mAchievementItems[i].mId].description);
 		aAchievementName.append(" Earned!");
 
 		Rect aSrcRect = Rect(70 * (mAchievementItems[i].mId % 7), 70 * (mAchievementItems[i].mId / 7), 70, 70);
@@ -656,7 +672,7 @@ void AwardScreen::AchievementsContinuePressed() {
 		mContinueButton->mBtnNoDraw = true;
 		mShowingAchievements = false;
 		int level = mApp->mPlayerInfo->GetLevel();
-		if (level == 1 && mApp->HasFinishedAdventure()) {
+		if (mApp->IsAdventureMode() && level == 1 && mApp->HasFinishedAdventure()) {
 			mApp->KillAwardScreen();
 			mApp->ShowAwardScreen(AWARD_CREDITS_ZOMBIENOTE, false);
 		}

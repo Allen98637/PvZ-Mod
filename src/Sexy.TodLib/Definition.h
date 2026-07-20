@@ -74,7 +74,7 @@ public:
     const char*         mFieldName;                     //+0x0：指向 _MemVar 的名称。指向空字符数组时表示无此变量，故被作为读取结束的标志
     int                 mFieldOffset;                   //+0x4：_MemVar 在所处类中的偏移量（结合汇编理解）
     DefFieldType        mFieldType;                     //+0x8：*_MemVar 的数据存储类型，不同类型的数据的读取方式也有所不同
-    void*               mExtraData;                     //+0xC：额外数据。用于对 *_MemVar 中包含的指针变量进行深拷贝。
+    const void*         mExtraData;                     //+0xC：额外数据。用于对 *_MemVar 中包含的指针变量进行深拷贝。
     // 若 _MemVar 为指向其他定义数据的指针型变量，则 mExtraData 为指向 _MemVar 所定义的类的定义结构图的指针；
     // 若 _MemVar 为标志或枚举类型的数据，则 mExtraData 为指向其各标志数据的 DefSymbol 数组的指针；否则，mExtraData 为空指针。
     // 虽然借助一个 _DefClass 类的定义结构图就已经可以通过相关函数读取该 _DefClass 的全部数据（即进行浅拷贝），
@@ -90,7 +90,7 @@ public:
 class DefMap
 {
 public:
-    DefField*           mMapFields;                     //+0x0：结构字段的数组，记录 _DefClass 类中的各成员变量在 _DefClass 中的结构（每项记录一种结构）
+    const DefField*     mMapFields;                     //+0x0：结构字段的数组，记录 _DefClass 类中的各成员变量在 _DefClass 中的结构（每项记录一种结构）
     int                 mDefSize;                       //+0x4：一个 _DefClass 实例所占用的内存大小，也即后续初次读取时的读取长度，一般为 sizeof(_DefClass)
     void*               (*mConstructorFunc)(void*);     //+0x8：_DefClass 类型实例的构造函数的指针
 };
@@ -104,24 +104,24 @@ void*            ReanimatorTrackConstructor(void* thePointer);
 void*            ReanimatorDefinitionConstructor(void* thePointer);
 
 //extern DefField gParticleFieldDefFields[];
-extern DefMap gParticleFieldDefMap;
+extern const DefMap gParticleFieldDefMap;
 //
 //extern DefField gEmitterDefFields[];
-extern DefMap gEmitterDefMap;
+extern const DefMap gEmitterDefMap;
 //
 //extern DefField gParticleDefFields[];
-extern DefMap gParticleDefMap;
+extern const DefMap gParticleDefMap;
 //
-extern DefMap gTrailDefMap;
+extern const DefMap gTrailDefMap;
 //
 //extern DefField gReanimatorTransformDefFields[];
-extern DefMap gReanimatorTransformDefMap;
+extern const DefMap gReanimatorTransformDefMap;
 //
 //extern DefField gReanimatorTrackDefFields[];
-extern DefMap gReanimatorTrackDefMap;
+extern const DefMap gReanimatorTrackDefMap;
 //
 //extern DefField gReanimatorDefFields[];
-extern DefMap gReanimatorDefMap;
+extern const DefMap gReanimatorDefMap;
 
 // ====================================================================================================
 // ★ 【定义数组】
@@ -165,28 +165,28 @@ public:
 std::string             DefinitionGetCompiledFilePathFromXMLFilePath(const std::string& theXMLFilePath);
 bool                    IsFileInPakFile(const std::string& theFilePath);
 bool                    DefinitionIsCompiled(const std::string& theXMLFilePath);
-bool                    DefinitionReadCompiledFile(const std::string& theCompiledFilePath, DefMap* theDefMap, void* theDefinition);
-void                    DefinitionFillWithDefaults(DefMap* theDefMap, void* theDefinition);
+bool                    DefinitionReadCompiledFile(const std::string& theCompiledFilePath, const DefMap* theDefMap, void* theDefinition);
+void                    DefinitionFillWithDefaults(const DefMap* theDefMap, void* theDefinition);
 void                    DefinitionXmlError(XMLParser* theXmlParser, char* theFormat, ...);
-bool                    DefSymbolValueFromString(DefSymbol* theSymbolMap, const char* theName, int* theResultValue);
+bool                    DefSymbolValueFromString(const DefSymbol* theSymbolMap, const char* theName, int* theResultValue);
 bool                    DefinitionReadXMLString(XMLParser* theXmlParser, std::string& theValue);
 bool                    DefinitionReadIntField(XMLParser* theXmlParser, int* theValue);
 bool                    DefinitionReadFloatField(XMLParser* theXmlParser, float* theValue);
 bool                    DefinitionReadStringField(XMLParser* theXmlParser, const char** theValue);
-bool                    DefinitionReadEnumField(XMLParser* theXmlParser, int* theValue, DefSymbol* theSymbolMap);
+bool                    DefinitionReadEnumField(XMLParser* theXmlParser, int* theValue, const DefSymbol* theSymbolMap);
 bool                    DefinitionReadVector2Field(XMLParser* theXmlParser, SexyVector2* theValue);
-bool                    DefinitionReadArrayField(XMLParser* theXmlParser, DefinitionArrayDef* theArray, DefField* theField);
+bool                    DefinitionReadArrayField(XMLParser* theXmlParser, DefinitionArrayDef* theArray, const DefField* theField);
 bool                    DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack* theTrack);
-bool                    DefinitionReadFlagField(XMLParser* theXmlParser, const std::string& theElementName, uint* theResultValue, DefSymbol* theSymbolMap);
+bool                    DefinitionReadFlagField(XMLParser* theXmlParser, const std::string& theElementName, uint* theResultValue, const DefSymbol* theSymbolMap);
 bool                    DefinitionReadImageField(XMLParser* theXmlParser, Image** theImage);
 bool                    DefinitionReadFontField(XMLParser* theXmlParser, _Font** theFont);
-bool                    DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefinition, bool* theDone);
-bool                    DefinitionWriteCompiledFile(const std::string& theCompiledFilePath, DefMap* theDefMap, void* theDefinition);
-bool                    DefinitionCompileFile(const std::string theXMLFilePath, const std::string& theCompiledFilePath, DefMap* theDefMap, void* theDefinition);
+bool                    DefinitionReadField(XMLParser* theXmlParser, const DefMap* theDefMap, void* theDefinition, bool* theDone);
+bool                    DefinitionWriteCompiledFile(const std::string& theCompiledFilePath, const DefMap* theDefMap, void* theDefinition);
+bool                    DefinitionCompileFile(const std::string& theXMLFilePath, const std::string& theCompiledFilePath, const DefMap* theDefMap, void* theDefinition);
 
-void                    DefMapWriteToCache(void*& theWritePtr, DefMap* theDefMap, void* theDefinition);
+void                    DefMapWriteToCache(void*& theWritePtr, const DefMap* theDefMap, void* theDefinition);
 void                    DefWriteToCacheString(void*& theWritePtr, const char** theValue);
-void                    DefWriteToCacheArray(void*& theWritePtr, DefinitionArrayDef* theValue, DefMap* theDefMap);
+void                    DefWriteToCacheArray(void*& theWritePtr, DefinitionArrayDef* theValue, const DefMap* theDefMap);
 void                    DefWriteToCacheFloatTrack(void*& theWritePtr, FloatParameterTrack* theValue);
 void                    DefWriteToCacheImage(void*& theWritePtr, Image** theValue);
 void                    DefWriteToCacheFont(void*& theWritePtr, _Font** theValue);
@@ -194,31 +194,31 @@ void                    DefWriteToCacheFont(void*& theWritePtr, _Font** theValue
 void*                   DefinitionCompressCompiledBuffer(void* theBuffer, unsigned int theBufferSize, unsigned int* theResultSize);
 
 /*inline*/ unsigned int DefGetSizeString(const char** theValue);
-/*inline*/ unsigned int DefinitionGetArraySize(DefinitionArrayDef* theValue, DefMap* theDefMap);
+/*inline*/ unsigned int DefinitionGetArraySize(DefinitionArrayDef* theValue, const DefMap* theDefMap);
 /*inline*/ unsigned int DefGetSizeFloatTrack(FloatParameterTrack* theValue);
 /*inline*/ unsigned int DefGetSizeImage(Image** theValue);
 /*inline*/ unsigned int DefGetSizeFont(_Font** theValue);
 
-/*inline*/ unsigned int DefinitionGetDeepSize(DefMap* theDefMap, void* theDefinition);
-/*inline*/ unsigned int DefinitionGetSize(DefMap* theDefMap, void* theDefinition);
+/*inline*/ unsigned int DefinitionGetDeepSize(const DefMap* theDefMap, void* theDefinition);
+/*inline*/ unsigned int DefinitionGetSize(const DefMap* theDefMap, void* theDefinition);
 /*inline*/ void*        DefinitionAlloc(int theSize);
 void*                   DefinitionUncompressCompiledBuffer(void* theCompressedBuffer, size_t theCompressedBufferSize, size_t& theUncompressedSize, const std::string& theCompiledFilePath);
-uint                    DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol* theSymbolMap);
-uint                    DefinitionCalcHashDefMap(int aSchemaHash, DefMap* theDefMap, TodList<DefMap*>& theProgressMaps);
-uint                    DefinitionCalcHash(DefMap* theDefMap);
+uint                    DefinitionCalcHashSymbolMap(int aSchemaHash, const DefSymbol* theSymbolMap);
+uint                    DefinitionCalcHashDefMap(int aSchemaHash, const DefMap* theDefMap, TodList<const DefMap*>& theProgressMaps);
+uint                    DefinitionCalcHash(const DefMap* theDefMap);
 inline bool             DefReadFromCacheString(void*& theReadPtr, const char** theString);
-inline bool             DefReadFromCacheArray(void*& theReadPtr, DefinitionArrayDef* theArray, DefMap* theDefMap);
+inline bool             DefReadFromCacheArray(void*& theReadPtr, DefinitionArrayDef* theArray, const DefMap* theDefMap);
 inline bool             DefReadFromCacheImage(void*& theReadPtr, Image** theImage);
 inline bool             DefReadFromCacheFont(void*& theReadPtr, _Font** theFont);
 inline bool             DefReadFromCacheFloatTrack(void*& theReadPtr, FloatParameterTrack* theTrack);
-bool                    DefMapReadFromCache(void*& theReadPtr, DefMap* theDefMap, void* theDefinition);
-bool                    DefinitionCompileAndLoad(const std::string& theXMLFilePath, DefMap* theDefMap, void* theDefinition);
-bool                    DefinitionLoadMap(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefinition);
+bool                    DefMapReadFromCache(void*& theReadPtr, const DefMap* theDefMap, void* theDefinition);
+bool                    DefinitionCompileAndLoad(const std::string& theXMLFilePath, const DefMap* theDefMap, void* theDefinition);
+bool                    DefinitionLoadMap(XMLParser* theXmlParser, const DefMap* theDefMap, void* theDefinition);
 bool                    DefinitionLoadImage(Image** theImage, const std::string& theName);
 bool                    DefinitionLoadFont(_Font** theFont, const std::string& theName);
-bool                    DefinitionLoadXML(const std::string& theFilename, DefMap* theDefMap, void* theDefinition);
-void                    DefinitionFreeArrayField(DefinitionArrayDef* theArray, DefMap* theDefMap);
-void                    DefinitionFreeMap(DefMap* theDefMap, void* theDefinition);
+bool                    DefinitionLoadXML(const std::string& theFilename, const DefMap* theDefMap, void* theDefinition);
+void                    DefinitionFreeArrayField(DefinitionArrayDef* theArray, const DefMap* theDefMap);
+void                    DefinitionFreeMap(const DefMap* theDefMap, void* theDefinition);
 
 /*inline*/ bool         FloatTrackIsSet(const FloatParameterTrack& theTrack);
 /*inline*/ void         FloatTrackSetDefault(FloatParameterTrack& theTrack, float theValue);

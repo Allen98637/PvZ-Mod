@@ -34,7 +34,7 @@ class MusicInterface
 {
 public:
 	MusicInterface() {}
-	virtual ~MusicInterface() {}
+	virtual ~MusicInterface() = default;
 
 	virtual bool			LoadMusic(int theSongId, const std::string& theFileName) = 0;
 	virtual void			PlayMusic(int theSongId, int theOffset = 0, bool noLoop = false) = 0;

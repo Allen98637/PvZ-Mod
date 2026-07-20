@@ -64,18 +64,18 @@ public:
 
 public:
 	NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector);
-	~NewOptionsDialog();
+	~NewOptionsDialog() override;
 
-	int						GetPreferredHeight(int theWidth);
-	void					AddedToManager(Sexy::WidgetManager* theWidgetManager);
-	void					RemovedFromManager(Sexy::WidgetManager* theWidgetManager);
-	void					Resize(int theX, int theY, int theWidth, int theHeight);
-	void					Draw(Sexy::Graphics* g);
-	void					SliderVal(int theId, double theVal);
-	void					CheckboxChecked(int theId, bool checked);
-	void					ButtonPress(int theId);
-	void					ButtonDepress(int theId);
-	void					KeyDown(Sexy::KeyCode theKey);
+	int						GetPreferredHeight(int theWidth) override;
+	void					AddedToManager(Sexy::WidgetManager* theWidgetManager) override;
+	void					RemovedFromManager(Sexy::WidgetManager* theWidgetManager) override;
+	void					Resize(int theX, int theY, int theWidth, int theHeight) override;
+	void					Draw(Sexy::Graphics* g) override;
+	void					SliderVal(int theId, double theVal) override;
+	void					CheckboxChecked(int theId, bool checked) override;
+	void					ButtonPress(int theId) override;
+	void					ButtonDepress(int theId) override;
+	void					KeyDown(Sexy::KeyCode theKey) override;
 };
 
 #endif

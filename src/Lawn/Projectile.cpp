@@ -33,25 +33,25 @@
 #include "../Sexy.TodLib/Attachment.h"
 #include "Widget/AchievementsScreen.h"
 
-ProjectileDefinition gProjectileDefinition[] = {
-	{ ProjectileType::PROJECTILE_PEA,           0,  20  },
-	{ ProjectileType::PROJECTILE_SNOWPEA,       0,  20  },
-	{ ProjectileType::PROJECTILE_CABBAGE,       0,  40  },
-	{ ProjectileType::PROJECTILE_MELON,         0,  80  },
-	{ ProjectileType::PROJECTILE_PUFF,          0,  20  },
-	{ ProjectileType::PROJECTILE_WINTERMELON,   0,  80  },
-	{ ProjectileType::PROJECTILE_FIREBALL,      0,  40  },
-	{ ProjectileType::PROJECTILE_STAR,          0,  20  },
-	{ ProjectileType::PROJECTILE_SPIKE,         0,  20  },
-	{ ProjectileType::PROJECTILE_BASKETBALL,    0,  75  },
-	{ ProjectileType::PROJECTILE_KERNEL,        0,  20  },
-	{ ProjectileType::PROJECTILE_COBBIG,        0,  300 },
-	{ ProjectileType::PROJECTILE_BUTTER,        0,  40  },
-	{ ProjectileType::PROJECTILE_ZOMBIE_PEA,    0,  20  },
-	{ ProjectileType::PROJECTILE_ZOMBIE_CABBAGE,0,  40  },
-	{ ProjectileType::PROJECTILE_ZOMBIE_MELON,	0,  80  },
-	{ ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA,0,  20  },
-	{ ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON,	0,  80  },
+constinit const ProjectileDefinition gProjectileDefinition[] = {
+	{ .mProjectileType = ProjectileType::PROJECTILE_PEA, .mImageRow = 0, .mDamage = 20 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_SNOWPEA, .mImageRow = 0, .mDamage = 20 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_CABBAGE, .mImageRow = 0, .mDamage = 40 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_MELON, .mImageRow = 0, .mDamage = 80 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_PUFF, .mImageRow = 0, .mDamage = 20 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_WINTERMELON, .mImageRow = 0, .mDamage = 80 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_FIREBALL, .mImageRow = 0, .mDamage = 40 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_STAR, .mImageRow = 0, .mDamage = 20 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_SPIKE, .mImageRow = 0, .mDamage = 20 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_BASKETBALL, .mImageRow = 0, .mDamage = 75 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_KERNEL, .mImageRow = 0, .mDamage = 20 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_COBBIG, .mImageRow = 0, .mDamage = 300 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_BUTTER, .mImageRow = 0, .mDamage = 40 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_ZOMBIE_PEA, .mImageRow = 0, .mDamage = 20 },
+	{ .mProjectileType = ProjectileType::PROJECTILE_ZOMBIE_CABBAGE, .mImageRow = 0, .mDamage = 40  },
+	{ .mProjectileType = ProjectileType::PROJECTILE_ZOMBIE_MELON, .mImageRow = 0, .mDamage = 80  },
+	{ .mProjectileType = ProjectileType::PROJECTILE_ZOMBIE_SNOWPEA, .mImageRow = 0, .mDamage = 20  },
+	{ .mProjectileType = ProjectileType::PROJECTILE_ZOMBIE_WINTERMELON, .mImageRow = 0, .mDamage = 80  }
 };
 
 Projectile::Projectile()
@@ -1465,9 +1465,9 @@ void Projectile::ConvertToPea(int theGridX)
 	mApp->PlayFoley(FoleyType::FOLEY_THROW);
 }
 
-ProjectileDefinition& Projectile::GetProjectileDef()
+const ProjectileDefinition& Projectile::GetProjectileDef()
 {
-	ProjectileDefinition& aProjectileDef = gProjectileDefinition[mProjectileType];
+	const ProjectileDefinition& aProjectileDef = gProjectileDefinition[mProjectileType];
 	TOD_ASSERT(aProjectileDef.mProjectileType == mProjectileType);
 
 	return aProjectileDef;

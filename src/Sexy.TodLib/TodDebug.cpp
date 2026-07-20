@@ -171,7 +171,7 @@ void TodTrace(const char* theFormat, ...)
 		}
 	}
 
-	printf("%s", aButter);
+	Sexy::PrintF("%s", aButter);
 }
 
 void TodHesitationTrace(...)
@@ -199,7 +199,7 @@ void TodTraceAndLog(const char* theFormat, ...)
 		}
 	}
 
-	printf("%s", aButter);
+	Sexy::PrintF("%s", aButter);
 	TodLogString(aButter);
 }
 
@@ -232,7 +232,7 @@ void TodTraceWithoutSpamming(const char* theFormat, ...)
 		}
 	}
 
-	printf("%s", aButter);
+	Sexy::PrintF("%s", aButter);
 }
 
 void TodAssertInitForApp()

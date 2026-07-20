@@ -69,6 +69,7 @@ SeedChooserScreen::SeedChooserScreen()
 	mStartButton->mDisabledImage = Sexy::IMAGE_SEEDCHOOSER_BUTTON_DISABLED;
 	mStartButton->mOverOverlayImage = Sexy::IMAGE_SEEDCHOOSER_BUTTON_GLOW;
 	mStartButton->SetFont(Sexy::FONT_DWARVENTODCRAFT18YELLOW);
+	mStartButton->mColors[GameButton::COLOR_LABEL_HILITE] = Color::White;
 	mStartButton->Resize(154, 545, 156, 42);
 	mStartButton->mTextOffsetY = -1;
 	EnableStartButton(false);
@@ -1163,15 +1164,20 @@ void SeedChooserScreen::CloseSeedChooser()
 void SeedChooserScreen::KeyDown(KeyCode theKey)
 {
 	mBoard->DoTypingCheck(theKey);
+
+	if (mChooseState == CHOOSE_VIEW_LAWN && (theKey == KeyCode::KEYCODE_SPACE || theKey == KeyCode::KEYCODE_RETURN || theKey == KeyCode::KEYCODE_ESCAPE))
+	{
+		CancelLawnView();
+	}
+	else if (theKey == KeyCode::KEYCODE_ESCAPE)
+	{
+		ButtonDepress(SeedChooserScreen::SeedChooserScreen_Menu);
+	}
 }
 
 void SeedChooserScreen::KeyChar(char theChar)
 {
-	if (mChooseState == CHOOSE_VIEW_LAWN && (theChar == ' ' || theChar == '\r' || theChar == '\u001B'))
-		CancelLawnView();
-	else if (mApp->mTodCheatKeys && theChar == '\u001B')
-		PickRandomSeeds();
-	else mBoard->KeyChar(theChar);
+	mBoard->KeyChar(theChar);
 }
 
 void SeedChooserScreen::UpdateAfterPurchase()

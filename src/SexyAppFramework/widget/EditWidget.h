@@ -90,35 +90,35 @@ public:
 	virtual bool			IsPartOfWord(char theChar);
 	virtual int				GetCharAt(int x, int y);
 
-	virtual void			Resize(int theX, int theY, int theWidth, int theHeight);
-	virtual void			Draw(Graphics* g); // Already translated;
+	void					Resize(int theX, int theY, int theWidth, int theHeight) override;
+	void					Draw(Graphics* g) override; // Already translated;
 
-	virtual void			Update();
-	virtual void			MarkDirty();
+	void					Update() override;
+	void					MarkDirty() override;
 
-	virtual bool			WantsFocus();
-	virtual void			GotFocus();
-	virtual void			LostFocus();
+	bool					WantsFocus() override;
+	void					GotFocus() override;
+	void					LostFocus() override;
 	virtual void			FocusCursor(bool bigJump);
 
-	virtual void			KeyDown(KeyCode theKey);
-	virtual void			KeyChar(char theChar);
+	void					KeyDown(KeyCode theKey) override;
+	void					KeyChar(char theChar) override;
 
-	virtual void			MouseDown(int x, int y, int theClickCount) { Widget::MouseDown(x, y, theClickCount); }
-	virtual void			MouseDown(int x, int y, int theBtnNum, int theClickCount);
-	virtual void			MouseUp(int x, int y) { Widget::MouseUp(x, y); }
-	virtual void			MouseUp(int x, int y, int theClickCount) { Widget::MouseUp(x, y, theClickCount); }
-	virtual void			MouseUp(int x, int y, int theBtnNum, int theClickCount);
-	virtual void			MouseDrag(int x, int y);
-	virtual void			MouseEnter();
-	virtual void			MouseLeave();
+	void					MouseDown(int x, int y, int theClickCount) override { Widget::MouseDown(x, y, theClickCount); }
+	void					MouseDown(int x, int y, int theBtnNum, int theClickCount) override;
+	void					MouseUp(int x, int y) override { Widget::MouseUp(x, y); }
+	void					MouseUp(int x, int y, int theClickCount) override { Widget::MouseUp(x, y, theClickCount); }
+	void					MouseUp(int x, int y, int theBtnNum, int theClickCount) override;
+	void					MouseDrag(int x, int y) override;
+	void					MouseEnter() override;
+	void					MouseLeave() override;
 	void					ClearWidthCheckFonts();
 	void					AddWidthCheckFont(_Font *theFont, int theMaxPixels = -1); // defaults to mMaxPixels
 	void					EnforceMaxPixels();
 
 public:
 	EditWidget(int theId, EditListener* theEditListener);
-	virtual ~EditWidget();
+	~EditWidget() override;
 };
 
 }

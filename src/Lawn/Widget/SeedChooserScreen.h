@@ -95,7 +95,7 @@ public:
 
 public:
     SeedChooserScreen();
-    ~SeedChooserScreen();
+    ~SeedChooserScreen() override;
 
     static /*inline*/ int   PickFromWeightedArrayUsingSpecialRandSeed(TodWeightedArray* theArray, int theCount, MTRand& theLevelRNG);
     void                    CrazyDavePickSeeds();
@@ -105,11 +105,11 @@ public:
     /*inline*/ unsigned int SeedNotRecommendedToPick(SeedType theSeedType);
     /*inline*/ bool         SeedNotAllowedToPick(SeedType theSeedType);
     /*inline*/ bool         SeedNotAllowedDuringTrial(SeedType theSeedType);
-    virtual void            Draw(Graphics* g);
+    void                    Draw(Graphics* g) override;
     void                    UpdateViewLawn();
     void                    LandFlyingSeed(ChosenSeed& theChosenSeed);
     void                    UpdateCursor();
-    virtual void            Update();
+    void                    Update() override;
     /*inline*/ bool         DisplayRepickWarningDialog(const char* theMessage);
     bool                    FlyersAreComming();
     bool                    FlyProtectionCurrentlyPlanted();
@@ -125,14 +125,14 @@ public:
     void                    ShowToolTip();
     /*inline*/ void         RemoveToolTip();
     /*inline*/ void         CancelLawnView();
-    virtual void            MouseUp(int x, int y, int theClickCount);
+    void                    MouseUp(int x, int y, int theClickCount) override;
     void                    UpdateImitaterButton();
-    virtual void            MouseDown(int x, int y, int theClickCount);
+    void                    MouseDown(int x, int y, int theClickCount) override;
     virtual void            MouseWheel(int theDelta);
     /*inline*/ bool         PickedPlantType(SeedType theSeedType);
     void                    CloseSeedChooser();
-    virtual void            KeyDown(KeyCode theKey);
-    virtual void            KeyChar(char theChar);
+    void                    KeyDown(KeyCode theKey) override;
+    void                    KeyChar(char theChar) override;
     void                    UpdateAfterPurchase();
 };
 

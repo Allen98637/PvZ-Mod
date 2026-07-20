@@ -57,15 +57,7 @@ public:
 	{
 	}
 
-	inline bool operator==(const TPoint& p)
-	{
-		return ((p.mX == mX) && (p.mY == mY));
-	}
-
-	inline bool operator!=(const TPoint& p)
-	{
-		return ((p.mX != mX) || (p.mY != mY));
-	}
+	bool operator==(const TPoint& p) const = default;
 
 	TPoint operator+(const TPoint& p) const {return TPoint(mX+p.mX, mY+p.mY);}
 	TPoint operator-(const TPoint& p) const {return TPoint(mX-p.mX, mY-p.mY);}

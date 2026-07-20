@@ -41,62 +41,62 @@
 #include "graphics/Graphics.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 
-static SpecialGridPlacement gGreenhouseGridPlacement[] =
+constinit const static SpecialGridPlacement gGreenhouseGridPlacement[] =
 {
-    {  73,  73, 0, 0 },
-    { 155,  71, 1, 0 },
-    { 239,  68, 2, 0 },
-    { 321,  73, 3, 0 },
-    { 406,  71, 4, 0 },
-    { 484,  67, 5, 0 },
-    { 566,  70, 6, 0 },
-    { 648,  72, 7, 0 },
-    {  67, 168, 0, 1 },
-    { 150, 165, 1, 1 },
-    { 232, 170, 2, 1 },
-    { 314, 175, 3, 1 },
-    { 416, 173, 4, 1 },
-    { 497, 170, 5, 1 },
-    { 578, 164, 6, 1 },
-    { 660, 168, 7, 1 },
-    {  41, 268, 0, 2 },
-    { 130, 266, 1, 2 },
-    { 219, 260, 2, 2 },
-    { 310, 266, 3, 2 },
-    { 416, 267, 4, 2 },
-    { 504, 261, 5, 2 },
-    { 594, 265, 6, 2 },
-    { 684, 269, 7, 2 },
-    {  37, 371, 0, 3 },
-    { 124, 369, 1, 3 },
-    { 211, 368, 2, 3 },
-    { 302, 369, 3, 3 },
-    { 425, 375, 4, 3 },
-    { 512, 368, 5, 3 },
-    { 602, 365, 6, 3 },
-    { 691, 368, 7, 3 }
+    { .mPixelX = 73, .mPixelY = 73, .mGridX = 0, .mGridY = 0 },
+    { .mPixelX = 155, .mPixelY = 71, .mGridX = 1, .mGridY = 0 },
+    { .mPixelX = 239, .mPixelY = 68, .mGridX = 2, .mGridY = 0 },
+    { .mPixelX = 321, .mPixelY = 73, .mGridX = 3, .mGridY = 0 },
+    { .mPixelX = 406, .mPixelY = 71, .mGridX = 4, .mGridY = 0 },
+    { .mPixelX = 484, .mPixelY = 67, .mGridX = 5, .mGridY = 0 },
+    { .mPixelX = 566, .mPixelY = 70, .mGridX = 6, .mGridY = 0 },
+    { .mPixelX = 648, .mPixelY = 72, .mGridX = 7, .mGridY = 0 },
+    { .mPixelX = 67, .mPixelY = 168, .mGridX = 0, .mGridY = 1 },
+    { .mPixelX = 150, .mPixelY = 165, .mGridX = 1, .mGridY = 1 },
+    { .mPixelX = 232, .mPixelY = 170, .mGridX = 2, .mGridY = 1 },
+    { .mPixelX = 314, .mPixelY = 175, .mGridX = 3, .mGridY = 1 },
+    { .mPixelX = 416, .mPixelY = 173, .mGridX = 4, .mGridY = 1 },
+    { .mPixelX = 497, .mPixelY = 170, .mGridX = 5, .mGridY = 1 },
+    { .mPixelX = 578, .mPixelY = 164, .mGridX = 6, .mGridY = 1 },
+    { .mPixelX = 660, .mPixelY = 168, .mGridX = 7, .mGridY = 1 },
+    { .mPixelX = 41, .mPixelY = 268, .mGridX = 0, .mGridY = 2 },
+    { .mPixelX = 130, .mPixelY = 266, .mGridX = 1, .mGridY = 2 },
+    { .mPixelX = 219, .mPixelY = 260, .mGridX = 2, .mGridY = 2 },
+    { .mPixelX = 310, .mPixelY = 266, .mGridX = 3, .mGridY = 2 },
+    { .mPixelX = 416, .mPixelY = 267, .mGridX = 4, .mGridY = 2 },
+    { .mPixelX = 504, .mPixelY = 261, .mGridX = 5, .mGridY = 2 },
+    { .mPixelX = 594, .mPixelY = 265, .mGridX = 6, .mGridY = 2 },
+    { .mPixelX = 684, .mPixelY = 269, .mGridX = 7, .mGridY = 2 },
+    { .mPixelX = 37, .mPixelY = 371, .mGridX = 0, .mGridY = 3 },
+    { .mPixelX = 124, .mPixelY = 369, .mGridX = 1, .mGridY = 3 },
+    { .mPixelX = 211, .mPixelY = 368, .mGridX = 2, .mGridY = 3 },
+    { .mPixelX = 302, .mPixelY = 369, .mGridX = 3, .mGridY = 3 },
+    { .mPixelX = 425, .mPixelY = 375, .mGridX = 4, .mGridY = 3 },
+    { .mPixelX = 512, .mPixelY = 368, .mGridX = 5, .mGridY = 3 },
+    { .mPixelX = 602, .mPixelY = 365, .mGridX = 6, .mGridY = 3 },
+    { .mPixelX = 691, .mPixelY = 368, .mGridX = 7, .mGridY = 3 }
 };
 
-static SpecialGridPlacement gMushroomGridPlacement[] = {
-    { 110, 441, 0, 0 },
-    { 237, 360, 1, 0 },
-    { 298, 458, 2, 0 },
-    { 355, 296, 3, 0 },
-    { 387, 203, 4, 0 },
-    { 460, 385, 5, 0 },
-    { 486, 478, 6, 0 },
-    { 552, 283, 7, 0 }
+constinit const static SpecialGridPlacement gMushroomGridPlacement[] = {
+    { .mPixelX = 110, .mPixelY = 441, .mGridX = 0, .mGridY = 0 },
+    { .mPixelX = 237, .mPixelY = 360, .mGridX = 1, .mGridY = 0 },
+    { .mPixelX = 298, .mPixelY = 458, .mGridX = 2, .mGridY = 0 },
+    { .mPixelX = 355, .mPixelY = 296, .mGridX = 3, .mGridY = 0 },
+    { .mPixelX = 387, .mPixelY = 203, .mGridX = 4, .mGridY = 0 },
+    { .mPixelX = 460, .mPixelY = 385, .mGridX = 5, .mGridY = 0 },
+    { .mPixelX = 486, .mPixelY = 478, .mGridX = 6, .mGridY = 0 },
+    { .mPixelX = 552, .mPixelY = 283, .mGridX = 7, .mGridY = 0 }
 };
 
-static SpecialGridPlacement gAquariumGridPlacement[] = {
-    { 113, 185, 0, 0 },
-    { 306, 120, 1, 0 },
-    { 356, 270, 2, 0 },
-    { 622, 120, 3, 0 },
-    { 669, 270, 4, 0 },
-    { 122, 355, 5, 0 },
-    { 365, 458, 6, 0 },
-    { 504, 417, 7, 0 }
+constinit const static SpecialGridPlacement gAquariumGridPlacement[] = {
+    { .mPixelX = 113, .mPixelY = 185, .mGridX = 0, .mGridY = 0 },
+    { .mPixelX = 306, .mPixelY = 120, .mGridX = 1, .mGridY = 0 },
+    { .mPixelX = 356, .mPixelY = 270, .mGridX = 2, .mGridY = 0 },
+    { .mPixelX = 622, .mPixelY = 120, .mGridX = 3, .mGridY = 0 },
+    { .mPixelX = 669, .mPixelY = 270, .mGridX = 4, .mGridY = 0 },
+    { .mPixelX = 122, .mPixelY = 355, .mGridX = 5, .mGridY = 0 },
+    { .mPixelX = 365, .mPixelY = 458, .mGridX = 6, .mGridY = 0 },
+    { .mPixelX = 504, .mPixelY = 417, .mGridX = 7, .mGridY = 0 }
 };
 
 ZenGarden::ZenGarden()
@@ -496,7 +496,7 @@ void ZenGarden::MouseDownWithMoneySign(Plant* thePlant)
         int aNumPlantsAfterThis = mApp->mPlayerInfo->mNumPottedPlants - thePlant->mPottedPlantIndex - 1;
         if (aNumPlantsAfterThis > 0)
         {
-            memcpy(aPottedPlant, aPottedPlant + 1, aNumPlantsAfterThis * sizeof(PottedPlant));
+            memmove(aPottedPlant, aPottedPlant + 1, aNumPlantsAfterThis * sizeof(PottedPlant));
 
             Plant* aUpdatePlant = nullptr;
             while (mBoard->IteratePlants(aUpdatePlant))
@@ -1360,12 +1360,12 @@ void ZenGarden::StinkyPickGoal(GridItem* theStinky)
         int aPickCount = 0;
 
         int aCount;
-        SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
+        const SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
         TOD_ASSERT(aCount < MAX_GRID_SIZE_X * MAX_GRID_SIZE_Y);
 
         for (int i = 0; i < aCount; i++)
         {
-            SpecialGridPlacement& aGrid = aSpecialGrids[i];
+            const SpecialGridPlacement& aGrid = aSpecialGrids[i];
             Plant* aPlant = mBoard->GetTopPlantAt(aGrid.mGridX, aGrid.mGridY, PlantPriority::TOPPLANT_ANY);
             aPicks[aPickCount].mX = aGrid.mPixelX + 15;
             aPicks[aPickCount].mY = aGrid.mPixelY + 80;
@@ -1944,7 +1944,7 @@ PottedPlant* ZenGarden::GetPottedPlantInWheelbarrow()
     return nullptr;
 }
 
-SpecialGridPlacement* ZenGarden::GetSpecialGridPlacements(int& theCount)
+const SpecialGridPlacement* ZenGarden::GetSpecialGridPlacements(int& theCount)
 {
     if (mBoard->mBackground == BackgroundType::BACKGROUND_MUSHROOM_GARDEN)
     {
@@ -1968,10 +1968,10 @@ SpecialGridPlacement* ZenGarden::GetSpecialGridPlacements(int& theCount)
 int ZenGarden::PixelToGridX(int theX, int theY)
 {
     int aCount;
-    SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
+    const SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
     for (int i = 0; i < aCount; i++)
     {
-        SpecialGridPlacement& aGrid = aSpecialGrids[i];
+        const SpecialGridPlacement& aGrid = aSpecialGrids[i];
         if (theX >= aGrid.mPixelX && theX <= aGrid.mPixelX + 80 && theY >= aGrid.mPixelY && theY <= aGrid.mPixelY + 85)
         {
             return aGrid.mGridX;
@@ -1983,10 +1983,10 @@ int ZenGarden::PixelToGridX(int theX, int theY)
 int ZenGarden::PixelToGridY(int theX, int theY)
 {
     int aCount;
-    SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
+    const SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
     for (int i = 0; i < aCount; i++)
     {
-        SpecialGridPlacement& aGrid = aSpecialGrids[i];
+        const SpecialGridPlacement& aGrid = aSpecialGrids[i];
         if (theX >= aGrid.mPixelX && theX <= aGrid.mPixelX + 80 && theY >= aGrid.mPixelY && theY <= aGrid.mPixelY + 85)
         {
             return aGrid.mGridY;
@@ -1998,10 +1998,10 @@ int ZenGarden::PixelToGridY(int theX, int theY)
 int ZenGarden::GridToPixelX(int theGridX, int theGridY)
 {
     int aCount;
-    SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
+    const SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
     for (int i = 0; i < aCount; i++)
     {
-        SpecialGridPlacement& aGrid = aSpecialGrids[i];
+        const SpecialGridPlacement& aGrid = aSpecialGrids[i];
         if (theGridX == aGrid.mGridX && theGridY == aGrid.mGridY)
         {
             return aGrid.mPixelX;
@@ -2013,10 +2013,10 @@ int ZenGarden::GridToPixelX(int theGridX, int theGridY)
 int ZenGarden::GridToPixelY(int theGridX, int theGridY)
 {
     int aCount;
-    SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
+    const SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
     for (int i = 0; i < aCount; i++)
     {
-        SpecialGridPlacement& aGrid = aSpecialGrids[i];
+        const SpecialGridPlacement& aGrid = aSpecialGrids[i];
         if (theGridX == aGrid.mGridX && theGridY == aGrid.mGridY)
         {
             return aGrid.mPixelY;
@@ -2037,10 +2037,10 @@ void ZenGarden::DrawBackdrop(Graphics* g)
         mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_GLOVE)
     {
         int aCount;
-        SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
+        const SpecialGridPlacement* aSpecialGrids = GetSpecialGridPlacements(aCount);
         for (int i = 0; i < aCount; i++)
         {
-            SpecialGridPlacement& aGrid = aSpecialGrids[i];
+            const SpecialGridPlacement& aGrid = aSpecialGrids[i];
             if (mBoard->GetTopPlantAt(aGrid.mGridX, aGrid.mGridY, PlantPriority::TOPPLANT_ZEN_TOOL_ORDER) == nullptr)
             {
                 TodDrawImageCelScaled(g, IMAGE_PLANTSHADOW, aGrid.mPixelX - 35, (aGrid.mPixelY + 33), 0, 0, 1.7f, 1.7f);

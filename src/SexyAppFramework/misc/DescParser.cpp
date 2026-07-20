@@ -206,7 +206,7 @@ bool DescParser::DataToInt(DataElement* theSource, int* theInt)
 	return true;
 }
 
-bool DescParser::DataToStringVector(DataElement* theSource, StringVector* theStringVector)
+bool DescParser::DataToStringVector(DataElement* theSource, std::vector<std::string>* theStringVector)
 {
 	theStringVector->clear();
 
@@ -273,11 +273,11 @@ bool DescParser::DataToList(DataElement* theSource, ListDataElement* theValues)
 	return true;
 }
 
-bool DescParser::DataToIntVector(DataElement* theSource, IntVector* theIntVector)
+bool DescParser::DataToIntVector(DataElement* theSource, std::vector<int>* theIntVector)
 {
 	theIntVector->clear();
 	
-	StringVector aStringVector = StringVector();
+	std::vector<std::string> aStringVector = std::vector<std::string>();
 	if (!DataToStringVector(theSource, &aStringVector))
 		return false;
 
@@ -297,7 +297,7 @@ bool DescParser::DataToDoubleVector(DataElement* theSource, DoubleVector* theDou
 {
 	theDoubleVector->clear();
 	
-	StringVector aStringVector;
+	std::vector<std::string> aStringVector;
 	if (!DataToStringVector(theSource, &aStringVector))
 		return false;	
 

@@ -428,7 +428,7 @@ float RandRangeFloat(float theMin, float theMax)
 	return Rand(theMax - theMin) + theMin;
 }
 
-void TodDrawString(Graphics* g, const std::string& theText, int thePosX, int thePosY, _Font* theFont, const Color& theColor, DrawStringJustification theJustification)
+void TodDrawString(Graphics* g, std::string_view theText, int thePosX, int thePosY, _Font* theFont, const Color& theColor, DrawStringJustification theJustification)
 {
 	std::string aFinalString = TodStringTranslate(theText);
 
@@ -462,7 +462,7 @@ static RenderCommand gRenderCommandPool[POOL_SIZE];
 static RenderCommand* gRenderTail[256];
 static RenderCommand* gRenderHead[256];
 
-void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& theMatrix, const std::string& theString, const Color& theColor)
+void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& theMatrix, std::string_view theString, const Color& theColor)
 {
 	std::string aFinalString = TodStringTranslate(theString);
 
@@ -475,20 +475,24 @@ void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& t
 	aFont->Prepare();
 	int aCurXPos = 0;
 	int aCurPoolIdx = 0;
-	for (int aCharNum = 0; aCharNum < static_cast<int>(aFinalString.size()); aCharNum++)
+	size_t aDecodeOffset = 0;
+	char32_t aCurRawChar = 0;
+	char32_t aNextRawChar = 0;
+	bool aHasCur = UTF8DecodeNext(aFinalString, aDecodeOffset, aCurRawChar);
+	while (aHasCur)
 	{
-		char aChar = aFont->GetMappedChar(aFinalString[aCharNum]);
-		char aNextChar = '\0';
-		if (aCharNum < static_cast<int>(aFinalString.size()) - 1)
-		{
-			aNextChar = aFont->GetMappedChar(aFinalString[aCharNum + 1]);
-		}
+		const bool aHasNext = UTF8DecodeNext(aFinalString, aDecodeOffset, aNextRawChar);
+		const char32_t aChar = aFont->GetMappedChar(aCurRawChar);
+		const char32_t aNextChar = aHasNext ? aFont->GetMappedChar(aNextRawChar) : 0;
 
 		int aMaxXPos = aCurXPos;
 		for (auto aKernItr = aFont->mActiveLayerList.begin(); aKernItr != aFont->mActiveLayerList.end(); aKernItr++)
 		{
 			FontLayer* aLayer = aKernItr->mBaseFontLayer;
 			CharData* aCharData = aLayer->GetCharData(aChar);
+			auto aRectItr = aKernItr->mScaledCharImageRects.find(aChar);
+			if (aRectItr == aKernItr->mScaledCharImageRects.end())
+				continue;
 			double aScale = aFont->mScale;
 			int aLayerPointSize = aLayer->mPointSize;
 			if (aLayerPointSize)
@@ -503,7 +507,7 @@ void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& t
 				anImageY = aCharData->mOffset.mY + aLayer->mOffset.mY - aLayer->mAscent;
 				aCharWidth = aCharData->mWidth;
 
-				if (aNextChar == '\0')
+				if (aNextChar == 0)
 				{
 					aSpacing = 0;
 				}
@@ -525,7 +529,7 @@ void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& t
 				anImageY = -floor((aLayer->mAscent - aLayer->mOffset.mY - aCharData->mOffset.mY) * aScale);
 				aCharWidth = aCharData->mWidth * aScale;
 
-				if (aNextChar == '\0')
+				if (aNextChar == 0)
 				{
 					aSpacing = 0;
 				}
@@ -557,14 +561,10 @@ void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& t
 			aRenderCommand->mColor = aColor;
 			aRenderCommand->mDest[0] = anImageX;
 			aRenderCommand->mDest[1] = anImageY;
-			//aRenderCommand->mSrc[0] = aKernItr->mScaledCharImageRects[aChar].mX;
-			//aRenderCommand->mSrc[1] = aKernItr->mScaledCharImageRects[aChar].mY;
-			//aRenderCommand->mSrc[2] = aKernItr->mScaledCharImageRects[aChar].mWidth;
-			//aRenderCommand->mSrc[3] = aKernItr->mScaledCharImageRects[aChar].mHeight;
-			aRenderCommand->mSrc[0] = aKernItr->mScaledCharImageRects.find(aChar)->second.mX;
-			aRenderCommand->mSrc[1] = aKernItr->mScaledCharImageRects.find(aChar)->second.mY;
-			aRenderCommand->mSrc[2] = aKernItr->mScaledCharImageRects.find(aChar)->second.mWidth;
-			aRenderCommand->mSrc[3] = aKernItr->mScaledCharImageRects.find(aChar)->second.mHeight;
+			aRenderCommand->mSrc[0] = aRectItr->second.mX;
+			aRenderCommand->mSrc[1] = aRectItr->second.mY;
+			aRenderCommand->mSrc[2] = aRectItr->second.mWidth;
+			aRenderCommand->mSrc[3] = aRectItr->second.mHeight;
 			aRenderCommand->mMode = aLayer->mDrawMode;
 			aRenderCommand->mUseAlphaCorrection = aLayer->mUseAlphaCorrection;
 			aRenderCommand->mNext = nullptr;
@@ -593,6 +593,8 @@ void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& t
 		}
 
 		aCurXPos = aMaxXPos;
+		aCurRawChar = aNextRawChar;
+		aHasCur = aHasNext;
 	}
 
 	for (int aPoolIdx = 0; aPoolIdx < 256; aPoolIdx++)
@@ -1250,7 +1252,7 @@ void FreeGlobalAllocators()
 	gNumGlobalAllocators = 0;
 }
 
-std::string TodReplaceString(const std::string& theText, const char* theStringToFind, const std::string& theStringToSubstitute)
+std::string TodReplaceString(std::string_view theText, const char* theStringToFind, std::string_view theStringToSubstitute)
 {
 	std::string aFinalString = TodStringTranslate(theText);
 	size_t aPos = aFinalString.find(theStringToFind);
@@ -1263,7 +1265,7 @@ std::string TodReplaceString(const std::string& theText, const char* theStringTo
 	return aFinalString;
 }
 
-std::string TodReplaceNumberString(const std::string& theText, const char* theStringToFind, int theNumber)
+std::string TodReplaceNumberString(std::string_view theText, const char* theStringToFind, int theNumber)
 {
 	std::string aFinalString = TodStringTranslate(theText);
 	size_t aPos = aFinalString.find(theStringToFind);

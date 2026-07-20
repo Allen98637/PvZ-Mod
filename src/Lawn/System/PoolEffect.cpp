@@ -19,6 +19,7 @@
  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <memory>
 #include "PoolEffect.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"
@@ -38,7 +39,7 @@ void PoolEffect::PoolEffectInitialize()
     mApp = gLawnApp;
     mPoolCounter = 0;
 
-    mCausticImage = new MemoryImage(gSexyAppBase);
+    mCausticImage = std::make_unique<MemoryImage>(gSexyAppBase);
     mCausticImage->mWidth = CAUSTIC_IMAGE_WIDTH;
     mCausticImage->mHeight = CAUSTIC_IMAGE_HEIGHT;
     mCausticImage->mBits = new uint32_t[CAUSTIC_IMAGE_WIDTH * CAUSTIC_IMAGE_HEIGHT + 1];
@@ -48,7 +49,7 @@ void PoolEffect::PoolEffectInitialize()
     memset(mCausticImage->mBits, 0xFF, CAUSTIC_IMAGE_WIDTH * CAUSTIC_IMAGE_HEIGHT * 4); //4
     mCausticImage->mBits[CAUSTIC_IMAGE_WIDTH * CAUSTIC_IMAGE_HEIGHT] = MEMORYCHECK_ID;
 
-    mCausticGrayscaleImage = new unsigned char[256 * 256];
+    mCausticGrayscaleImage.resize(256 * 256);
     MemoryImage* aCausticGrayscaleImage = reinterpret_cast<MemoryImage*>(IMAGE_POOL_CAUSTIC_EFFECT);
     int index = 0;
     for (int x = 0; x < 256; x++)
@@ -59,13 +60,6 @@ void PoolEffect::PoolEffectInitialize()
             index++;
         }
     }
-}
-
-void PoolEffect::PoolEffectDispose()
-{
-	//unload pool caustics from memory
-    delete mCausticImage;
-    delete[] mCausticGrayscaleImage;
 }
 
 unsigned int PoolEffect::BilinearLookupFixedPoint(unsigned int u, unsigned int v)
@@ -257,7 +251,7 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics* g, bool theIsNight)
     GLInterface* anInterface = ((GLImage*)g->mDestImage)->mGLInterface;
     
     //Send caustic effect tris to OpenGL (tex, verts, tris)
-    g->DrawTrianglesTex(mCausticImage, aVertArray[2], 150);
+    g->DrawTrianglesTex(mCausticImage.get(), aVertArray[2], 150);
 }
 
 void PoolEffect::PoolEffectUpdate()

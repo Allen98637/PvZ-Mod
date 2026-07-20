@@ -85,22 +85,22 @@ protected:
 
 public:
 	SDLSoundInstance(SDLSoundManager* theSoundManager, Mix_Chunk* theSourceSound, int theReservedChannel = -1);
-	virtual ~SDLSoundInstance();
-	virtual void			Release();
+	~SDLSoundInstance() override;
+	void					Release() override;
 		
-	virtual void			SetBaseVolume(double theBaseVolume);
-	virtual void			SetBasePan(int theBasePan);
+	void					SetBaseVolume(double theBaseVolume) override;
+	void					SetBasePan(int theBasePan) override;
 
-	virtual void			AdjustPitch(double theNumSteps);
+	void					AdjustPitch(double theNumSteps) override;
 
-	virtual void			SetVolume(double theVolume); 
-	virtual void			SetPan(int thePosition); //-hundredth db to +hundredth db = left to right
+	void					SetVolume(double theVolume) override;
+	void					SetPan(int thePosition) override; //-hundredth db to +hundredth db = left to right
 
-	virtual bool			Play(bool looping, bool autoRelease);
-	virtual void			Stop();
-	virtual bool			IsPlaying();
-	virtual bool			IsReleased();
-	virtual double			GetVolume();
+	bool					Play(bool looping, bool autoRelease) override;
+	void					Stop() override;
+	bool					IsPlaying() override;
+	bool					IsReleased() override;
+	double					GetVolume() override;
 };
 
 }

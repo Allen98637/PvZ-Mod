@@ -212,7 +212,7 @@ MemoryImage* ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVar
 	Graphics aMemoryGraphics(aMemoryImage);
 	aMemoryGraphics.SetLinearBlend(true);
 
-	PlantDefinition& aPlantDef = GetPlantDefinition(theSeedType);
+	const PlantDefinition& aPlantDef = GetPlantDefinition(theSeedType);
 	//TOD_ASSERT(aPlantDef.mReanimationType != ReanimationType::REANIM_NONE);
 
 	if (theSeedType == SeedType::SEED_POTATOMINE)
@@ -269,7 +269,7 @@ MemoryImage* ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 	{
 		aUseZombieType = ZombieType::ZOMBIE_POLEVAULTER;
 	}
-	ZombieDefinition& aZombieDef = GetZombieDefinition(aUseZombieType);
+	const ZombieDefinition& aZombieDef = GetZombieDefinition(aUseZombieType);
 	TOD_ASSERT(aZombieDef.mReanimationType != ReanimationType::REANIM_NONE);
 
 	float aPosX = 40.0f, aPosY = 40.0f;
@@ -355,6 +355,11 @@ MemoryImage* ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 	return aMemoryImage;
 }
 
+ReanimatorCache::~ReanimatorCache()
+{
+	ReanimatorCacheDispose();
+}
+
 void ReanimatorCache::ReanimatorCacheInitialize()
 {
 	mApp = (LawnApp*)gSexyAppBase;
@@ -362,14 +367,17 @@ void ReanimatorCache::ReanimatorCacheInitialize()
 		mPlantImages[i] = nullptr;
 	for (int i = 0; i < LawnMowerType::NUM_MOWER_TYPES; i++)
 		mLawnMowers[i] = nullptr;
-	for (int i = 0; i < ZombieType::NUM_ZOMBIE_TYPES; i++)
+	for (int i = 0; i < ZombieType::NUM_CACHED_ZOMBIE_TYPES; i++)
 		mZombieImages[i] = nullptr;
 }
 
 void ReanimatorCache::ReanimatorCacheDispose()
 {
 	for (int i = 0; i < SeedType::NUM_SEED_TYPES; i++)
+	{
 		delete mPlantImages[i];
+		mPlantImages[i] = nullptr;
+	}
 	while (mImageVariationList.mSize != 0)
 	{
 		ReanimCacheImageVariation aImageVariation = mImageVariationList.RemoveHead();
@@ -377,9 +385,15 @@ void ReanimatorCache::ReanimatorCacheDispose()
 			delete aImageVariation.mImage;
 	}
 	for (int i = 0; i < LawnMowerType::NUM_MOWER_TYPES; i++)
+	{
 		delete mLawnMowers[i];
-	for (int i = 0; i < ZombieType::NUM_ZOMBIE_TYPES; i++)
+		mLawnMowers[i] = nullptr;
+	}
+	for (int i = 0; i < ZombieType::NUM_CACHED_ZOMBIE_TYPES; i++)
+	{
 		delete mZombieImages[i];
+		mZombieImages[i] = nullptr;
+	}
 }
 
 

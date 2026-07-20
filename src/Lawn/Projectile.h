@@ -40,7 +40,7 @@ public:
     int32_t                 mImageRow;
     int32_t                 mDamage;
 };
-extern ProjectileDefinition gProjectileDefinition[NUM_PROJECTILES];
+extern const ProjectileDefinition gProjectileDefinition[NUM_PROJECTILES];
 
 class Projectile : public GameObject
 {
@@ -94,7 +94,7 @@ public:
     void                    CheckForHighGround();
     bool                    CantHitHighGround();
     void                    DoSplashDamage(PlantOrZombie theEnemy);
-    ProjectileDefinition&   GetProjectileDef();
+    const ProjectileDefinition&   GetProjectileDef();
     unsigned int            GetDamageFlags(PlantOrZombie theEnemy);
     Rect                    GetProjectileRect();
     void                    UpdateNormalMotion();

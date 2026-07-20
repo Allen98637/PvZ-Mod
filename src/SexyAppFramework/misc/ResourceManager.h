@@ -28,6 +28,7 @@
 #include "Common.h"
 #include "graphics/Image.h"
 #include "SexyAppBase.h"
+#include "XMLParser.h"
 #include <string>
 #include <map>
 
@@ -45,9 +46,6 @@ class Image;
 class SoundInstance;
 class SexyAppBase;
 class _Font;
-
-typedef std::map<std::string, std::string>	StringToStringMap;
-typedef std::map<std::string, std::string>	XMLParamMap;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,7 +69,7 @@ public: // @Patoke todo: revert to protected
 		XMLParamMap mXMLAttributes;
 		bool mFromProgram;
 
-		virtual ~BaseRes() {}
+		virtual ~BaseRes() = default;
 		virtual void DeleteResource() { }
 	};
 
@@ -94,7 +92,7 @@ public: // @Patoke todo: revert to protected
 		AnimInfo mAnimInfo;
 
 		ImageRes() { mType = ResType_Image; }
-		virtual void DeleteResource();
+		void         DeleteResource() override;
 	};
 
 	struct SoundRes : public BaseRes
@@ -104,7 +102,7 @@ public: // @Patoke todo: revert to protected
 		int mPanning;
 
 		SoundRes() { mType = ResType_Sound; }
-		virtual void DeleteResource();
+		void         DeleteResource() override;
 	};
 
 	struct FontRes : public BaseRes
@@ -124,7 +122,7 @@ public: // @Patoke todo: revert to protected
 
 
 		FontRes() { mType = ResType_Font; }
-		virtual void DeleteResource();
+		void         DeleteResource() override;
 	};
 
 	typedef std::map<std::string,BaseRes*> ResMap;

@@ -80,21 +80,21 @@ public:
 
 public:
 	ButtonWidget(int theId, ButtonListener* theButtonListener);
-	virtual ~ButtonWidget();
+	~ButtonWidget() override;
 	
 	virtual void			SetFont(_Font* theFont);
 	virtual bool			IsButtonDown();
-	virtual void			Draw(Graphics* g);
-	virtual void			SetDisabled(bool isDisabled);
-	virtual void			MouseEnter();
-	virtual void			MouseLeave();
-	virtual void			MouseMove(int theX, int theY);
-	virtual void			MouseDown(int theX, int theY, int theClickCount) { Widget::MouseDown(theX, theY, theClickCount); }
-	virtual void			MouseDown(int theX, int theY, int theBtnNum, int theClickCount);
-	virtual void			MouseUp(int theX, int theY) { Widget::MouseUp(theX, theY); }
-	virtual void			MouseUp(int theX, int theY, int theClickCount) { Widget::MouseUp(theX, theY, theClickCount); }
-	virtual void			MouseUp(int theX, int theY, int theBtnNum, int theClickCount);
-	virtual void			Update();
+	void					Draw(Graphics* g) override;
+	void					SetDisabled(bool isDisabled) override;
+	void					MouseEnter() override;
+	void					MouseLeave() override;
+	void					MouseMove(int theX, int theY) override;
+	void					MouseDown(int theX, int theY, int theClickCount) override { Widget::MouseDown(theX, theY, theClickCount); }
+	void					MouseDown(int theX, int theY, int theBtnNum, int theClickCount) override;
+	void					MouseUp(int theX, int theY) override { Widget::MouseUp(theX, theY); }
+	void					MouseUp(int theX, int theY, int theClickCount) override { Widget::MouseUp(theX, theY, theClickCount); }
+	void					MouseUp(int theX, int theY, int theBtnNum, int theClickCount) override;
+	void					Update() override;
 };
 
 }

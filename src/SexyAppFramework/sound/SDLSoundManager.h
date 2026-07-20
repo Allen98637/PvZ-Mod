@@ -58,30 +58,30 @@ protected:
 
 public:
 	SDLSoundManager();
-	virtual ~SDLSoundManager();
+	~SDLSoundManager() override;
 
-	virtual bool			Initialized();
+	bool					Initialized() override;
 
-	virtual bool			LoadSound(intptr_t theSfxID, const std::string& theFilename);
-	virtual intptr_t		LoadSound(const std::string& theFilename);
-	virtual void			ReleaseSound(intptr_t theSfxID);
+	bool					LoadSound(intptr_t theSfxID, const std::string& theFilename) override;
+	intptr_t				LoadSound(const std::string& theFilename) override;
+	void					ReleaseSound(intptr_t theSfxID) override;
 
-	virtual void			SetVolume(double theVolume);
-	virtual bool			SetBaseVolume(intptr_t theSfxID, double theBaseVolume);
-	virtual bool			SetBasePan(intptr_t theSfxID, int theBasePan);
+	void					SetVolume(double theVolume) override;
+	bool					SetBaseVolume(intptr_t theSfxID, double theBaseVolume) override;
+	bool					SetBasePan(intptr_t theSfxID, int theBasePan) override;
 
-	virtual SoundInstance*	GetSoundInstance(intptr_t theSfxID);
+	SoundInstance*			GetSoundInstance(intptr_t theSfxID) override;
 
-	virtual void			ReleaseSounds();
-	virtual void			ReleaseChannels();
+	void					ReleaseSounds() override;
+	void					ReleaseChannels() override;
 
-	virtual double			GetMasterVolume();
-	virtual void			SetMasterVolume(double theVolume);
+	double					GetMasterVolume() override;
+	void					SetMasterVolume(double theVolume) override;
 
-	virtual void			Flush();
-	virtual void			StopAllSounds();
-	virtual intptr_t		GetFreeSoundId();
-	virtual int				GetNumSounds();
+	void					Flush() override;
+	void					StopAllSounds() override;
+	intptr_t				GetFreeSoundId() override;
+	int						GetNumSounds() override;
 };
 
 }

@@ -114,7 +114,7 @@ public:
 
 	void					SetEncodingType(XMLEncodingType theEncoding);
 	bool					OpenFile(const std::string& theFilename);
-	void					SetStringSource(const std::string& theString);
+	void					SetStringSource(std::string_view theString);
 	bool					NextElement(XMLElement* theElement);
 	std::string				GetErrorText();
 	int						GetCurrentLineNum();

@@ -31,9 +31,6 @@
 namespace Sexy 
 {
 
-typedef std::vector<std::string> SexyStringVector;
-typedef std::vector<Color> ColorVector;
-
 class ScrollbarWidget;
 class ListListener;
 class _Font;
@@ -64,8 +61,8 @@ public:
 	ScrollbarWidget*			mScrollbar;
 	int							mJustify;
 
-	SexyStringVector			mLines;
-	ColorVector					mLineColors;
+	std::vector<std::string>	mLines;
+	std::vector<Color>			mLineColors;
 	double						mPosition;	
 	double						mPageSize;
 	int							mHiliteIdx;
@@ -85,33 +82,33 @@ public:
 
 public:
 	ListWidget(int theId, _Font *theFont, ListListener *theListListener);
-	virtual ~ListWidget();
+	~ListWidget() override;
 
-	virtual void				RemovedFromManager(WidgetManager *theManager);
+	void						RemovedFromManager(WidgetManager *theManager) override;
 
 	virtual std::string			GetSortKey(int theIdx);
 	virtual void				Sort(bool ascending);
 	virtual std::string			GetStringAt(int theIdx);
-	virtual void				Resize(int theX, int theY, int theWidth, int theHeight);
+	void						Resize(int theX, int theY, int theWidth, int theHeight) override;
 	virtual int					AddLine(const std::string& theLine, bool alphabetical);
 	virtual void				SetLine(int theIdx, const std::string& theString);
 	virtual int					GetLineCount();
 	virtual int					GetLineIdx(const std::string& theLine);
 	virtual void				SetColor(const std::string& theLine, const Color& theColor);
-	virtual void				SetColor(int theIdx, const Color& theColor);
+	void						SetColor(int theIdx, const Color& theColor) override;
 	virtual void				SetLineColor(int theIdx, const Color& theColor);	
 	virtual void				RemoveLine(int theIdx);
 	virtual void				RemoveAll();
 	virtual int					GetOptimalWidth();
 	virtual int					GetOptimalHeight();
-	virtual void				OrderInManagerChanged();
-	virtual void				Draw(Graphics *g);
-	virtual void				ScrollPosition(int theId, double thePosition);
-	virtual void				MouseMove(int x, int y);
-	virtual void				MouseWheel(int theDelta);
-	virtual void				MouseDown(int x, int y, int theClickCount) { Widget::MouseDown(x, y, theClickCount); }
-	virtual void				MouseDown(int x, int y, int theBtnNum, int theClickCount);
-	virtual void				MouseLeave();
+	void						OrderInManagerChanged() override;
+	void						Draw(Graphics *g) override;
+	void						ScrollPosition(int theId, double thePosition) override;
+	void						MouseMove(int x, int y) override;
+	void						MouseWheel(int theDelta) override;
+	void						MouseDown(int x, int y, int theClickCount) override { Widget::MouseDown(x, y, theClickCount); }
+	void						MouseDown(int x, int y, int theBtnNum, int theClickCount) override;
+	void						MouseLeave() override;
 	virtual void				SetSelect(int theSelectIdx);
 };
 

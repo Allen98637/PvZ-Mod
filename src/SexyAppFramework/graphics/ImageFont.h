@@ -59,10 +59,10 @@ class FontLayer
 {
 public:	
 	FontData*				mFontData;
-	StringStringMap			mExtendedInfo;
+	std::map<std::string, std::string>	mExtendedInfo;
 	std::string				mLayerName;
-	StringVector			mRequiredTags;
-	StringVector			mExcludedTags;	
+	std::vector<std::string>	mRequiredTags;
+	std::vector<std::string>	mExcludedTags;
 	//CharData				mCharData[256];	
 	CharDataMap				mCharDataMap;
 	Color					mColorMult;
@@ -110,15 +110,15 @@ public:
 	std::string				mFontErrorHeader;	
 
 public:
-	virtual bool			Error(const std::string& theError);
+	bool					Error(const std::string& theError) override;
 
 	bool					GetColorFromDataElement(DataElement *theElement, Color &theColor);
 	bool					DataToLayer(DataElement* theSource, FontLayer** theFontLayer);
-	virtual bool			HandleCommand(const ListDataElement& theParams);
+	bool					HandleCommand(const ListDataElement& theParams) override;
 
 public:
 	FontData();
-	virtual ~FontData();
+	~FontData() override;
 
 	void					Ref();
 	void					DeRef();
@@ -141,6 +141,7 @@ public:
 public:
 	ActiveFontLayer();
 	ActiveFontLayer(const ActiveFontLayer& theActiveFontLayer);
+	ActiveFontLayer& operator=(const ActiveFontLayer& theActiveFontLayer) = delete;
 	virtual ~ActiveFontLayer();
 };
 
@@ -165,7 +166,7 @@ class ImageFont : public _Font
 public:	
 	FontData*				mFontData;
 	int						mPointSize;
-	StringVector			mTagVector;
+	std::vector<std::string>	mTagVector;
 
 	bool					mActiveListValid;
 	ActiveFontLayerList		mActiveLayerList;
@@ -174,24 +175,25 @@ public:
 
 public:
 	virtual void			GenerateActiveFontLayers();
-	virtual void			DrawStringEx(Graphics* g, int theX, int theY, const std::string& theString, const Color& theColor, RectList* theDrawnAreas, int* theWidth);
+	virtual void			DrawStringEx(Graphics* g, int theX, int theY, std::string_view theString, const Color& theColor, RectList* theDrawnAreas, int* theWidth);
 
 public:
 	ImageFont(SexyAppBase* theSexyApp, const std::string& theFontDescFileName);
 	ImageFont(Image *theFontImage); // for constructing your own image font without a file descriptor
 	ImageFont(const ImageFont& theImageFont);
-	virtual ~ImageFont();
+	ImageFont& operator=(const ImageFont& theImageFont) = delete;
+	~ImageFont() override;
 
 	// Deprecated
 	ImageFont(Image* theFontImage, const std::string& theFontDescFileName);
 	//ImageFont(const ImageFont& theImageFont, Image* theImage);
 	
-	virtual int				CharWidth(char32_t theChar);
-	virtual int				CharWidthKern(char32_t theChar, char32_t thePrevChar);
-	virtual int				StringWidth(const std::string& theString);
-	virtual void			DrawString(Graphics* g, int theX, int theY, const std::string& theString, const Color& theColor, const Rect& theClipRect);
+	int						CharWidth(char32_t theChar) override;
+	int						CharWidthKern(char32_t theChar, char32_t thePrevChar) override;
+	int						StringWidth(std::string_view theString) override;
+	void					DrawString(Graphics* g, int theX, int theY, std::string_view theString, const Color& theColor, const Rect& theClipRect) override;
 
-	virtual _Font*			Duplicate();
+	_Font*					Duplicate() override;
 
 	virtual void			SetPointSize(int thePointSize);
 	virtual int				GetPointSize();

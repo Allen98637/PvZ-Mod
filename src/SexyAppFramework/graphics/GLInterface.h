@@ -213,7 +213,7 @@ public:
 
 public:
 	GLInterface(SexyAppBase* theApp);
-	virtual ~GLInterface();
+	~GLInterface() override;
 
 	GLImage*				GetScreenImage();
 	void					UpdateViewport();

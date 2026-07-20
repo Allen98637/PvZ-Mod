@@ -130,8 +130,8 @@ void					SexyMatrix3Inverse(const SexyMatrix3& m, SexyMatrix3& r);  // r = m ^ -
 void					SexyMatrix3Multiply(SexyMatrix3& m, const SexyMatrix3& l, const SexyMatrix3& r);  // m = l × r
 bool					TodIsPointInPolygon(const SexyVector2* thePolygonPoint, int theNumberPolygonPoints, const SexyVector2& theCheckPoint);
 
-void					TodDrawString(Graphics* g, const std::string& theText, int thePosX, int thePosY, _Font* theFont, const Color& theColor, DrawStringJustification theJustification);
-void					TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& theMatrix, const std::string& theString, const Color& theColor);
+void					TodDrawString(Graphics* g, std::string_view theText, int thePosX, int thePosY, _Font* theFont, const Color& theColor, DrawStringJustification theJustification);
+void					TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& theMatrix, std::string_view theString, const Color& theColor);
 void					TodDrawImageScaledF(Graphics* g, Image* theImage, float thePosX, float thePosY, float theScaleX, float theScaleY);
 void					TodDrawImageCenterScaledF(Graphics* g, Image* theImage, float thePosX, float thePosY, float theScaleX, float theScaleY);
 void					TodDrawImageCelF(Graphics* g, Image* theImageStrip, float thePosX, float thePosY, int theCelCol, int theCelRow);
@@ -145,8 +145,8 @@ void					FixPixelsOnAlphaEdgeForBlending(Image* theImage);
 uint32_t				AverageNearByPixels(MemoryImage* theImage, uint32_t* thePixel, int x, int y);
 void					Tod_SWTri_AddAllDrawTriFuncs();
 
-std::string				TodReplaceString(const std::string& theText, const char* theStringToFind, const std::string& theStringToSubstitute);
-std::string				TodReplaceNumberString(const std::string& theText, const char* theStringToFind, int theNumber);
+std::string				TodReplaceString(std::string_view theText, const char* theStringToFind, std::string_view theStringToSubstitute);
+std::string				TodReplaceNumberString(std::string_view theText, const char* theStringToFind, int theNumber);
 int						TodSnprintf(char* theBuffer, int theSize, const char* theFormat, ...);
 int						TodVsnprintf(char* theBuffer, int theSize, const char* theFormat, va_list theArgList);
 

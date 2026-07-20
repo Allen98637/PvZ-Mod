@@ -313,7 +313,7 @@ void Widget::MouseWheel(int){}
 
 //////// Helper functions
 
-Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, const std::string& theLine)
+Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, std::string_view theLine)
 {
 	_Font* aFont = g->GetFont();
 	int aWidth = aFont->StringWidth(theLine);
@@ -324,7 +324,7 @@ Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, const std::string& the
 	return Rect(aX, anOffset - aFont->GetAscent(), aWidth, aFont->GetHeight());
 }
 
-Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, const std::string& theLine, Color theColor1, Color theColor2, const Point& theShadowOffset)
+Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, std::string_view theLine, Color theColor1, Color theColor2, const Point& theShadowOffset)
 {
 	_Font* aFont = g->GetFont();
 	int aWidth = aFont->StringWidth(theLine);
@@ -345,7 +345,7 @@ Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, const std::string& the
 		aFont->GetHeight() + abs(theShadowOffset.mY));
 }
 
-int Widget::WriteString(Graphics* g, const std::string& theString, int theX, int theY, int theWidth, int theJustification, bool drawString, int theOffset, int theLength)
+int Widget::WriteString(Graphics* g, std::string_view theString, int theX, int theY, int theWidth, int theJustification, bool drawString, int theOffset, int theLength)
 {
 	bool oldColored = g->mWriteColoredString;
 	g->mWriteColoredString = mWriteColoredString;
@@ -355,7 +355,7 @@ int Widget::WriteString(Graphics* g, const std::string& theString, int theX, int
 	return aXOffset;
 }
 
-int	Widget::WriteWordWrapped(Graphics* g, const Rect& theRect, const std::string& theLine, int theLineSpacing, int theJustification)
+int	Widget::WriteWordWrapped(Graphics* g, const Rect& theRect, std::string_view theLine, int theLineSpacing, int theJustification)
 {
 	bool oldColored = g->mWriteColoredString;
 	g->mWriteColoredString = mWriteColoredString;
@@ -365,7 +365,7 @@ int	Widget::WriteWordWrapped(Graphics* g, const Rect& theRect, const std::string
 	return aReturn;
 }
 
-int Widget::GetWordWrappedHeight(Graphics* g, int theWidth, const std::string& theLine, int aLineSpacing)
+int Widget::GetWordWrappedHeight(Graphics* g, int theWidth, std::string_view theLine, int aLineSpacing)
 {
 	return g->GetWordWrappedHeight(theWidth,theLine,aLineSpacing);
 }

@@ -451,8 +451,8 @@ public:
     int                             mPickWeight;
     const char*                 mZombieName;
 };
-extern ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES];
+extern const ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES];
 
-/*inline*/ ZombieDefinition&            GetZombieDefinition(ZombieType theZombieType);
+/*inline*/ const ZombieDefinition&            GetZombieDefinition(ZombieType theZombieType);
 
 #endif

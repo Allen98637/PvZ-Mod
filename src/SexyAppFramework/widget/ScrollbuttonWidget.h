@@ -43,9 +43,9 @@ public:
 
 public:
 	ScrollbuttonWidget(int theId, ButtonListener *theButtonListener, int theType = 0);
-	virtual ~ScrollbuttonWidget();
+	~ScrollbuttonWidget() override;
 
-	void				Draw(Graphics *g);
+	void				Draw(Graphics *g) override;
 };
 
 }

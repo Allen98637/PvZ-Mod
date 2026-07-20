@@ -22,6 +22,8 @@
 #ifndef __POOLEFFECT_H__
 #define __POOLEFFECT_H__
 
+#include <memory>
+#include <vector>
 #include "../../ConstEnums.h"
 
 constexpr const int CAUSTIC_IMAGE_WIDTH = 128;
@@ -37,14 +39,13 @@ class LawnApp;
 class PoolEffect
 {
 public:
-	unsigned char*		mCausticGrayscaleImage;
-	Sexy::MemoryImage*	mCausticImage;
+	std::vector<unsigned char>			mCausticGrayscaleImage;
+	std::unique_ptr<Sexy::MemoryImage>	mCausticImage;
 	LawnApp*			mApp;
 	unsigned int		mPoolCounter;
 
 public:
 	void				PoolEffectInitialize();
-	void				PoolEffectDispose();
 	void				PoolEffectDraw(Sexy::Graphics* g, bool theIsNight);
 	void				UpdateWaterEffect();
 	unsigned int		BilinearLookupFixedPoint(unsigned int u, unsigned int v);

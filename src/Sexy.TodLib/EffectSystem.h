@@ -22,6 +22,8 @@
 #ifndef __EFFECTSYSTEM_H__
 #define __EFFECTSYSTEM_H__
 
+#include <memory>
+
 #include "DataArray.h"
 #include "../ConstEnums.h"
 #include "graphics/SWTri.h"
@@ -156,14 +158,14 @@ class AttachmentHolder;
 class EffectSystem
 {
 public:
-    TodParticleHolder*          mParticleHolder;
-    TrailHolder*                mTrailHolder;
-    ReanimationHolder*          mReanimationHolder;
-    AttachmentHolder*           mAttachmentHolder;
+    std::unique_ptr<TodParticleHolder>      mParticleHolder;
+    std::unique_ptr<TrailHolder>            mTrailHolder;
+    std::unique_ptr<ReanimationHolder>      mReanimationHolder;
+    std::unique_ptr<AttachmentHolder>       mAttachmentHolder;
 
 public:
-    EffectSystem() : mParticleHolder(nullptr), mTrailHolder(nullptr), mReanimationHolder(nullptr), mAttachmentHolder(nullptr) { }
-    ~EffectSystem() { }
+    EffectSystem() = default;
+    ~EffectSystem();
 
     void                        EffectSystemInitialize();
     void                        EffectSystemDispose();

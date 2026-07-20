@@ -53,11 +53,11 @@ public:
 
 public:
 	ReanimationWidget();
-	virtual ~ReanimationWidget();
+	~ReanimationWidget() override;
 
 	/*inline*/ void			Dispose();
-	virtual void			Draw(Graphics*);
-	virtual void			Update();
+	void					Draw(Graphics*) override;
+	void					Update() override;
 	void					AddReanimation(float x, float y, ReanimationType theReanimationType);
 };
 
@@ -75,21 +75,21 @@ public:
 
 public:
 	LawnDialog(LawnApp* theApp, int theId, bool isModal, const std::string& theDialogHeader, const std::string& theDialogLines, const std::string& theDialogFooter, int theButtonMode);
-	~LawnDialog();
+	~LawnDialog() override;
 
 	int						GetLeft();
 	int						GetWidth();
 	int						GetTop();
 	virtual void			SetButtonDelay(int theDelay);
-	virtual void			Update();
-	virtual void			ButtonPress(int theId);
-	virtual void			ButtonDepress(int theId);
+	void					Update() override;
+	void					ButtonPress(int theId) override;
+	void					ButtonDepress(int theId) override;
 	virtual void			CheckboxChecked();
-	virtual void			KeyDown(KeyCode theKey);
-	virtual void			AddedToManager(WidgetManager* theWidgetManager);
-	virtual void			RemovedFromManager(WidgetManager* theWidgetManager);
-	virtual void			Resize(int theX, int theY, int theWidth, int theHeight);
-	virtual void			Draw(Graphics* g);
+	void					KeyDown(KeyCode theKey) override;
+	void					AddedToManager(WidgetManager* theWidgetManager) override;
+	void					RemovedFromManager(WidgetManager* theWidgetManager) override;
+	void					Resize(int theX, int theY, int theWidth, int theHeight) override;
+	void					Draw(Graphics* g) override;
 	void					CalcSize(int theExtraX, int theExtraY);
 };
 
@@ -100,12 +100,13 @@ public:
 
 public:
 	GameOverDialog(const std::string& theMessage, bool theShowChallengeName);
-	virtual ~GameOverDialog();
+	~GameOverDialog() override;
 
-	virtual void			ButtonDepress(int theId);
-	virtual void			AddedToManager(WidgetManager* theWidgetManager);
-	virtual void			RemovedFromManager(WidgetManager* theWidgetManager);
-	virtual void			MouseDrag(int x, int y);
+	void					KeyDown(KeyCode theKey) override;
+	void					ButtonDepress(int theId) override;
+	void					AddedToManager(WidgetManager* theWidgetManager) override;
+	void					RemovedFromManager(WidgetManager* theWidgetManager) override;
+	void					MouseDrag(int x, int y) override;
 };
 
 #endif

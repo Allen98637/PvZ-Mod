@@ -122,10 +122,7 @@ public:
 		return *this;
 	}
 
-	bool operator==(const TRect<_T>& theRect) const
-	{
-		return (mX == theRect.mX) && (mY == theRect.mY) && (mWidth == theRect.mWidth) && (mHeight == theRect.mHeight);
-	}
+	bool operator==(const TRect<_T>& theRect) const = default;
 };
 
 typedef TRect<int32_t> Rect;

@@ -184,11 +184,11 @@ void SexyDumpUnfreed()
 	time_t aTime = time(nullptr);
 	snprintf(buf, sizeof(buf), "Memory Leak Report for %s\n", asctime(localtime(&aTime)));
 	fprintf(f, "%s", buf);
-	printf("\n%s", buf);
+	Sexy::PrintF("\n%s", buf);
 	for(i = gSexyAllocMap.begin(); i != gSexyAllocMap.end(); i++) 
 	{
 		snprintf(buf, sizeof(buf), "%s(%d) : Leak %d byte%s\n", i->second.file, i->second.line, i->second.size,i->second.size>1?"s":"");
-		printf("%s", buf);
+		Sexy::PrintF("%s", buf);
 		fprintf(f, "%s", buf);
 
 #ifdef SEXY_DUMP_LEAKED_MEM
@@ -250,9 +250,9 @@ void SexyDumpUnfreed()
 
 	snprintf(buf, sizeof(buf), "-----------------------------------------------------------\n");
 	fprintf(f, "%s", buf);
-	printf("%s", buf);
+	Sexy::PrintF("%s", buf);
 	snprintf(buf, sizeof(buf), "Total Unfreed: %d bytes (%dKB)\n\n", totalSize, totalSize / 1024);
-	printf("%s", buf);
+	Sexy::PrintF("%s", buf);
 	fprintf(f, "%s", buf);
 }
 
@@ -265,5 +265,5 @@ void OutputDebug(const char* fmt ...)
 	std::string result = VFormat(fmt, argList);
     va_end(argList);
 
-	printf("%s", result.c_str());
+	Sexy::PrintF("%s", result.c_str());
 }

@@ -99,12 +99,12 @@ std::string Sexy::GetAppDataFolder()
 	return PathToU8(Sexy::gAppDataFolder);
 }
 
-void Sexy::SetAppDataFolder(const std::string& thePath)
+void Sexy::SetAppDataFolder(std::string_view thePath)
 {
 	Sexy::gAppDataFolder = PathFromU8(thePath);
 }
 
-std::string Sexy::GetAppDataPath(const std::string& theRelativePath)
+std::string Sexy::GetAppDataPath(std::string_view theRelativePath)
 {
 	return PathToU8(Sexy::gAppDataFolder / PathFromU8(theRelativePath));
 }
@@ -114,37 +114,37 @@ const std::string& Sexy::GetResourceFolder()
 	return Sexy::gResourceFolderStr;
 }
 
-void Sexy::SetResourceFolder(const std::string& thePath)
+void Sexy::SetResourceFolder(std::string_view thePath)
 {
 	Sexy::gResourceFolder = PathFromU8(thePath);
 	Sexy::gResourceFolderStr = PathToU8(Sexy::gResourceFolder);
 }
 
-std::string Sexy::GetResourcePath(const std::string& theRelativePath)
+std::string Sexy::GetResourcePath(std::string_view theRelativePath)
 {
 	return PathToU8(Sexy::gResourceFolder / PathFromU8(theRelativePath));
 }
 
-std::string Sexy::StringToUpper(const std::string& theString)
+std::string Sexy::StringToUpper(std::string_view theString)
 {
-	std::string aString = theString;
+	std::string aString(theString);
 	std::transform(aString.begin(), aString.end(), aString.begin(),
 		[](unsigned char c) { return (char)std::toupper(c); });
 	return aString;
 }
 
-std::string Sexy::StringToLower(const std::string& theString)
+std::string Sexy::StringToLower(std::string_view theString)
 {
-	std::string aString = theString;
+	std::string aString(theString);
 	std::transform(aString.begin(), aString.end(), aString.begin(),
 		[](unsigned char c) { return (char)std::tolower(c); });
 	return aString;
 }
 
-std::string Sexy::Trim(const std::string& theString)
+std::string Sexy::Trim(std::string_view theString)
 {
 	if (theString.empty())
-		return theString;
+		return std::string(theString);
 
 	size_t start = 0;
 	while (start < theString.size() && std::isspace((unsigned char)theString[start]))
@@ -157,7 +157,7 @@ std::string Sexy::Trim(const std::string& theString)
 	while (end > start && std::isspace((unsigned char)theString[end]))
 		--end;
 
-	return theString.substr(start, end - start + 1);
+	return std::string(theString.substr(start, end - start + 1));
 }
 
 bool Sexy::StringToInt(const std::string& theString, int* theIntVal)
@@ -232,12 +232,12 @@ std::string Sexy::GetCurDir()
 	return PathToU8(cur);
 }
 
-std::string Sexy::GetFullPath(const std::string& theRelPath)
+std::string Sexy::GetFullPath(std::string_view theRelPath)
 {
 	return GetPathFrom(theRelPath, GetCurDir());
 }
 
-std::string Sexy::GetPathFrom(const std::string& theRelPath, const std::string& theDir)
+std::string Sexy::GetPathFrom(std::string_view theRelPath, std::string_view theDir)
 {
 	std::filesystem::path relPath = PathFromU8(theRelPath);
 	if (IsPathRooted(theRelPath))
@@ -288,12 +288,12 @@ bool Sexy::IsPathRooted(std::string_view thePath)
 	return false;
 }
 
-bool Sexy::AllowAllAccess(const std::string& theFileName)
+bool Sexy::AllowAllAccess(std::string_view theFileName)
 {
 	return false;
 }
 
-bool Sexy::Deltree(const std::string& thePath)
+bool Sexy::Deltree(std::string_view thePath)
 {
 	std::error_code ec;
 	std::filesystem::path path = PathFromU8(thePath);
@@ -304,19 +304,19 @@ bool Sexy::Deltree(const std::string& thePath)
 	return !ec;
 }
 
-bool Sexy::FileExists(const std::string& theFileName)
+bool Sexy::FileExists(std::string_view theFileName)
 {
 	std::error_code ec;
 	return std::filesystem::exists(PathFromU8(theFileName), ec);
 }
 
-void Sexy::MkDir(const std::string& theDir)
+void Sexy::MkDir(std::string_view theDir)
 {
 	std::error_code ec;
 	std::filesystem::create_directories(PathFromU8(theDir), ec);
 }
 
-std::string Sexy::GetFileName(const std::string& thePath, bool noExtension)
+std::string Sexy::GetFileName(std::string_view thePath, bool noExtension)
 {
 	std::filesystem::path path = PathFromU8(thePath);
 	if (!path.has_filename())
@@ -328,7 +328,7 @@ std::string Sexy::GetFileName(const std::string& thePath, bool noExtension)
 	return PathToU8(path.filename());
 }
 
-std::string Sexy::GetFileDir(const std::string& thePath, bool withSlash)
+std::string Sexy::GetFileDir(std::string_view thePath, bool withSlash)
 {
 	std::filesystem::path path = PathFromU8(thePath);
 	std::filesystem::path parent = path.parent_path();
@@ -342,10 +342,10 @@ std::string Sexy::GetFileDir(const std::string& thePath, bool withSlash)
 	return result;
 }
 
-std::string Sexy::RemoveTrailingSlash(const std::string& theDirectory)
+std::string Sexy::RemoveTrailingSlash(std::string_view theDirectory)
 {
 	if (theDirectory.empty())
-		return theDirectory;
+		return std::string(theDirectory);
 
 	return PathToU8(PathFromU8(theDirectory).lexically_normal());
 }
@@ -392,9 +392,9 @@ std::string Sexy::StrFormat(const char* fmt ...)
     return result;
 }
 
-std::string Sexy::Evaluate(const std::string& theString, const DefinesMap& theDefinesMap)
+std::string Sexy::Evaluate(std::string_view theString, const DefinesMap& theDefinesMap)
 {
-	std::string anEvaluatedString = theString;
+	std::string anEvaluatedString(theString);
 
 	for (;;)
 	{
@@ -422,13 +422,13 @@ std::string Sexy::Evaluate(const std::string& theString, const DefinesMap& theDe
 	return anEvaluatedString;
 }
 
-std::string Sexy::XMLDecodeString(const std::string& theString)
+std::string Sexy::XMLDecodeString(std::string_view theString)
 {
 	std::string aNewString;
 	aNewString.reserve(theString.size());
 
 	if (theString.find('&') == std::string::npos)
-		return theString;
+		return std::string(theString);
 
 	for (size_t i = 0; i < theString.length(); i++)
 	{
@@ -440,7 +440,7 @@ std::string Sexy::XMLDecodeString(const std::string& theString)
 
 			if (aSemiPos != std::string::npos)
 			{
-				std::string anEntName = theString.substr(i+1, aSemiPos-i-1);
+				std::string anEntName(theString.substr(i+1, aSemiPos-i-1));
 				i = aSemiPos;
 											
 				if (anEntName == "lt")
@@ -466,7 +466,7 @@ std::string Sexy::XMLDecodeString(const std::string& theString)
 	return aNewString;
 }
 
-std::string Sexy::XMLEncodeString(const std::string& theString)
+std::string Sexy::XMLEncodeString(std::string_view theString)
 {
 	std::string aNewString;
 	aNewString.reserve(theString.size() * 2);
@@ -519,12 +519,12 @@ std::string Sexy::XMLEncodeString(const std::string& theString)
 	return aNewString;
 }
 
-std::string Sexy::Upper(const std::string& _data)
+std::string Sexy::Upper(std::string_view _data)
 {
 	return StringToUpper(_data);
 }
 
-std::string Sexy::Lower(const std::string& _data)
+std::string Sexy::Lower(std::string_view _data)
 {
 	return StringToLower(_data);
 }
@@ -599,9 +599,9 @@ void Sexy::SMemW(void*& _Dst, const void* _Src, size_t _Size)
 	_Dst = (void*)((uintptr_t)_Dst + _Size);
 }
 
-void Sexy::SMemWStr(void*& _Dst, const std::string& theString)
+void Sexy::SMemWStr(void*& _Dst, std::string_view theString)
 {
 	size_t aStrLen = theString.size();
 	SMemW(_Dst, &aStrLen, sizeof(aStrLen));
-	SMemW(_Dst, theString.c_str(), aStrLen);
+	SMemW(_Dst, theString.data(), aStrLen);
 }

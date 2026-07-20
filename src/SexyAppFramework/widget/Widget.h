@@ -37,8 +37,6 @@ namespace Sexy
 
 class WidgetManager;
 
-typedef std::vector<Color> ColorVector;
-
 class Widget : public WidgetContainer
 {
 public:			
@@ -49,7 +47,7 @@ public:
 	bool					mIsDown;
 	bool					mIsOver;
 	bool					mHasTransparencies;	
-	ColorVector				mColors;
+	std::vector<Color>		mColors;
 	Insets					mMouseInsets;
 	bool					mDoFinger;
 	bool					mWantsFocus;
@@ -65,7 +63,7 @@ public:
 
 public:
 	Widget();
-	virtual ~Widget();
+	~Widget() override;
 		
 	virtual void			OrderInManagerChanged();
 	virtual void			SetVisible(bool isVisible);
@@ -83,10 +81,10 @@ public:
 	virtual void			Resize(const Rect& theRect);
 	virtual void			Move(int theNewX, int theNewY);	
 	virtual bool			WantsFocus();
-	virtual void			Draw(Graphics* g); // Already translated
+	void					Draw(Graphics* g) override; // Already translated
 	virtual void			DrawOverlay(Graphics* g);
 	virtual void			DrawOverlay(Graphics* g, int thePriority);
-	virtual void			Update();
+	void					Update() override;
 //	virtual void			UpdateF(float theFrac);
 	virtual void			GotFocus();
 	virtual void			LostFocus();	
@@ -107,12 +105,12 @@ public:
 	
 	//////// Helper functions
 	
-	virtual Rect			WriteCenteredLine(Graphics* g, int anOffset, const std::string& theLine);
-	virtual Rect			WriteCenteredLine(Graphics* g, int anOffset, const std::string& theLine, Color theColor1, Color theColor2, const Point& theShadowOffset = Point(1,2));
+	virtual Rect			WriteCenteredLine(Graphics* g, int anOffset, std::string_view theLine);
+	virtual Rect			WriteCenteredLine(Graphics* g, int anOffset, std::string_view theLine, Color theColor1, Color theColor2, const Point& theShadowOffset = Point(1,2));
 
-	virtual int				WriteString(Graphics* g, const std::string& theString, int theX, int theY, int theWidth = -1, int theJustification = -1, bool drawString = true, int theOffset = 0, int theLength = -1);
-	virtual int				WriteWordWrapped(Graphics* g, const Rect& theRect, const std::string& theLine, int theLineSpacing, int theJustification);
-	virtual int				GetWordWrappedHeight(Graphics* g, int theWidth, const std::string& theLine, int aLineSpacing);
+	virtual int				WriteString(Graphics* g, std::string_view theString, int theX, int theY, int theWidth = -1, int theJustification = -1, bool drawString = true, int theOffset = 0, int theLength = -1);
+	virtual int				WriteWordWrapped(Graphics* g, const Rect& theRect, std::string_view theLine, int theLineSpacing, int theJustification);
+	virtual int				GetWordWrappedHeight(Graphics* g, int theWidth, std::string_view theLine, int aLineSpacing);
 	virtual int				GetNumDigits(int theNumber);
 	virtual void			WriteNumberFromStrip(Graphics* g, int theNumber, int theX, int theY, Image* theNumberStrip, int aSpacing);
 	virtual bool			Contains(int theX, int theY);

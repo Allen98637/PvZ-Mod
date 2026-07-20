@@ -50,9 +50,9 @@ public:
     ToolTipWidget();
 
     void                Draw(Sexy::Graphics* g);
-    void                SetLabel(const std::string& theLabel);
-    void                SetTitle(const std::string& theTitle);
-    void                SetWarningText(const std::string& theWarningText);
+    void                SetLabel(std::string_view theLabel);
+    void                SetTitle(std::string_view theTitle);
+    void                SetWarningText(std::string_view theWarningText);
     void                CalculateSize();
     void                GetLines(std::vector<std::string>& theLines);
     inline void         FlashWarning() { mWarningFlashCounter = 70; }

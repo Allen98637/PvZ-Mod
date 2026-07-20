@@ -41,9 +41,9 @@ public:
 public:
 	HyperlinkWidget(int theId, ButtonListener* theButtonListener);
 
-	void					Draw(Graphics* g);
-	void					MouseEnter();
-	void					MouseLeave();	
+	void					Draw(Graphics* g) override;
+	void					MouseEnter() override;
+	void					MouseLeave() override;
 };
 
 }

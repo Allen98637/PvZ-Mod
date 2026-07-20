@@ -80,7 +80,7 @@ bool PropertiesParser::ParseSingleElement(std::string* aString)
 	}
 }
 
-bool PropertiesParser::ParseStringArray(StringVector* theStringVector)
+bool PropertiesParser::ParseStringArray(std::vector<std::string>* theStringVector)
 {
 	theStringVector->clear();
 
@@ -141,7 +141,7 @@ bool PropertiesParser::ParseProperties()
 			}
 			else if (aXMLElement.mValue == "StringArray")
 			{
-				StringVector aDef;
+				std::vector<std::string> aDef;
 
 				if (!ParseStringArray(&aDef))
 					return false;

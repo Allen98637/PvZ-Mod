@@ -34,11 +34,14 @@ MessageWidget::MessageWidget(LawnApp* theApp)
 {
 	mApp = theApp;
 	mDuration = 0;
+	mDisplayTime = 0;
 	mLabel[0] = '\0';
 	mMessageStyle = MessageStyle::MESSAGE_STYLE_OFF;
 	mLabelNext[0] = '\0';
 	mMessageStyleNext = MessageStyle::MESSAGE_STYLE_OFF;
 	mSlideOffTime = 100;
+	mReanimType = ReanimationType::REANIM_NONE;
+	mTextReanimCount = 0;
 	memset(mTextReanimID, static_cast<int>(ReanimationID::REANIMATIONID_NULL), MAX_MESSAGE_LENGTH);
 }
 
@@ -68,7 +71,7 @@ void MessageWidget::ClearLabel()
 }
 
 // GOTY @Patoke: inlined 0x459715
-void MessageWidget::SetLabel(const std::string& theNewLabel, MessageStyle theMessageStyle)
+void MessageWidget::SetLabel(std::string_view theNewLabel, MessageStyle theMessageStyle)
 {
 	std::string aLabel = TodStringTranslate(theNewLabel);
 	TOD_ASSERT(aLabel.length() < MAX_MESSAGE_LENGTH - 1);
@@ -173,24 +176,33 @@ void MessageWidget::LayoutReanimText()
 	aCurLine = 0;
 	float aCurPosY = 0.0f;
 	float aCurPosX = -aLineWidth[0] * 0.5f;
-	// 以下遍历字幕中的所有文本，分别在适当的位置创建每一个文字的动画
-	for (int aPos = 0; aPos < aLabelLen; aPos++)
+	// Iterate by code point so each reanimated glyph corresponds to one UTF-8 character.
+	int aCharIdx = 0;
+	size_t aBytePos = 0;
+	while (aBytePos < (size_t)aLabelLen)
 	{
-		// 创建文字的动画
+		const size_t aCharStart = aBytePos;
+		char32_t aChar = 0;
+		if (!UTF8DecodeNext(mLabel, aBytePos, aChar))
+			break;
+
 		Reanimation* aReanimText = mApp->AddReanimation(aCurPosX, aCurPosY, 0, mReanimType);
 		aReanimText->mIsAttachment = true;
 		aReanimText->PlayReanim("anim_enter", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0.0f, 0.0f);
-		mTextReanimID[aPos] = mApp->ReanimationGetID(aReanimText);
+		mTextReanimID[aCharIdx] = mApp->ReanimationGetID(aReanimText);
+		mTextReanimByteOffset[aCharIdx] = aCharStart;
 
-		aCurPosX += aFont->CharWidth(mLabel[aPos]);  // 坐标调整至下一个文字的位置
-		if (mLabel[aPos] == '\n')  // 换行处理
+		aCurPosX += aFont->CharWidth(aChar);
+		if (aChar == U'\n')
 		{
 			aCurLine++;
 			TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
 			aCurPosX = -aLineWidth[aCurLine] * 0.5f;
 			aCurPosY += aFont->GetLineSpacing();
 		}
+		aCharIdx++;
 	}
+	mTextReanimCount = aCharIdx;
 }
 
 void MessageWidget::Update()
@@ -213,11 +225,10 @@ void MessageWidget::Update()
 		}
 	}
 
-	int aLabelLen = strlen(mLabel);
-	// 以下遍历每个文字的动画，设置其动画速率并更新其动画
-	for (int aPos = 0; aPos < aLabelLen; aPos++)
+	// Iterate reanimated glyphs by code-point index.
+	for (int aCharIdx = 0; aCharIdx < mTextReanimCount; aCharIdx++)
 	{
-		Reanimation* aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
+		Reanimation* aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aCharIdx]);
 		if (aTextReanim == nullptr)
 		{
 			break;  // 当不存在文本动画时，跳出循环，直接返回
@@ -233,7 +244,7 @@ void MessageWidget::Update()
 			}
 			else
 			{
-				aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mDisplayTime - mDuration) * aTextSpeed - aPos, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
+				aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mDisplayTime - mDuration) * aTextSpeed - aCharIdx, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
 			}
 		}
 		else
@@ -242,7 +253,7 @@ void MessageWidget::Update()
 			{
 				aTextReanim->PlayReanim("anim_leave", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 0.0f);
 			}
-			aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mSlideOffTime - mDuration) * aTextSpeed - aPos, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
+			aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mSlideOffTime - mDuration) * aTextSpeed - aCharIdx, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
 		}
 
 		aTextReanim->Update();  //更新动画
@@ -251,10 +262,9 @@ void MessageWidget::Update()
 
 void MessageWidget::DrawReanimatedText(Graphics* g, _Font* theFont, const Color& theColor, float thePosY)
 {
-	int aLabelLen = strlen(mLabel);
-	for (int aPos = 0; aPos < aLabelLen; aPos++)
+	for (int aCharIdx = 0; aCharIdx < mTextReanimCount; aCharIdx++)
 	{
-		Reanimation* aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
+		Reanimation* aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aCharIdx]);
 		if (aTextReanim == nullptr)
 		{
 			break;  // 当不存在文本动画时，跳出循环，直接返回
@@ -281,8 +291,9 @@ void MessageWidget::DrawReanimatedText(Graphics* g, _Font* theFont, const Color&
 
 		SexyMatrix3 aMatrix;
 		Reanimation::MatrixFromTransform(aTransform, aMatrix);
-		std::string aLetter;
-		aLetter.append(1, mLabel[aPos]);
+		const int aByteStart = mTextReanimByteOffset[aCharIdx];
+		const int aByteEnd = (aCharIdx + 1 < mTextReanimCount) ? mTextReanimByteOffset[aCharIdx + 1] : strlen(mLabel);
+		std::string aLetter(&mLabel[aByteStart], aByteEnd - aByteStart);
 		TodDrawStringMatrix(g, theFont, aMatrix, aLetter, aFinalColor);
 	}
 }

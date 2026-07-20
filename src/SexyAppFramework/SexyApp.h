@@ -39,22 +39,22 @@ public:
 	std::string				mUserName;	
 
 public:
-	virtual void			UpdateFrames();
+	void					UpdateFrames() override;
 
-	virtual void			WriteToRegistry();
-	virtual void			ReadFromRegistry();	
+	void					WriteToRegistry() override;
+	void					ReadFromRegistry() override;
 
 public:
 	SexyApp();
-	virtual ~SexyApp();
+	~SexyApp() override;
 
-	virtual void			PreDisplayHook();
-	virtual void			InitPropertiesHook();
-	virtual void			Init();
-	virtual void			PreTerminate();
+	void					PreDisplayHook() override;
+	void					InitPropertiesHook() override;
+	void					Init() override;
+	void					PreTerminate() override;
 
-	virtual void			HandleCmdLineParam(const std::string& theParamName, const std::string& theParamValue);
-	virtual std::string		GetGameSEHInfo();
+	void					HandleCmdLineParam(const std::string& theParamName, const std::string& theParamValue) override;
+	std::string				GetGameSEHInfo() override;
 };
 
 extern SexyApp* gSexyApp;

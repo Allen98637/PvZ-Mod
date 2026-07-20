@@ -40,7 +40,7 @@ public:
 public:
 	DialogButton(Image* theComponentImage, int theId, ButtonListener* theListener);
 
-	virtual void			Draw(Graphics* g);
+	void					Draw(Graphics* g) override;
 };
 
 }

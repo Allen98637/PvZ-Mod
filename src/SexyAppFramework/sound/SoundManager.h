@@ -39,7 +39,7 @@ class SoundManager
 {
 public:
 	SoundManager() {}
-	virtual ~SoundManager() {}
+	virtual ~SoundManager() = default;
 
 	virtual bool			Initialized() = 0;
 

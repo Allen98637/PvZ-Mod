@@ -46,6 +46,8 @@ public:
 	int32_t				mDuration;
 	MessageStyle		mMessageStyle;
 	ReanimationID		mTextReanimID[MAX_MESSAGE_LENGTH];
+	int32_t				mTextReanimByteOffset[MAX_MESSAGE_LENGTH];
+	int32_t				mTextReanimCount;
 	ReanimationType		mReanimType;
 	int32_t				mSlideOffTime;
 	char				mLabelNext[MAX_MESSAGE_LENGTH];
@@ -55,7 +57,7 @@ public:
 	MessageWidget(LawnApp* theApp);
 	~MessageWidget() { ClearReanim(); }
 
-	/*inline*/ void		SetLabel(const std::string& theNewLabel, MessageStyle theMessageStyle);
+	/*inline*/ void		SetLabel(std::string_view theNewLabel, MessageStyle theMessageStyle);
 	void				Update();
 	void				Draw(Sexy::Graphics* g);
 	void				ClearReanim();

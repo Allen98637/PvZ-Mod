@@ -52,8 +52,7 @@ public:
 	void operator*=(float t) { x*=t; y*=t; }
 	void operator/=(float t) { x/=t; y/=t; }
 
-	bool operator==(const SexyVector2 &v) { return x==v.x && y==v.y; }
-	bool operator!=(const SexyVector2 &v) { return x!=v.x || y!=v.y; }
+	bool operator==(const SexyVector2 &v) const = default;
 
 	float Magnitude() const { return sqrtf(x*x + y*y); }
 	float MagnitudeSquared() const { return x*x+y*y; }
@@ -87,6 +86,7 @@ public:
 	SexyVector3 operator-(const SexyVector3 &v) const { return SexyVector3(x-v.x, y-v.y, z-v.z); }
 	SexyVector3 operator*(float t) const { return SexyVector3(t*x, t*y, t*z); }
 	SexyVector3 operator/(float t) const { return SexyVector3(x/t, y/t, z/t); }
+	bool operator==(const SexyVector3 &v) const = default;
 	float Magnitude() const { return sqrtf(x*x + y*y + z*z); }
 
 	SexyVector3 Normalize() const 

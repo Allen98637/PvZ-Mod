@@ -31,16 +31,21 @@
 
 EffectSystem* gEffectSystem = nullptr;
 
+EffectSystem::~EffectSystem()
+{
+	EffectSystemDispose();
+}
+
 void EffectSystem::EffectSystemInitialize()
 {
 	TOD_ASSERT(!gEffectSystem);
 	TOD_ASSERT(!mParticleHolder && !mTrailHolder && !mReanimationHolder && !mAttachmentHolder);
 
 	gEffectSystem = this;
-	mParticleHolder = new TodParticleHolder();
-	mTrailHolder = new TrailHolder();
-	mReanimationHolder = new ReanimationHolder();
-	mAttachmentHolder = new AttachmentHolder();
+	mParticleHolder = std::make_unique<TodParticleHolder>();
+	mTrailHolder = std::make_unique<TrailHolder>();
+	mReanimationHolder = std::make_unique<ReanimationHolder>();
+	mAttachmentHolder = std::make_unique<AttachmentHolder>();
 
 	mParticleHolder->InitializeHolder();
 	mTrailHolder->InitializeHolder();
@@ -50,30 +55,10 @@ void EffectSystem::EffectSystemInitialize()
 
 void EffectSystem::EffectSystemDispose()
 {
-	if (mParticleHolder)
-	{
-		mParticleHolder->DisposeHolder();
-		delete mParticleHolder;
-		mParticleHolder = nullptr;
-	}
-	if (mTrailHolder)
-	{
-		mTrailHolder->DisposeHolder(); // DisposeHolder is called from the destructor!
-		delete mTrailHolder;
-		mTrailHolder = nullptr;
-	}
-	if (mReanimationHolder)
-	{
-		mReanimationHolder->DisposeHolder();
-		delete mReanimationHolder;
-		mReanimationHolder = nullptr;
-	}
-	if (mAttachmentHolder)
-	{
-		mAttachmentHolder->DisposeHolder();
-		delete mAttachmentHolder;
-		mAttachmentHolder = nullptr;
-	}
+	mParticleHolder.reset();
+	mTrailHolder.reset();
+	mReanimationHolder.reset();
+	mAttachmentHolder.reset();
 
 	gEffectSystem = nullptr;
 }

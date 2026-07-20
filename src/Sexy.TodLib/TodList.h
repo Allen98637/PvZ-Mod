@@ -144,19 +144,20 @@ public:
 
     inline TodListNode<T>* RemoveAt(TodListNode<T>* theNode)
     {
+        TodListNode<T>* aNext = theNode->mNext;
         if (theNode->mPrev != nullptr)
-            theNode->mPrev->mNext = theNode->mNext;
+            theNode->mPrev->mNext = aNext;
         else
-            mHead = theNode->mNext;
+            mHead = aNext;
 
-        if (theNode->mNext != nullptr)
-            theNode->mNext->mPrev = theNode->mPrev;
+        if (aNext != nullptr)
+            aNext->mPrev = theNode->mPrev;
         else
             mTail = theNode->mPrev;
 
         mSize--;
         mpAllocator->Free(theNode, sizeof(TodListNode<T>));
-        return theNode->mNext;
+        return aNext;
     }
 
     inline TodListNode<T>* Find(const T& theItem) const

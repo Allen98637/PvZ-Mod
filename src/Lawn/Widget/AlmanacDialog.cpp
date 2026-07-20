@@ -37,7 +37,7 @@
 
 Rect gAlmanacRect(0, 81, 1080, 481);
 
-AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANAC, true, "Almanac", "", "", BUTTONS_NONE)
+AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANAC, true, theApp->GetString("ALMANAC_HEADER", "Almanac"), "", "", BUTTONS_NONE)
 {
 	mApp = (LawnApp*)gSexyAppBase;
 	mOpenPage = ALMANAC_PAGE_INDEX;
@@ -349,7 +349,7 @@ void AlmanacDialog::DrawPlants(Graphics* g)
 	}
 
 	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTCARD, 459, 86);
-	PlantDefinition& aPlantDef = GetPlantDefinition(mSelectedSeed);
+	const PlantDefinition& aPlantDef = GetPlantDefinition(mSelectedSeed);
 	std::string aName = Plant::GetNameString(mSelectedSeed, SEED_NONE);
 	std::string aDescriptionName = StrFormat("[%s_DESCRIPTION]", aPlantDef.mPlantName);
 	TodDrawString(g, aName, 617, 288, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
@@ -518,7 +518,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 	}
 	g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIECARD, 455, 78);
 
-	ZombieDefinition& aZombieDef = GetZombieDefinition(mSelectedZombie);
+	const ZombieDefinition& aZombieDef = GetZombieDefinition(mSelectedZombie);
 	std::string aName = ZombieHasSilhouette(mSelectedZombie) ? "???" : StrFormat("[%s]", aZombieDef.mZombieName);
 	TodDrawString(g, aName, 613, 362, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(190, 255, 235, 255), DS_ALIGN_CENTER);
 
@@ -753,4 +753,28 @@ void AlmanacDialog::MouseWheel(int theDelta){
 		if(mOpenPage == ALMANAC_PAGE_PLANTS) Ymin = (gAlmanacRect.mY + gAlmanacRect.mHeight) - (((NUM_ALMANAC_SEEDS - 1) / 8) * 78 + 92 + 70);
 		if(mScrollY <= Ymin) mScrollY = Ymin;
 	}
+}
+void AlmanacDialog::KeyDown(KeyCode theKey)
+{
+	if (theKey == KeyCode::KEYCODE_ESCAPE)
+	{
+		if (mOpenPage == AlmanacPage::ALMANAC_PAGE_INDEX)
+			mApp->KillAlmanacDialog();
+		else
+			SetPage(AlmanacPage::ALMANAC_PAGE_INDEX);
+		return;
+	}
+
+	LawnDialog::KeyDown(theKey);
+}
+
+void AlmanacInitForPlayer()
+{
+	for (int i = 0; i < ZombieType::NUM_ZOMBIE_TYPES; i++)
+		gZombieDefeated[i] = false;
+}
+
+void AlmanacPlayerDefeatedZombie(ZombieType theZombieType)
+{
+	gZombieDefeated[theZombieType] = true;
 }

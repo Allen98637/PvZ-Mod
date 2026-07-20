@@ -259,7 +259,7 @@ void Graphics::PFDelete(int i) // remove edge i from active list
 	if (j>=mPFNumActiveEdges) return;	/* edge not in active list; happens at aMinY*/
     
 	mPFNumActiveEdges--;
-    memcpy(&mPFActiveEdgeList[j], &mPFActiveEdgeList[j+1], (mPFNumActiveEdges-j)*sizeof mPFActiveEdgeList[0]);
+    memmove(&mPFActiveEdgeList[j], &mPFActiveEdgeList[j+1], (mPFNumActiveEdges-j)*sizeof mPFActiveEdgeList[0]);
 }
 
 void Graphics::PFInsert(int i, int y) // append edge i to end of active list
@@ -664,7 +664,7 @@ void Graphics::DrawLineAA(int theStartX, int theStartY, int theEndX, int theEndY
 	mDestImage->DrawLineAA(aStartX, aStartY, aEndX, aEndY, mColor, mDrawMode);
 }
 
-void Graphics::DrawString(const std::string& theString, int theX, int theY)
+void Graphics::DrawString(std::string_view theString, int theX, int theY)
 {
 	if (mFont != nullptr)
 		mFont->DrawString(this, theX, theY, theString, mColor, mClipRect);
@@ -1003,7 +1003,7 @@ void Graphics::SetScale(float theScaleX, float theScaleY, float theOrigX, float 
 	mScaleOrigY = theOrigY + mTransY;
 }
 
-int Graphics::StringWidth(const std::string& theString)
+int Graphics::StringWidth(std::string_view theString)
 {
 	return mFont->StringWidth(theString);
 }
@@ -1097,7 +1097,7 @@ void Graphics::DrawImageCel(Image* theImageStrip, const Rect& theDestRect, int t
 	DrawImage(theImageStrip,theDestRect,aSrcRect);
 }
 
-int Graphics::WriteString(const std::string& theString, int theX, int theY, int theWidth, int theJustification, bool drawString, int theOffset, int theLength, int theOldColor)
+int Graphics::WriteString(std::string_view theString, int theX, int theY, int theWidth, int theJustification, bool drawString, int theOffset, int theLength, int theOldColor)
 {
 	// _Font* aFont = GetFont(); // unused
 	if (theOldColor==-1)
@@ -1141,7 +1141,7 @@ int Graphics::WriteString(const std::string& theString, int theX, int theY, int 
 				uint32_t aColor = 0;
 				if (theString[i+1]=='o')
 				{
-					if (strncmp(theString.c_str()+i+1, "oldclr", 6) == 0)
+					if (theString.compare(i+1, 6, "oldclr") == 0)
 						aColor = theOldColor;
 				}
 				else
@@ -1189,7 +1189,7 @@ int Graphics::WriteString(const std::string& theString, int theX, int theY, int 
 	return aXOffset;
 }
 
-static int WriteWordWrappedHelper(Graphics *g, const std::string& theString, int theX, int theY, int theWidth, int theJustification, bool drawString, int theOffset, int theLength, int theOldColor, int theMaxChars)
+static int WriteWordWrappedHelper(Graphics *g, std::string_view theString, int theX, int theY, int theWidth, int theJustification, bool drawString, int theOffset, int theLength, int theOldColor, int theMaxChars)
 {
 	if (theOffset+theLength>theMaxChars)
 	{
@@ -1201,7 +1201,7 @@ static int WriteWordWrappedHelper(Graphics *g, const std::string& theString, int
 	return g->WriteString(theString,theX,theY,theWidth,theJustification,drawString,theOffset,theLength,theOldColor);
 }
 
-int	Graphics::WriteWordWrapped(const Rect& theRect, const std::string& theLine, int theLineSpacing, int theJustification, int *theMaxWidth, int theMaxChars, int *theLastWidth)
+int	Graphics::WriteWordWrapped(const Rect& theRect, std::string_view theLine, int theLineSpacing, int theJustification, int *theMaxWidth, int theMaxChars, int *theLastWidth)
 {
 	Color anOrigColor = GetColor();
 	int anOrigColorInt = anOrigColor.ToInt();
@@ -1383,12 +1383,12 @@ int	Graphics::WriteWordWrapped(const Rect& theRect, const std::string& theLine, 
 	//返回时，aYOffset 增量为 (行数 + 1) * 行距。以 aYOffset 减去末行多算的一次行距，再加上字体下沉部分的高度，得到文本底部的纵向偏移值，即文本区域高度。
 	return aYOffset + aFont->GetDescent() - theLineSpacing;
 }
-int	Graphics::DrawStringColor(const std::string& theLine, int theX, int theY, int theOldColor)
+int	Graphics::DrawStringColor(std::string_view theLine, int theX, int theY, int theOldColor)
 {
 	return WriteString(theLine, theX, theY, -1, -1,true,0,-1,theOldColor);
 }
 
-int	Graphics::DrawStringWordWrapped(const std::string& theLine, int theX, int theY, int theWrapWidth, int theLineSpacing, int theJustification, int *theMaxWidth)
+int	Graphics::DrawStringWordWrapped(std::string_view theLine, int theX, int theY, int theWrapWidth, int theLineSpacing, int theJustification, int *theMaxWidth)
 {
 	/*这个函数在正式版中被删得只剩前三个参数了……*/
 	int aYOffset = mFont->GetAscent() - mFont->GetAscentPadding();
@@ -1397,7 +1397,7 @@ int	Graphics::DrawStringWordWrapped(const std::string& theLine, int theX, int th
 	return WriteWordWrapped(aRect, theLine, theLineSpacing, theJustification, theMaxWidth);
 }
 
-int	Graphics::GetWordWrappedHeight(int theWidth, const std::string& theLine, int theLineSpacing, int *theMaxWidth)
+int	Graphics::GetWordWrappedHeight(int theWidth, std::string_view theLine, int theLineSpacing, int *theMaxWidth)
 {
 	Graphics aTestG;
 	aTestG.SetFont(mFont);

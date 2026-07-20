@@ -87,7 +87,7 @@ public:
     void                    GotoNextGarden();
     /*inline*/ PottedPlant* GetPottedPlantInWheelbarrow();
     void                    RemovePottedPlant(Plant* thePlant);
-    SpecialGridPlacement*   GetSpecialGridPlacements(int& theCount);
+    const SpecialGridPlacement*   GetSpecialGridPlacements(int& theCount);
     int                     PixelToGridX(int theX, int theY);
     int                     PixelToGridY(int theX, int theY);
     int                     GridToPixelX(int theGridX, int theGridY);

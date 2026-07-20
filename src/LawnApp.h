@@ -145,22 +145,22 @@ public:
 
 public:
 	LawnApp();
-	virtual ~LawnApp();
+	~LawnApp() override;
 
 	bool							KillNewOptionsDialog();
-	virtual void					GotFocus();
-	virtual void					LostFocus();
-	virtual void					InitHook();
-	virtual void					WriteToRegistry();
-	virtual void					ReadFromRegistry();
-	virtual void					LoadingThreadProc();
+	void							GotFocus() override;
+	void							LostFocus() override;
+	void							InitHook() override;
+	void							WriteToRegistry() override;
+	void							ReadFromRegistry() override;
+	void							LoadingThreadProc() override;
 	virtual void					LoadingCompleted();
-	virtual void					LoadingThreadCompleted();
-	virtual void					URLOpenFailed(const std::string& theURL);
-	virtual void					URLOpenSucceeded(const std::string& theURL);
-	virtual bool					OpenURL(const std::string& theURL, bool shutdownOnOpen);
-	virtual bool					DebugKeyDown(int theKey);
-	virtual void					HandleCmdLineParam(const std::string& theParamName, const std::string& theParamValue);
+	void							LoadingThreadCompleted() override;
+	void							URLOpenFailed(const std::string& theURL) override;
+	void							URLOpenSucceeded(const std::string& theURL) override;
+	bool							OpenURL(const std::string& theURL, bool shutdownOnOpen) override;
+	bool							DebugKeyDown(int theKey) override;
+	void							HandleCmdLineParam(const std::string& theParamName, const std::string& theParamValue) override;
 	void							ConfirmQuit();
 	void							ConfirmCheckForUpdates() { ; }
 	void							CheckForUpdates() { ; }
@@ -177,7 +177,6 @@ public:
 	void							FinishNameError(int theId);
 	void							FinishRestartConfirmDialog();
 	void							DoConfirmSellDialog(const std::string& theMessage);
-	void							DoConfirmPurchaseDialog(const std::string& theMessage);
 	void							FinishTimesUpDialog();
 	void							KillBoard();
 	void							MakeNewBoard();
@@ -206,28 +205,28 @@ public:
 	void							DoContinueDialog();
 	void							DoPauseDialog();
 	void							FinishModelessDialogs();
-	virtual Dialog*					DoDialog(int theDialogId, bool isModal, const std::string& theDialogHeader, const std::string& theDialogLines, const std::string& theDialogFooter, int theButtonMode);
+	Dialog*							DoDialog(int theDialogId, bool isModal, const std::string& theDialogHeader, const std::string& theDialogLines, const std::string& theDialogFooter, int theButtonMode) override;
 	virtual Dialog*					DoDialogDelay(int theDialogId, bool isModal, const std::string& theDialogHeader, const std::string& theDialogLines, const std::string& theDialogFooter, int theButtonMode);
-	virtual void					Shutdown();
-	virtual void					Init();
-	virtual void					Start();
-	virtual Dialog*					NewDialog(int theDialogId, bool isModal, const std::string& theDialogHeader, const std::string& theDialogLines, const std::string& theDialogFooter, int theButtonMode);
-	virtual bool					KillDialog(int theDialogId);
-	virtual void					ModalOpen();
-	virtual void					ModalClose();
-	virtual void					PreDisplayHook();
-	virtual bool					ChangeDirHook(const char* theIntendedPath);
+	void							Shutdown() override;
+	void							Init() override;
+	void							Start() override;
+	Dialog*							NewDialog(int theDialogId, bool isModal, const std::string& theDialogHeader, const std::string& theDialogLines, const std::string& theDialogFooter, int theButtonMode) override;
+	bool							KillDialog(int theDialogId) override;
+	void							ModalOpen() override;
+	void							ModalClose() override;
+	void							PreDisplayHook() override;
+	bool							ChangeDirHook(const char* theIntendedPath) override;
 	virtual bool					NeedRegister();
 	virtual void					UpdateRegisterInfo();
-	virtual void					ButtonPress(int theId);
-	virtual void					ButtonDepress(int theId);
-	virtual void					ButtonDownTick(int theId);
-	virtual void					ButtonMouseEnter(int theId);
-	virtual void					ButtonMouseLeave(int theId);
-	virtual void					ButtonMouseMove(int theId, int theX, int theY);
-	virtual void					UpdateFrames();
-	virtual bool					UpdateAppStep(bool* updated);
-	virtual bool					UpdateApp();
+	void							ButtonPress(int theId) override;
+	void							ButtonDepress(int theId) override;
+	void							ButtonDownTick(int theId) override;
+	void							ButtonMouseEnter(int theId) override;
+	void							ButtonMouseLeave(int theId) override;
+	void							ButtonMouseMove(int theId, int theX, int theY) override;
+	void							UpdateFrames() override;
+	bool							UpdateAppStep(bool* updated) override;
+	bool							UpdateApp() override;
 	/*inline*/ bool					IsAdventureMode();
 	/*inline*/ bool					IsSurvivalMode();
 	bool							IsContinuousChallenge();
@@ -238,14 +237,14 @@ public:
 	void							ToggleFastMo();
 	void							PlayFoley(FoleyType theFoleyType);
 	void							PlayFoleyPitch(FoleyType theFoleyType, float thePitch);
-	void							PlaySample(intptr_t theSoundNum);
+	void							PlaySample(intptr_t theSoundNum) override;
 	void							FastLoad(GameMode theGameMode);
 	static std::string				GetStageString(int theLevel);
 	/*inline*/ void					KillChallengeScreen();
 	void							ShowChallengeScreen(ChallengePage thePage);
-	ChallengeDefinition&			GetCurrentChallengeDef();
+	const ChallengeDefinition&			GetCurrentChallengeDef();
 	void							CheckForGameEnd();
-	virtual void					CloseRequestAsync();
+	void							CloseRequestAsync() override;
 	/*inline*/ bool					IsChallengeWithoutSeedBank();
 	AlmanacDialog*					DoAlmanacDialog(SeedType theSeedType = SeedType::SEED_NONE, ZombieType theZombieType = ZombieType::ZOMBIE_INVALID);
 	bool							KillAlmanacDialog();
@@ -338,7 +337,7 @@ public:
 	/*inline*/ bool					CanDoPinataMode();
 	/*inline*/ bool					CanDoDanceMode();
 	/*inline*/ bool					CanDoDaisyMode();
-	virtual void					SwitchScreenMode(bool wantWindowed, bool is3d, bool force = false);
+	void							SwitchScreenMode(bool wantWindowed, bool is3d, bool force = false) override;
 	static /*inline*/ void			CenterDialog(Dialog* theDialog, int theWidth, int theHeight);
 };
 

@@ -218,13 +218,13 @@ public:
     const char*                 mParticleFileName;
 };
 extern int gParticleParamArraySize;                 // [0x6A9F10]
-extern ParticleParams* gParticleParamArray;         // [0x6A9F14]
+extern const ParticleParams* gParticleParamArray;         // [0x6A9F14]
 
 bool                            TodParticleLoadADef(TodParticleDefinition* theParticleDef, const char* theParticleFileName);
-void                            TodParticleLoadDefinitions(ParticleParams* theParticleParamArray, int theParticleParamArraySize);
+void                            TodParticleLoadDefinitions(const ParticleParams* theParticleParamArray, int theParticleParamArraySize);
 void                            TodParticleFreeDefinitions();
 
-extern ParticleParams gLawnParticleArray[static_cast<int>(ParticleEffect::NUM_PARTICLES)];  // 0x6A0FF0
+extern const ParticleParams gLawnParticleArray[static_cast<int>(ParticleEffect::NUM_PARTICLES)];  // 0x6A0FF0
 
 // ######################################################################################################################################################
 // ############################################################ 以下正式开始粒子系统相关声明 ############################################################

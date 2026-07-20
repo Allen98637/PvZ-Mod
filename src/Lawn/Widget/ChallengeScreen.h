@@ -59,24 +59,26 @@ public:
 
 public:
     ChallengeScreen(LawnApp* theApp, ChallengePage thePage);
-    virtual ~ChallengeScreen();
+    ~ChallengeScreen() override;
     void                        SetUnlockChallengeIndex(ChallengePage thePage, bool theIsIZombie = false);
     int                         MoreTrophiesNeeded(int theChallengeIndex);
     /*inline*/ bool             ShowPageButtons();
     void                        UpdateButtons();
     int                         AccomplishmentsNeeded(int theChallengeIndex);
     void                        DrawButton(Graphics* g, int theChallengeIndex);
-    virtual void                Draw(Graphics* g);
-    virtual void                Update();
-    virtual void                AddedToManager(WidgetManager* theWidgetManager);
-    virtual void                RemovedFromManager(WidgetManager* theWidgetManager);
-    virtual void                ButtonPress(int theId);
-    virtual void                ButtonDownTick(int){}
-    virtual void                ButtonMouseEnter(int){}
-    virtual void                ButtonMouseLeave(int){}
-    virtual void                ButtonMouseMove(int, int, int){}
-    virtual void                ButtonDepress(int theId);
+    void                        Draw(Graphics* g) override;
+    void                        Update() override;
+    void                        AddedToManager(WidgetManager* theWidgetManager) override;
+    void                        RemovedFromManager(WidgetManager* theWidgetManager) override;
+    void                        ButtonPress(int theId) override;
+    void                        ButtonDownTick(int) override {}
+    void                        ButtonMouseEnter(int) override {}
+    void                        ButtonMouseLeave(int) override {}
+    void                        ButtonMouseMove(int, int, int) override {}
+    void                        ButtonDepress(int theId) override;
+    void                        KeyDown(KeyCode theKey) override;
     void                        UpdateToolTip();
+    void                        MouseDown(int x, int y, int theClickCount) override;
 //  virtual void                KeyChar(char theChar);
 
     /*inline*/ bool             IsScaryPotterLevel(GameMode theGameMode);
@@ -93,8 +95,8 @@ public:
     int                         mCol;
     const char*             mChallengeName;
 };
-extern ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES];
+extern const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES];
 
-ChallengeDefinition& GetChallengeDefinition(int theChallengeMode);
+const ChallengeDefinition& GetChallengeDefinition(int theChallengeMode);
 
 #endif

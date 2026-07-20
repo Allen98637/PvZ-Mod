@@ -34,9 +34,7 @@ ScrollbuttonWidget::ScrollbuttonWidget(int theId, ButtonListener *theButtonListe
 	mType = theType;
 }
 
-ScrollbuttonWidget::~ScrollbuttonWidget() 
-{
-}
+ScrollbuttonWidget::~ScrollbuttonWidget() = default;
 
 void ScrollbuttonWidget::Draw(Graphics *g) 
 {

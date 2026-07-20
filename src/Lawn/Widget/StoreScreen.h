@@ -76,7 +76,7 @@ public:
 
 public:
     StoreScreen(LawnApp* theApp);
-    virtual ~StoreScreen();
+    ~StoreScreen() override;
 
     /*inline*/ StoreItem        GetStoreItemType(int theSpotIndex);
     bool                        IsFullVersionOnly(StoreItem theStoreItem);
@@ -87,24 +87,24 @@ public:
     static /*inline*/ void      GetStorePosition(int theSpotIndex, int& thePosX, int& thePosY);
     void                        DrawItemIcon(Graphics* g, int theItemPosition, StoreItem theItemType, bool theIsForHighlight);
     void                        DrawItem(Graphics* g, int theItemPosition, StoreItem theItemType);
-    virtual void                Draw(Graphics* g);
-    virtual void                DrawOverlay(Graphics* g);
+    void                        Draw(Graphics* g) override;
+    void                        DrawOverlay(Graphics* g) override;
     /*inline*/ void             SetBubbleText(int theCrazyDaveMessage, int theTime, bool theClickToContinue);
     void                        UpdateMouse();
     void                        StorePreload();
     /*inline*/ bool             CanInteractWithButtons();
-    virtual void                Update();
-    virtual void                AddedToManager(WidgetManager* theWidgetManager);
-    virtual void                RemovedFromManager(WidgetManager* theWidgetManager);
-    virtual void                ButtonPress(int theId);
+    void                        Update() override;
+    void                        AddedToManager(WidgetManager* theWidgetManager) override;
+    void                        RemovedFromManager(WidgetManager* theWidgetManager) override;
+    void                        ButtonPress(int theId) override;
     /*inline*/ bool             IsPageShown(StorePages thePage);
-    virtual void                ButtonDepress(int theId);
-    virtual void                KeyChar(char theChar);
+    void                        ButtonDepress(int theId) override;
+    void                        KeyDown(KeyCode theKey) override;
     static /*inline*/ int		GetItemCost(StoreItem theStoreItem);
     /*inline*/ bool             CanAffordItem(StoreItem theStoreItem);
     void                        PurchaseItem(StoreItem theStoreItem);
     void                        AdvanceCrazyDaveDialog();
-    virtual void                MouseDown(int x, int y, int theClickCount);
+    void                        MouseDown(int x, int y, int theClickCount) override;
     /*inline*/ void             EnableButtons(bool theEnable);
     void                        SetupForIntro(int theDialogIndex);
 };
@@ -116,7 +116,7 @@ public:
 
 public:
     StoreScreenOverlay(StoreScreen* theParent);
-    virtual void                Draw(Graphics* g);
+    void                        Draw(Graphics* g) override;
 };
 
 

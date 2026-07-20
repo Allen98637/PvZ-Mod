@@ -83,7 +83,7 @@ public:
 	void					WriteBool(bool theBool);
 	void					WriteFloat(float theFloat);
 	void					WriteDouble(double theDouble);
-	void					WriteString(const std::string& theStr);
+	void					WriteString(std::string_view theStr);
 	inline uint32_t			GetPos();
 	inline void				SetUInt32(uint32_t, uint32_t) { /* 未找到 */ }
 	inline void				SetUInt16(uint32_t, uint32_t) { /* 未找到 */ }

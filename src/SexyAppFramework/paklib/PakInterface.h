@@ -103,15 +103,15 @@ public:
 	~PakInterface();
 
 	bool					AddPakFile(const std::string& theFileName);
-	PFILE*					FOpen(const char* theFileName, const char* theAccess);
-	int						FClose(PFILE* theFile);
-	int						FSeek(PFILE* theFile, long theOffset, int theOrigin);
-	int						FTell(PFILE* theFile);
-	size_t					FRead(void* thePtr, int theElemSize, int theCount, PFILE* theFile);
-	int						FGetC(PFILE* theFile);
-	int						UnGetC(int theChar, PFILE* theFile);
-	char*					FGetS(char* thePtr, int theSize, PFILE* theFile);
-	int						FEof(PFILE* theFile);
+	PFILE*					FOpen(const char* theFileName, const char* theAccess) override;
+	int						FClose(PFILE* theFile) override;
+	int						FSeek(PFILE* theFile, long theOffset, int theOrigin) override;
+	int						FTell(PFILE* theFile) override;
+	size_t					FRead(void* thePtr, int theElemSize, int theCount, PFILE* theFile) override;
+	int						FGetC(PFILE* theFile) override;
+	int						UnGetC(int theChar, PFILE* theFile) override;
+	char*					FGetS(char* thePtr, int theSize, PFILE* theFile) override;
+	int						FEof(PFILE* theFile) override;
 
 };
 

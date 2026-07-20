@@ -82,6 +82,18 @@ void ToolTipWidget::GetLines(std::vector<std::string>& theLines)
 		{
 			aBreakDrawLen = aCharStart - aLineStart;
 			aBreakResumePos = aCharEnd;
+			if (aLineWidth >= mGetsLinesWidth)
+			{
+				theLines.push_back(mLabel.substr(aLineStart, aBreakDrawLen));
+				aCurPos = aBreakResumePos;
+				while (aCurPos < mLabel.size() && mLabel[aCurPos] == ' ')
+					aCurPos++;
+				aLineStart = aCurPos;
+				aLineWidth = 0;
+				aBreakDrawLen = -1;
+				aPrevChar = 0;
+				continue;
+			}
 		}
 		else if (Sexy::IsAutoBreakChar(aChar) &&
 			!Sexy::IsClosingPunctuation(aChar) &&
@@ -90,29 +102,18 @@ void ToolTipWidget::GetLines(std::vector<std::string>& theLines)
 		{
 			aBreakDrawLen = aCharStart - aLineStart;
 			aBreakResumePos = aCharStart;
-		}
-		aPrevChar = aChar;
-
-		if (aLineWidth >= mGetsLinesWidth)
-		{
-			if (aBreakDrawLen >= 0)
+			if (aLineWidth >= mGetsLinesWidth)
 			{
 				theLines.push_back(mLabel.substr(aLineStart, aBreakDrawLen));
 				aCurPos = aBreakResumePos;
-				while (aCurPos < mLabel.size() && mLabel[aCurPos] == ' ')
-					aCurPos++;
+				aLineStart = aCurPos;
+				aLineWidth = 0;
+				aBreakDrawLen = -1;
+				aPrevChar = 0;
+				continue;
 			}
-			else
-			{
-				size_t aDrawEnd = (aCharEnd > aLineStart) ? aCharEnd : aCharStart + 1;
-				theLines.push_back(mLabel.substr(aLineStart, aDrawEnd - aLineStart));
-				aCurPos = aDrawEnd;
-			}
-			aLineStart = aCurPos;
-			aLineWidth = 0;
-			aBreakDrawLen = -1;
-			aPrevChar = 0;
 		}
+		aPrevChar = aChar;
 	}
 
 	if (aLineStart < mLabel.size())
@@ -155,19 +156,19 @@ void ToolTipWidget::CalculateSize()
 	mHeight = aHeight + aLines.size() * 2 - 2;
 }
 
-void ToolTipWidget::SetLabel(const std::string& theLabel)
+void ToolTipWidget::SetLabel(std::string_view theLabel)
 {
 	mLabel = TodStringTranslate(theLabel);
 	CalculateSize();
 }
 
-void ToolTipWidget::SetTitle(const std::string& theTitle)
+void ToolTipWidget::SetTitle(std::string_view theTitle)
 {
 	mTitle = TodStringTranslate(theTitle);
 	CalculateSize();
 }
 
-void ToolTipWidget::SetWarningText(const std::string& theWarningText)
+void ToolTipWidget::SetWarningText(std::string_view theWarningText)
 {
 	mWarningText = TodStringTranslate(theWarningText);
 	CalculateSize();

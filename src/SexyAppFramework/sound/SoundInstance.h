@@ -34,7 +34,7 @@ class SoundInstance
 {
 public:
 	SoundInstance() {}
-	virtual ~SoundInstance() {}
+	virtual ~SoundInstance() = default;
 	virtual void			Release() = 0;
 
 	virtual void			SetBaseVolume(double theBaseVolume) = 0; 

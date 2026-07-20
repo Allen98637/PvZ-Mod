@@ -25,6 +25,7 @@
 #include "SDLSoundManager.h"
 #include "SDLSoundInstance.h"
 #include "paklib/PakInterface.h"
+#include <vector>
 
 using namespace Sexy;
 
@@ -51,13 +52,13 @@ SDLSoundManager::SDLSoundManager()
 
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO))
     {
-        printf("Failed to initialize SDL audio subsystem\n");
+		Sexy::PrintF("Failed to initialize SDL audio subsystem\n");
 		return;
     }
 
 	if (Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 2048))
 	{
-		printf("Failed to initialize SDL mixer\n");
+		Sexy::PrintF("Failed to initialize SDL mixer\n");
 		return;
 	}
 	mInitializedMixer = true;
@@ -276,12 +277,11 @@ bool SDLSoundManager::LoadSound(intptr_t theSfxID, const std::string& theFilenam
 		p_fseek(fp, 0, SEEK_END);
 		size_t fileSize = p_ftell(fp);
 		p_fseek(fp, 0, SEEK_SET);
-		uint8_t *data = new uint8_t[fileSize];
-		p_fread(data, 1, fileSize, fp);
+		std::vector<uint8_t> data(fileSize);
+		p_fread(data.data(), 1, fileSize, fp);
 		p_fclose(fp);
 
-		mSourceSounds[theSfxID] = Mix_LoadWAV_RW(SDL_RWFromConstMem(data, fileSize), 1);
-		delete[] data;
+		mSourceSounds[theSfxID] = Mix_LoadWAV_RW(SDL_RWFromConstMem(data.data(), fileSize), 1);
 
 		if (mSourceSounds[theSfxID]) break;
 	}

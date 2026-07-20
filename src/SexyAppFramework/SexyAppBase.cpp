@@ -1856,7 +1856,7 @@ int SexyAppBase::MsgBox(const std::string& theText, const std::string& theTitle,
 	(void)theFlags;
 
 	BeginPopup();
-	printf("%s\n===\n%s\n", theTitle.c_str(), theText.c_str());
+	Sexy::PrintF("%s\n===\n%s\n", theTitle.c_str(), theText.c_str());
 
 #ifdef __SWITCH__
 	ErrorApplicationConfig c;
@@ -1879,7 +1879,7 @@ void SexyAppBase::Popup(const std::string& theString)
 
 	BeginPopup();
 	if (!mShutdown)
-		printf("FATAL ERROR\n===\n%s\n", theString.c_str());
+		Sexy::PrintF("FATAL ERROR\n===\n%s\n", theString.c_str());
 
 #ifdef __SWITCH__
 	ErrorApplicationConfig c;
@@ -2263,7 +2263,7 @@ void SexyAppBase::LoadingThreadProcStub(SexyAppBase *theArg)
 	
 	aSexyApp->LoadingThreadProc();		
 
-	printf("Resource Loading Time: %d\r\n", (SDL_GetTicks() - aSexyApp->mTimeLoaded));
+	Sexy::PrintF("Resource Loading Time: %d\r\n", (SDL_GetTicks() - aSexyApp->mTimeLoaded));
 
 	aSexyApp->mLoadingThreadCompleted = true;
 }
@@ -2443,18 +2443,14 @@ void SexyAppBase::ProcessSafeDeleteList()
 {
 	MTAutoDisallowRand aDisallowRand;
 
-	WidgetSafeDeleteList::iterator anItr = mSafeDeleteList.begin();
-	while (anItr != mSafeDeleteList.end())
-	{
-		WidgetSafeDeleteInfo* aWidgetSafeDeleteInfo = &(*anItr);
-		if (mUpdateAppDepth <= aWidgetSafeDeleteInfo->mUpdateAppDepth)
+	std::erase_if(mSafeDeleteList, [&](const WidgetSafeDeleteInfo& theInfo) {
+		if (mUpdateAppDepth <= theInfo.mUpdateAppDepth)
 		{
-			delete aWidgetSafeDeleteInfo->mWidget;
-			anItr = mSafeDeleteList.erase(anItr);
+			delete theInfo.mWidget;
+			return true;
 		}
-		else
-			++anItr;
-	}	
+		return false;
+	});
 }
 
 void SexyAppBase::UpdateFTimeAcc()
@@ -2933,16 +2929,16 @@ void SexyAppBase::Start()
 
 	WaitForLoadingThread();
 
-	printf("Seconds       = %g\r\n", (SDL_GetTicks() - aStartTime) / 1000.0);
-	//printf("Count         = %d\r\n", aCount);
-	printf("Sleep Count   = %d\r\n", mSleepCount);
-	printf("Update Count  = %d\r\n", mUpdateCount);
-	printf("Draw Count    = %d\r\n", mDrawCount);
-	printf("Draw Time     = %d\r\n", mDrawTime);
-	printf("Screen Blt    = %d\r\n", mScreenBltTime);
+	Sexy::PrintF("Seconds       = %g\r\n", (SDL_GetTicks() - aStartTime) / 1000.0);
+	//Sexy::PrintF("Count         = %d\r\n", aCount);
+	Sexy::PrintF("Sleep Count   = %d\r\n", mSleepCount);
+	Sexy::PrintF("Update Count  = %d\r\n", mUpdateCount);
+	Sexy::PrintF("Draw Count    = %d\r\n", mDrawCount);
+	Sexy::PrintF("Draw Time     = %d\r\n", mDrawTime);
+	Sexy::PrintF("Screen Blt    = %d\r\n", mScreenBltTime);
 	if (mDrawTime+mScreenBltTime > 0)
 	{
-		printf("Avg FPS       = %d\r\n", (mDrawCount*1000)/(mDrawTime+mScreenBltTime));
+		Sexy::PrintF("Avg FPS       = %d\r\n", (mDrawCount*1000)/(mDrawTime+mScreenBltTime));
 	}
 
 	//timeEndPeriod(1);	
@@ -3006,72 +3002,72 @@ void SexyAppBase::ShowResourceError(bool doExit)
 		DoExit(0);
 }
 
-bool SexyAppBase::GetBoolean(const std::string& theId)
+bool SexyAppBase::GetBoolean(std::string_view theId)
 {
 	StringBoolMap::iterator anItr = mBoolProperties.find(theId);
 	DBG_ASSERTE(anItr != mBoolProperties.end());
-	
-	if (anItr != mBoolProperties.end())	
+
+	if (anItr != mBoolProperties.end())
 		return anItr->second;
 	else
 		return false;
 }
 
-bool SexyAppBase::GetBoolean(const std::string& theId, bool theDefault)
+bool SexyAppBase::GetBoolean(std::string_view theId, bool theDefault)
 {
-	StringBoolMap::iterator anItr = mBoolProperties.find(theId);	
-	
-	if (anItr != mBoolProperties.end())	
+	StringBoolMap::iterator anItr = mBoolProperties.find(theId);
+
+	if (anItr != mBoolProperties.end())
 		return anItr->second;
 	else
-		return theDefault;	
+		return theDefault;
 }
 
-int SexyAppBase::GetInteger(const std::string& theId)
+int SexyAppBase::GetInteger(std::string_view theId)
 {
 	StringIntMap::iterator anItr = mIntProperties.find(theId);
 	DBG_ASSERTE(anItr != mIntProperties.end());
-	
-	if (anItr != mIntProperties.end())	
+
+	if (anItr != mIntProperties.end())
 		return anItr->second;
 	else
 		return false;
 }
 
-int SexyAppBase::GetInteger(const std::string& theId, int theDefault)
+int SexyAppBase::GetInteger(std::string_view theId, int theDefault)
 {
-	StringIntMap::iterator anItr = mIntProperties.find(theId);	
-	
-	if (anItr != mIntProperties.end())	
+	StringIntMap::iterator anItr = mIntProperties.find(theId);
+
+	if (anItr != mIntProperties.end())
 		return anItr->second;
 	else
-		return theDefault;	
+		return theDefault;
 }
 
-double SexyAppBase::GetDouble(const std::string& theId)
+double SexyAppBase::GetDouble(std::string_view theId)
 {
 	StringDoubleMap::iterator anItr = mDoubleProperties.find(theId);
 	DBG_ASSERTE(anItr != mDoubleProperties.end());
-	
+
 	if (anItr != mDoubleProperties.end())
 		return anItr->second;
 	else
 		return false;
 }
 
-double SexyAppBase::GetDouble(const std::string& theId, double theDefault)
+double SexyAppBase::GetDouble(std::string_view theId, double theDefault)
 {
-	StringDoubleMap::iterator anItr = mDoubleProperties.find(theId);	
-	
-	if (anItr != mDoubleProperties.end())	
+	StringDoubleMap::iterator anItr = mDoubleProperties.find(theId);
+
+	if (anItr != mDoubleProperties.end())
 		return anItr->second;
 	else
 		return theDefault;
 }
 
-std::string SexyAppBase::GetString(const std::string& theId)
+std::string SexyAppBase::GetString(std::string_view theId)
 {
-	StringSexyStringMap::iterator anItr = mStringProperties.find(theId);
+	auto anItr = mStringProperties.find(theId);
 	DBG_ASSERTE(anItr != mStringProperties.end());
 	
 	if (anItr != mStringProperties.end())	
@@ -3080,17 +3076,17 @@ std::string SexyAppBase::GetString(const std::string& theId)
 		return "";
 }
 
-std::string SexyAppBase::GetString(const std::string& theId, const std::string& theDefault)
+std::string SexyAppBase::GetString(std::string_view theId, std::string_view theDefault)
 {
-	StringSexyStringMap::iterator anItr = mStringProperties.find(theId);
+	auto anItr = mStringProperties.find(theId);
 	
 	if (anItr != mStringProperties.end())	
 		return anItr->second;
 	else
-		return theDefault;	
+		return std::string(theDefault);	
 }
 
-StringVector SexyAppBase::GetStringVector(const std::string& theId)
+std::vector<std::string> SexyAppBase::GetStringVector(std::string_view theId)
 {
 	StringStringVectorMap::iterator anItr = mStringVectorProperties.find(theId);
 	DBG_ASSERTE(anItr != mStringVectorProperties.end());
@@ -3098,12 +3094,12 @@ StringVector SexyAppBase::GetStringVector(const std::string& theId)
 	if (anItr != mStringVectorProperties.end())	
 		return anItr->second;
 	else
-		return StringVector();
+		return std::vector<std::string>();
 }
 
 void SexyAppBase::SetString(const std::string& theId, const std::string& theValue)
 {
-	std::pair<StringSexyStringMap::iterator, bool> aPair = mStringProperties.insert(StringSexyStringMap::value_type(theId, theValue));
+	auto aPair = mStringProperties.emplace(theId, theValue);
 	if (!aPair.second) // Found it, change value
 		aPair.first->second = theValue;
 }

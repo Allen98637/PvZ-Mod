@@ -161,14 +161,14 @@ public:
     unsigned int        mFoleyFlags;
 };
 
-/*inline*/ void         TodFoleyInitialize(FoleyParams* theFoleyParamArray, int theFoleyParamArraySize);
+/*inline*/ void         TodFoleyInitialize(const FoleyParams* theFoleyParamArray, int theFoleyParamArraySize);
 /*inline*/ void         TodFoleyDispose();
-FoleyParams*            LookupFoley(FoleyType theFoleyType);
+const FoleyParams*      LookupFoley(FoleyType theFoleyType);
 
 extern int gFoleyParamArraySize;
-extern FoleyParams* gFoleyParamArray;
+extern const FoleyParams* gFoleyParamArray;
 
-extern FoleyParams gLawnFoleyParamArray[static_cast<int>(FoleyType::NUM_FOLEY)];
+extern const FoleyParams gLawnFoleyParamArray[static_cast<int>(FoleyType::NUM_FOLEY)];
 
 // ######################################################################################################################################################
 // ############################################################ 以下正式开始拟音音效相关声明 ############################################################

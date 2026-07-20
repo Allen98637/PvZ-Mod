@@ -48,10 +48,10 @@ public:
 
 public:
 	LawnEditWidget(int theId, EditListener* theListener, Dialog* theDialog);
-	~LawnEditWidget();
+	~LawnEditWidget() override;
 
-	virtual void			KeyDown(KeyCode theKey);
-	virtual void			KeyChar(char theChar);
+	void					KeyDown(KeyCode theKey) override;
+	void					KeyChar(char theChar) override;
 };
 
 // ====================================================================================================

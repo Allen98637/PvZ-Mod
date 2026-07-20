@@ -41,8 +41,6 @@ extern std::string DIALOG_NO_STRING;
 extern std::string DIALOG_OK_STRING;
 extern std::string DIALOG_CANCEL_STRING;
 
-typedef std::vector<std::string> StringVector;
-
 class Dialog : public Widget, public ButtonListener
 {
 public:
@@ -112,37 +110,37 @@ public:
 	Dialog(Image* theComponentImage, Image* theButtonComponentImage, 
 		int theId, bool isModal, const std::string& theDialogHeader, const std::string& theDialogLines, const std::string& theDialogFooter, int theButtonMode); //UNICODE
 
-	virtual ~Dialog();
+	~Dialog() override;
 
 	virtual void			SetButtonFont(_Font* theFont);
 	virtual void			SetHeaderFont(_Font* theFont);
 	virtual void			SetLinesFont(_Font* theFont);
 
-	virtual void			SetColor(int theIdx, const Color& theColor);
+	void					SetColor(int theIdx, const Color& theColor) override;
 	virtual int				GetPreferredHeight(int theWidth);
 
-	virtual void			Draw(Graphics* g);
-	virtual void			AddedToManager(WidgetManager* theWidgetManager);
-	virtual void			RemovedFromManager(WidgetManager* theWidgetManager);
-	virtual void			OrderInManagerChanged();
-	virtual void			Resize(int theX, int theY, int theWidth, int theHeight);
+	void					Draw(Graphics* g) override;
+	void					AddedToManager(WidgetManager* theWidgetManager) override;
+	void					RemovedFromManager(WidgetManager* theWidgetManager) override;
+	void					OrderInManagerChanged() override;
+	void					Resize(int theX, int theY, int theWidth, int theHeight) override;
 
-	virtual void			MouseDown(int x, int y, int theClickCount) { Widget::MouseDown(x, y, theClickCount); }
-	virtual void			MouseDown(int x, int y, int theBtnNum, int theClickCount);
-	virtual void			MouseDrag(int x, int y);
-	virtual void			MouseUp(int x, int y) { Widget::MouseUp(x, y); }
-	virtual void			MouseUp(int x, int y, int theClickCount) { Widget::MouseUp(x, y, theClickCount); }
-	virtual void			MouseUp(int x, int y, int theBtnNum, int theClickCount);
-	virtual void			Update();
+	void					MouseDown(int x, int y, int theClickCount) override { Widget::MouseDown(x, y, theClickCount); }
+	void					MouseDown(int x, int y, int theBtnNum, int theClickCount) override;
+	void					MouseDrag(int x, int y) override;
+	void					MouseUp(int x, int y) override { Widget::MouseUp(x, y); }
+	void					MouseUp(int x, int y, int theClickCount) override { Widget::MouseUp(x, y, theClickCount); }
+	void					MouseUp(int x, int y, int theBtnNum, int theClickCount) override;
+	void					Update() override;
 	virtual	bool			IsModal();
 	virtual int				WaitForResult(bool autoKill = true);
 
-	virtual void			ButtonPress(int theId);
-	virtual void			ButtonDepress(int theId);
-	virtual void			ButtonDownTick(int){}
-	virtual void			ButtonMouseEnter(int){}
-	virtual void			ButtonMouseLeave(int){}
-	virtual void			ButtonMouseMove(int, int, int){}
+	void					ButtonPress(int theId) override;
+	void					ButtonDepress(int theId) override;
+	void					ButtonDownTick(int) override{}
+	void					ButtonMouseEnter(int) override{}
+	void					ButtonMouseLeave(int) override{}
+	void					ButtonMouseMove(int, int, int) override{}
 };
 
 }

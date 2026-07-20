@@ -40,12 +40,12 @@ TextWidget::TextWidget()
 	mScrollbar = nullptr;
 }
 
-SexyStringVector TextWidget::GetLines()
+std::vector<std::string> TextWidget::GetLines()
 {
 	return mLogicalLines;
 }
 
-void TextWidget::SetLines(SexyStringVector theNewLines)
+void TextWidget::SetLines(std::vector<std::string> theNewLines)
 {
 	mLogicalLines = theNewLines;
 }
@@ -59,7 +59,7 @@ void TextWidget::Clear()
 	MarkDirty();
 }
 
-void TextWidget::DrawColorString(Graphics* g, const std::string& theString, int x, int y, bool useColors)
+void TextWidget::DrawColorString(Graphics* g, std::string_view theString, int x, int y, bool useColors)
 {		
 	int aWidth = 0;
 	
@@ -90,7 +90,7 @@ void TextWidget::DrawColorString(Graphics* g, const std::string& theString, int 
 		g->DrawString(aCurString, x + aWidth, y);
 }	
 
-void TextWidget::DrawColorStringHilited(Graphics* g, const std::string& theString, int x, int y, int theStartPos, int theEndPos)
+void TextWidget::DrawColorStringHilited(Graphics* g, std::string_view theString, int x, int y, int theStartPos, int theEndPos)
 {
 	DrawColorString(g, theString, x, y, true);				
 	
@@ -110,26 +110,26 @@ void TextWidget::DrawColorStringHilited(Graphics* g, const std::string& theStrin
 	}
 }
 
-int TextWidget::GetStringIndex(const std::string& theString, int thePixel)
+int TextWidget::GetStringIndex(std::string_view theString, int thePixel)
 {
 	int aPos = 0;
-	
+
 	for (int i = 0; i < (int)theString.length(); i++)
 	{
-		std::string aLoSubStr = theString.substr(0, i);
-		std::string aHiSubStr = theString.substr(0, i+1);
-			
+		std::string_view aLoSubStr = theString.substr(0, i);
+		std::string_view aHiSubStr = theString.substr(0, i+1);
+
 		int aLoLen = GetColorStringWidth(aLoSubStr);
 		int aHiLen = GetColorStringWidth(aHiSubStr);
 		if (thePixel >= (aLoLen+aHiLen)/2)
 			aPos = i+1;
 	}
-	
+
 	return aPos;
 }
 
 //UNICODE
-int TextWidget::GetColorStringWidth(const std::string& theString)
+int TextWidget::GetColorStringWidth(std::string_view theString)
 {				
 	int aWidth = 0;	
 	std::string aTempString;
@@ -193,7 +193,7 @@ void TextWidget::Resize(int theX, int theY, int theWidth, int theHeight)
 }
 
 //UNICODE
-Color TextWidget::GetLastColor(const std::string& theString)
+Color TextWidget::GetLastColor(std::string_view theString)
 {
 	int anIdx = theString.rfind((char)0xFF);
 	if (anIdx < 0)

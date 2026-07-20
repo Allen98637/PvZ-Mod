@@ -114,24 +114,24 @@ public:
 
 public:
     GameSelector(LawnApp* theApp);
-    virtual ~GameSelector();
+    ~GameSelector() override;
 
     void                        SyncProfile(bool theShowLoading);
-    virtual void                Draw(Graphics* g);
-    virtual void                DrawOverlay(Graphics* g);
-    virtual void                Update();
-    virtual void                AddedToManager(WidgetManager* theWidgetManager);
-    virtual void                RemovedFromManager(WidgetManager* theWidgetManager);
-    virtual void                OrderInManagerChanged();
-    virtual void                ButtonMouseEnter(int theId);
-    virtual void                ButtonPress(int theId);
-    virtual void                ButtonDepress(int theId);
-    virtual void                ButtonDownTick(int){}
-    virtual void                ButtonMouseLeave(int){}
-    virtual void                ButtonMouseMove(int, int, int){}
-    virtual void                KeyDown(KeyCode theKey);
-    virtual void                KeyChar(char theChar);
-    virtual void                MouseDown(int x, int y, int theClickCount);
+    void                        Draw(Graphics* g) override;
+    void                        DrawOverlay(Graphics* g) override;
+    void                        Update() override;
+    void                        AddedToManager(WidgetManager* theWidgetManager) override;
+    void                        RemovedFromManager(WidgetManager* theWidgetManager) override;
+    void                        OrderInManagerChanged() override;
+    void                        ButtonMouseEnter(int theId) override;
+    void                        ButtonPress(int theId) override;
+    void                        ButtonDepress(int theId) override;
+    void                        ButtonDownTick(int) override{}
+    void                        ButtonMouseLeave(int) override{}
+    void                        ButtonMouseMove(int, int, int) override{}
+    void                        KeyDown(KeyCode theKey) override;
+    void                        KeyChar(char theChar) override;
+    void                        MouseDown(int x, int y, int theClickCount) override;
     void                        TrackButton(DialogButton* theButton, const char* theTrackName, float theOffsetX, float theOffsetY);
     void                        SyncButtons();
     void                        AddTrophySparkle();
@@ -151,9 +151,9 @@ public:
 
 public:
     GameSelectorOverlay(GameSelector* theGameSelector);
-    virtual ~GameSelectorOverlay() { }
+    ~GameSelectorOverlay() override { }
 
-    virtual void Draw(Graphics* g);
+    void         Draw(Graphics* g) override;
 };
 
 #endif

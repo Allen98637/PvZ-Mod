@@ -34,6 +34,7 @@
 #include <mutex>
 #include <thread>
 #include <set>
+#include <string_view>
 #include "graphics/SharedImage.h"
 #include "misc/Ratio.h"
 #include <atomic>
@@ -74,15 +75,12 @@ typedef std::set<MemoryImage*> MemoryImageSet;
 typedef std::map<int, Dialog*> DialogMap;
 typedef std::list<Dialog*> DialogList;
 //typedef std::list<MSG> WindowsMessageList;
-typedef std::vector<std::string> StringVector;
 //typedef std::basic_string<TCHAR> tstring; // string of TCHARs
 
-typedef std::map<std::string, std::string> StringSexyStringMap;
-typedef std::map<std::string, std::string> StringStringMap;
-typedef std::map<std::string, bool> StringBoolMap;
-typedef std::map<std::string, int> StringIntMap;
-typedef std::map<std::string, double> StringDoubleMap;
-typedef std::map<std::string, StringVector> StringStringVectorMap;
+typedef std::map<std::string, bool, std::less<>> StringBoolMap;
+typedef std::map<std::string, int, std::less<>> StringIntMap;
+typedef std::map<std::string, double, std::less<>> StringDoubleMap;
+typedef std::map<std::string, std::vector<std::string>, std::less<>> StringStringVectorMap;
 
 enum
 {
@@ -343,7 +341,7 @@ public:
 	bool					mEnableWindowAspect;
 	Ratio					mWindowAspect;
 
-	StringSexyStringMap		mStringProperties;
+	std::map<std::string, std::string, std::less<>>	mStringProperties;
 	StringBoolMap			mBoolProperties;
 	StringIntMap			mIntProperties;
 	StringDoubleMap			mDoubleProperties;
@@ -502,8 +500,8 @@ public:
 	virtual int				GetDialogCount();
 	virtual void			ModalOpen();
 	virtual void			ModalClose();	
-	virtual void			DialogButtonPress(int theDialogId, int theButtonId);
-	virtual void			DialogButtonDepress(int theDialogId, int theButtonId);
+	void					DialogButtonPress(int theDialogId, int theButtonId) override;
+	void					DialogButtonDepress(int theDialogId, int theButtonId) override;
 
 	virtual void			GotFocus();
 	virtual void			LostFocus();
@@ -534,16 +532,16 @@ public:
 	void					LoadResourceManifest();
 	void					ShowResourceError(bool doExit = false);
 	
-	bool					GetBoolean(const std::string& theId);
-	bool					GetBoolean(const std::string& theId, bool theDefault);	
-	int						GetInteger(const std::string& theId);
-	int						GetInteger(const std::string& theId, int theDefault);
-	double					GetDouble(const std::string& theId);
-	double					GetDouble(const std::string& theId, double theDefault);
-	std::string				GetString(const std::string& theId);
-	std::string				GetString(const std::string& theId, const std::string& theDefault);
+	bool					GetBoolean(std::string_view theId);
+	bool					GetBoolean(std::string_view theId, bool theDefault);
+	int						GetInteger(std::string_view theId);
+	int						GetInteger(std::string_view theId, int theDefault);
+	double					GetDouble(std::string_view theId);
+	double					GetDouble(std::string_view theId, double theDefault);
+	std::string				GetString(std::string_view theId);
+	std::string				GetString(std::string_view theId, std::string_view theDefault);
 
-	StringVector			GetStringVector(const std::string& theId);
+	std::vector<std::string>	GetStringVector(std::string_view theId);
 
 	void					SetBoolean(const std::string& theId, bool theValue);
 	void					SetInteger(const std::string& theId, int theValue);
@@ -566,7 +564,7 @@ public:
 	
 
 	// Registry access methods
-	//bool					RegistryGetSubKeys(const std::string& theKeyName, StringVector* theSubKeys);
+	//bool					RegistryGetSubKeys(const std::string& theKeyName, std::vector<std::string>* theSubKeys);
 	bool					RegistryReadString(const std::string& theValueName, std::string* theString);
 	bool					RegistryReadInteger(const std::string& theValueName, int* theValue);
 	bool					RegistryReadBoolean(const std::string& theValueName, bool* theValue);

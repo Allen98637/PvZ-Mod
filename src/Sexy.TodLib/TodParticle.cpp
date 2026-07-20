@@ -30,127 +30,127 @@
 int gParticleDefCount;                      // [0x6A9F08]
 TodParticleDefinition* gParticleDefArray;   // [0x6A9F0C]
 int gParticleParamArraySize;				// [0x6A9F10]
-ParticleParams* gParticleParamArray;		// [0x6A9F14]
+const ParticleParams* gParticleParamArray;		// [0x6A9F14]
 
 ParticleParams gLawnParticleArray[ParticleEffect::NUM_PARTICLES] = {
-	{ ParticleEffect::PARTICLE_MELONSPLASH, "particles/MelonImpact.xml" },
-	{ ParticleEffect::PARTICLE_WINTERMELON, "particles/WinterMelonImpact.xml" },
-	{ ParticleEffect::PARTICLE_FUMECLOUD, "particles/FumeCloud.xml" },
-	{ ParticleEffect::PARTICLE_POPCORNSPLASH, "particles/PopcornSplash.xml" },
-	{ ParticleEffect::PARTICLE_POWIE, "particles/Powie.xml" },
-	{ ParticleEffect::PARTICLE_JACKEXPLODE, "particles/JackExplode.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_HEAD, "particles/ZombieHead.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_ARM, "particles/ZombieArm.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_TRAFFIC_CONE, "particles/ZombieTrafficCone.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_PAIL, "particles/ZombiePail.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_HELMET, "particles/ZombieHelmet.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_HELMET_GIGA, "particles/ZombieHelmetGiga.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_FLAG, "particles/ZombieFlag.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_DOOR, "particles/ZombieDoor.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_NEWSPAPER, "particles/ZombieNewspaper.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_HEADLIGHT, "particles/ZombieHeadLight.xml" },
-	{ ParticleEffect::PARTICLE_POW, "particles/Pow.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_POGO, "particles/ZombiePogo.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_NEWSPAPER_HEAD, "particles/ZombieNewspaperHead.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_BALLOON_HEAD, "particles/ZombieBalloonHead.xml" },
-	{ ParticleEffect::PARTICLE_SOD_ROLL, "particles/SodRoll.xml" },
-	{ ParticleEffect::PARTICLE_GRAVE_STONE_RISE, "particles/GraveStoneRise.xml" },
-	{ ParticleEffect::PARTICLE_PLANTING, "particles/Planting.xml" },
-	{ ParticleEffect::PARTICLE_PLANTING_POOL, "particles/PlantingPool.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_RISE, "particles/ZombieRise.xml" },
-	{ ParticleEffect::PARTICLE_GRAVE_BUSTER, "particles/GraveBuster.xml" },
-	{ ParticleEffect::PARTICLE_GRAVE_BUSTER_DIE, "particles/GraveBusterDie.xml" },
-	{ ParticleEffect::PARTICLE_POOL_SPLASH, "particles/PoolSplash.xml" },
-	{ ParticleEffect::PARTICLE_ICE_SPARKLE, "particles/IceSparkle.xml" },
-	{ ParticleEffect::PARTICLE_SEED_PACKET, "particles/SeedPacket.xml" },
-	{ ParticleEffect::PARTICLE_TALL_NUT_BLOCK, "particles/TallNutBlock.xml" },
-	{ ParticleEffect::PARTICLE_DOOM, "particles/Doom.xml" },
-	{ ParticleEffect::PARTICLE_DIGGER_RISE, "particles/DiggerRise.xml" },
-	{ ParticleEffect::PARTICLE_DIGGER_TUNNEL, "particles/DiggerTunnel.xml" },
-	{ ParticleEffect::PARTICLE_DANCER_RISE, "particles/DancerRise.xml" },
-	{ ParticleEffect::PARTICLE_POOL_SPARKLY, "particles/PoolSparkly.xml" },
-	{ ParticleEffect::PARTICLE_WALLNUT_EAT_SMALL, "particles/WallnutEatSmall.xml" },
-	{ ParticleEffect::PARTICLE_WALLNUT_EAT_LARGE, "particles/WallnutEatLarge.xml" },
-	{ ParticleEffect::PARTICLE_PEA_SPLAT, "particles/PeaSplat.xml" },
-	{ ParticleEffect::PARTICLE_BUTTER_SPLAT, "particles/ButterSplat.xml" },
-	{ ParticleEffect::PARTICLE_CABBAGE_SPLAT, "particles/CabbageSplat.xml" },
-	{ ParticleEffect::PARTICLE_PUFF_SPLAT, "particles/PuffSplat.xml" },
-	{ ParticleEffect::PARTICLE_STAR_SPLAT, "particles/StarSplat.xml" },
-	{ ParticleEffect::PARTICLE_ICE_TRAP, "particles/IceTrap.xml" },
-	{ ParticleEffect::PARTICLE_SNOWPEA_SPLAT, "particles/SnowPeaSplat.xml" },
-	{ ParticleEffect::PARTICLE_SNOWPEA_PUFF, "particles/SnowPeaPuff.xml" },
-	{ ParticleEffect::PARTICLE_SNOWPEA_TRAIL, "particles/SnowPeaTrail.xml" },
-	{ ParticleEffect::PARTICLE_LANTERN_SHINE, "particles/LanternShine.xml" },
-	{ ParticleEffect::PARTICLE_SEED_PACKET_PICKUP, "particles/Award.xml" },
-	{ ParticleEffect::PARTICLE_POTATO_MINE, "particles/PotatoMine.xml" },
-	{ ParticleEffect::PARTICLE_POTATO_MINE_RISE, "particles/PotatoMineRise.xml" },
-	{ ParticleEffect::PARTICLE_PUFFSHROOM_TRAIL, "particles/PuffShroomTrail.xml" },
-	{ ParticleEffect::PARTICLE_PUFFSHROOM_MUZZLE, "particles/PuffShroomMuzzle.xml" },
-	{ ParticleEffect::PARTICLE_SEED_PACKET_FLASH, "particles/SeedPacketFlash.xml" },
-	{ ParticleEffect::PARTICLE_WHACK_A_ZOMBIE_RISE, "particles/WhackAZombieRise.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_LADDER, "particles/ZombieLadder.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT, "particles/UmbrellaReflect.xml" },
-	{ ParticleEffect::PARTICLE_SEED_PACKET_PICK, "particles/SeedPacketPick.xml" },
-	{ ParticleEffect::PARTICLE_ICE_TRAP_ZOMBIE, "particles/IceTrapZombie.xml" },
-	{ ParticleEffect::PARTICLE_ICE_TRAP_RELEASE, "particles/IceTrapRelease.xml" },
-	{ ParticleEffect::PARTICLE_ZAMBONI_SMOKE, "particles/ZamboniSmoke.xml" },
-	{ ParticleEffect::PARTICLE_GLOOMCLOUD, "particles/GloomCloud.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_POGO_HEAD, "particles/ZombiePogoHead.xml" },
-	{ ParticleEffect::PARTICLE_ZAMBONI_TIRE, "particles/ZamboniTire.xml" },
-	{ ParticleEffect::PARTICLE_ZAMBONI_EXPLOSION, "particles/ZamboniExplosion.xml" },
-	{ ParticleEffect::PARTICLE_ZAMBONI_EXPLOSION2, "particles/ZamboniExplosion2.xml" },
-	{ ParticleEffect::PARTICLE_CATAPULT_EXPLOSION, "particles/CatapultExplosion.xml" },
-	{ ParticleEffect::PARTICLE_MOWER_CLOUD, "particles/MowerCloud.xml" },
-	{ ParticleEffect::PARTICLE_BOSS_ICE_BALL, "particles/BossIceBallTrail.xml" },
-	{ ParticleEffect::PARTICLE_BLASTMARK, "particles/BlastMark.xml" },
-	{ ParticleEffect::PARTICLE_COIN_PICKUP_ARROW, "particles/CoinPickupArrow.xml" },
-	{ ParticleEffect::PARTICLE_PRESENT_PICKUP, "particles/PresentPickup.xml" },
-	{ ParticleEffect::PARTICLE_IMITATER_MORPH, "particles/ImitaterMorph.xml" },
-	{ ParticleEffect::PARTICLE_MOWERED_ZOMBIE_HEAD, "particles/MoweredZombieHead.xml" },
-	{ ParticleEffect::PARTICLE_MOWERED_ZOMBIE_ARM, "particles/MoweredZombieArm.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_HEAD_POOL, "particles/ZombieHeadPool.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_BOSS_FIREBALL, "particles/Zombie_boss_fireball.xml" },
-	{ ParticleEffect::PARTICLE_FIREBALL_DEATH, "particles/FireballDeath.xml" },
-	{ ParticleEffect::PARTICLE_ICEBALL_DEATH, "particles/IceballDeath.xml" },
-	{ ParticleEffect::PARTICLE_ICEBALL_TRAIL, "particles/Iceball_Trail.xml" },
-	{ ParticleEffect::PARTICLE_FIREBALL_TRAIL, "particles/Fireball_Trail.xml" },
-	{ ParticleEffect::PARTICLE_BOSS_EXPLOSION, "particles/BossExplosion.xml" },
-	{ ParticleEffect::PARTICLE_SCREEN_FLASH, "particles/ScreenFlash.xml" },
-	{ ParticleEffect::PARTICLE_TROPHY_SPARKLE, "particles/TrophySparkle.xml" },
-	{ ParticleEffect::PARTICLE_PORTAL_CIRCLE, "particles/PortalCircle.xml" },
-	{ ParticleEffect::PARTICLE_PORTAL_SQUARE, "particles/PortalSquare.xml" },
-	{ ParticleEffect::PARTICLE_POTTED_PLANT_GLOW, "particles/PottedPlantGlow.xml" },
-	{ ParticleEffect::PARTICLE_POTTED_WATER_PLANT_GLOW, "particles/PottedWaterPlantGlow.xml" },
-	{ ParticleEffect::PARTICLE_POTTED_ZEN_GLOW, "particles/PottedZenGlow.xml" },
-	{ ParticleEffect::PARTICLE_MIND_CONTROL, "particles/MindControl.xml" },
-	{ ParticleEffect::PARTICLE_VASE_SHATTER, "particles/VaseShatter.xml" },
-	{ ParticleEffect::PARTICLE_VASE_SHATTER_LEAF, "particles/VaseShatterLeaf.xml" },
-	{ ParticleEffect::PARTICLE_VASE_SHATTER_ZOMBIE, "particles/VaseShatterZombie.xml" },
-	{ ParticleEffect::PARTICLE_AWARD_PICKUP_ARROW, "particles/AwardPickupArrow.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_SEAWEED, "particles/Zombie_seaweed.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_MUSTACHE, "particles/ZombieMustache.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_SUNGLASS, "particles/ZombieFutureGlasses.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_PINATA, "particles/Pinata.xml" },
-	{ ParticleEffect::PARTICLE_DUST_SQUASH, "particles/Dust_Squash.xml" },
-	{ ParticleEffect::PARTICLE_DUST_FOOT, "particles/Dust_Foot.xml" },
-	{ ParticleEffect::PARTICLE_ZOMBIE_DAISIES, "particles/Daisy.xml" },
-	{ ParticleEffect::PARTICLE_CREDIT_STROBE, "particles/Credits_Strobe.xml" },
-	{ ParticleEffect::PARTICLE_CREDITS_RAYSWIPE, "particles/Credits_RaysWipe.xml" },
-	{ ParticleEffect::PARTICLE_CREDITS_ZOMBIEHEADWIPE, "particles/Credits_ZombieHeadWipe.xml" },
-	{ ParticleEffect::PARTICLE_STARBURST, "particles/Starburst.xml" },
-	{ ParticleEffect::PARTICLE_CREDITS_FOG, "particles/Credits_fog.xml" },
-	{ ParticleEffect::PARTICLE_PERSENT_PICK_UP_ARROW, "particles/UpsellArrow.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_CABBAGE, "particles/UmbrellaReflectCabbage.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_KERNEL, "particles/UmbrellaReflectKernel.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_BUTTER, "particles/UmbrellaReflectButter.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_MELON, "particles/UmbrellaReflectMelon.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_WINTERMELON, "particles/UmbrellaReflectWinterMelon.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_CABBAGE2, "particles/UmbrellaReflectCabbage2.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_MELON2, "particles/UmbrellaReflectMelon2.xml" },
-	{ ParticleEffect::PARTICLE_FUMECLOUD2, "particles/FumeCloud2.xml" },
-	{ ParticleEffect::PARTICLE_PUFFSHROOM_MUZZLE2, "particles/PuffShroomMuzzle2.xml" },
-	{ ParticleEffect::PARTICLE_SNOWPEA_PUFF2, "particles/SnowPeaPuff2.xml" },
-	{ ParticleEffect::PARTICLE_UMBRELLA_REFLECT_WINTERMELON2, "particles/UmbrellaReflectWinterMelon2.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_MELONSPLASH, .mParticleFileName = "particles/MelonImpact.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_WINTERMELON, .mParticleFileName = "particles/WinterMelonImpact.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_FUMECLOUD, .mParticleFileName = "particles/FumeCloud.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POPCORNSPLASH, .mParticleFileName = "particles/PopcornSplash.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POWIE, .mParticleFileName = "particles/Powie.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_JACKEXPLODE, .mParticleFileName = "particles/JackExplode.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_HEAD, .mParticleFileName = "particles/ZombieHead.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_ARM, .mParticleFileName = "particles/ZombieArm.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_TRAFFIC_CONE, .mParticleFileName = "particles/ZombieTrafficCone.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_PAIL, .mParticleFileName = "particles/ZombiePail.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_HELMET, .mParticleFileName = "particles/ZombieHelmet.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_HELMET_GIGA, .mParticleFileName = "particles/ZombieHelmetGiga.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_FLAG, .mParticleFileName = "particles/ZombieFlag.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_DOOR, .mParticleFileName = "particles/ZombieDoor.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_NEWSPAPER, .mParticleFileName = "particles/ZombieNewspaper.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_HEADLIGHT, .mParticleFileName = "particles/ZombieHeadLight.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POW, .mParticleFileName = "particles/Pow.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_POGO, .mParticleFileName = "particles/ZombiePogo.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_NEWSPAPER_HEAD, .mParticleFileName = "particles/ZombieNewspaperHead.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_BALLOON_HEAD, .mParticleFileName = "particles/ZombieBalloonHead.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SOD_ROLL, .mParticleFileName = "particles/SodRoll.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_GRAVE_STONE_RISE, .mParticleFileName = "particles/GraveStoneRise.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PLANTING, .mParticleFileName = "particles/Planting.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PLANTING_POOL, .mParticleFileName = "particles/PlantingPool.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_RISE, .mParticleFileName = "particles/ZombieRise.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_GRAVE_BUSTER, .mParticleFileName = "particles/GraveBuster.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_GRAVE_BUSTER_DIE, .mParticleFileName = "particles/GraveBusterDie.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POOL_SPLASH, .mParticleFileName = "particles/PoolSplash.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ICE_SPARKLE, .mParticleFileName = "particles/IceSparkle.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SEED_PACKET, .mParticleFileName = "particles/SeedPacket.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_TALL_NUT_BLOCK, .mParticleFileName = "particles/TallNutBlock.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_DOOM, .mParticleFileName = "particles/Doom.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_DIGGER_RISE, .mParticleFileName = "particles/DiggerRise.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_DIGGER_TUNNEL, .mParticleFileName = "particles/DiggerTunnel.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_DANCER_RISE, .mParticleFileName = "particles/DancerRise.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POOL_SPARKLY, .mParticleFileName = "particles/PoolSparkly.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_WALLNUT_EAT_SMALL, .mParticleFileName = "particles/WallnutEatSmall.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_WALLNUT_EAT_LARGE, .mParticleFileName = "particles/WallnutEatLarge.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PEA_SPLAT, .mParticleFileName = "particles/PeaSplat.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_BUTTER_SPLAT, .mParticleFileName = "particles/ButterSplat.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_CABBAGE_SPLAT, .mParticleFileName = "particles/CabbageSplat.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PUFF_SPLAT, .mParticleFileName = "particles/PuffSplat.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_STAR_SPLAT, .mParticleFileName = "particles/StarSplat.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ICE_TRAP, .mParticleFileName = "particles/IceTrap.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SNOWPEA_SPLAT, .mParticleFileName = "particles/SnowPeaSplat.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SNOWPEA_PUFF, .mParticleFileName = "particles/SnowPeaPuff.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SNOWPEA_TRAIL, .mParticleFileName = "particles/SnowPeaTrail.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_LANTERN_SHINE, .mParticleFileName = "particles/LanternShine.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SEED_PACKET_PICKUP, .mParticleFileName = "particles/Award.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POTATO_MINE, .mParticleFileName = "particles/PotatoMine.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POTATO_MINE_RISE, .mParticleFileName = "particles/PotatoMineRise.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PUFFSHROOM_TRAIL, .mParticleFileName = "particles/PuffShroomTrail.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PUFFSHROOM_MUZZLE, .mParticleFileName = "particles/PuffShroomMuzzle.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SEED_PACKET_FLASH, .mParticleFileName = "particles/SeedPacketFlash.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_WHACK_A_ZOMBIE_RISE, .mParticleFileName = "particles/WhackAZombieRise.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_LADDER, .mParticleFileName = "particles/ZombieLadder.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT, .mParticleFileName = "particles/UmbrellaReflect.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SEED_PACKET_PICK, .mParticleFileName = "particles/SeedPacketPick.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ICE_TRAP_ZOMBIE, .mParticleFileName = "particles/IceTrapZombie.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ICE_TRAP_RELEASE, .mParticleFileName = "particles/IceTrapRelease.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZAMBONI_SMOKE, .mParticleFileName = "particles/ZamboniSmoke.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_GLOOMCLOUD, .mParticleFileName = "particles/GloomCloud.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_POGO_HEAD, .mParticleFileName = "particles/ZombiePogoHead.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZAMBONI_TIRE, .mParticleFileName = "particles/ZamboniTire.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZAMBONI_EXPLOSION, .mParticleFileName = "particles/ZamboniExplosion.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZAMBONI_EXPLOSION2, .mParticleFileName = "particles/ZamboniExplosion2.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_CATAPULT_EXPLOSION, .mParticleFileName = "particles/CatapultExplosion.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_MOWER_CLOUD, .mParticleFileName = "particles/MowerCloud.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_BOSS_ICE_BALL, .mParticleFileName = "particles/BossIceBallTrail.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_BLASTMARK, .mParticleFileName = "particles/BlastMark.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_COIN_PICKUP_ARROW, .mParticleFileName = "particles/CoinPickupArrow.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PRESENT_PICKUP, .mParticleFileName = "particles/PresentPickup.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_IMITATER_MORPH, .mParticleFileName = "particles/ImitaterMorph.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_MOWERED_ZOMBIE_HEAD, .mParticleFileName = "particles/MoweredZombieHead.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_MOWERED_ZOMBIE_ARM, .mParticleFileName = "particles/MoweredZombieArm.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_HEAD_POOL, .mParticleFileName = "particles/ZombieHeadPool.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_BOSS_FIREBALL, .mParticleFileName = "particles/Zombie_boss_fireball.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_FIREBALL_DEATH, .mParticleFileName = "particles/FireballDeath.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ICEBALL_DEATH, .mParticleFileName = "particles/IceballDeath.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ICEBALL_TRAIL, .mParticleFileName = "particles/Iceball_Trail.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_FIREBALL_TRAIL, .mParticleFileName = "particles/Fireball_Trail.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_BOSS_EXPLOSION, .mParticleFileName = "particles/BossExplosion.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SCREEN_FLASH, .mParticleFileName = "particles/ScreenFlash.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_TROPHY_SPARKLE, .mParticleFileName = "particles/TrophySparkle.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PORTAL_CIRCLE, .mParticleFileName = "particles/PortalCircle.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PORTAL_SQUARE, .mParticleFileName = "particles/PortalSquare.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POTTED_PLANT_GLOW, .mParticleFileName = "particles/PottedPlantGlow.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POTTED_WATER_PLANT_GLOW, .mParticleFileName = "particles/PottedWaterPlantGlow.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_POTTED_ZEN_GLOW, .mParticleFileName = "particles/PottedZenGlow.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_MIND_CONTROL, .mParticleFileName = "particles/MindControl.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_VASE_SHATTER, .mParticleFileName = "particles/VaseShatter.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_VASE_SHATTER_LEAF, .mParticleFileName = "particles/VaseShatterLeaf.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_VASE_SHATTER_ZOMBIE, .mParticleFileName = "particles/VaseShatterZombie.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_AWARD_PICKUP_ARROW, .mParticleFileName = "particles/AwardPickupArrow.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_SEAWEED, .mParticleFileName = "particles/Zombie_seaweed.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_MUSTACHE, .mParticleFileName = "particles/ZombieMustache.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_SUNGLASS, .mParticleFileName = "particles/ZombieFutureGlasses.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_PINATA, .mParticleFileName = "particles/Pinata.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_DUST_SQUASH, .mParticleFileName = "particles/Dust_Squash.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_DUST_FOOT, .mParticleFileName = "particles/Dust_Foot.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_ZOMBIE_DAISIES, .mParticleFileName = "particles/Daisy.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_CREDIT_STROBE, .mParticleFileName = "particles/Credits_Strobe.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_CREDITS_RAYSWIPE, .mParticleFileName = "particles/Credits_RaysWipe.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_CREDITS_ZOMBIEHEADWIPE, .mParticleFileName = "particles/Credits_ZombieHeadWipe.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_STARBURST, .mParticleFileName = "particles/Starburst.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_CREDITS_FOG, .mParticleFileName = "particles/Credits_fog.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PERSENT_PICK_UP_ARROW, .mParticleFileName = "particles/UpsellArrow.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT_CABBAGE, .mParticleFileName = "particles/UmbrellaReflectCabbage.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT_KERNEL, .mParticleFileName = "particles/UmbrellaReflectKernel.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT_BUTTER, .mParticleFileName = "particles/UmbrellaReflectButter.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT_MELON, .mParticleFileName = "particles/UmbrellaReflectMelon.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT_WINTERMELON, .mParticleFileName = "particles/UmbrellaReflectWinterMelon.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT_CABBAGE2, .mParticleFileName = "particles/UmbrellaReflectCabbage2.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT_MELON2, .mParticleFileName = "particles/UmbrellaReflectMelon2.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_FUMECLOUD2, .mParticleFileName = "particles/FumeCloud2.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_PUFFSHROOM_MUZZLE2, .mParticleFileName = "particles/PuffShroomMuzzle2.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_SNOWPEA_PUFF2, .mParticleFileName = "particles/SnowPeaPuff2.xml" },
+	{ .mParticleEffect = ParticleEffect::PARTICLE_UMBRELLA_REFLECT_WINTERMELON2, .mParticleFileName = "particles/UmbrellaReflectWinterMelon2.xml" },
 };  // 0x6A0FF0
 
 // (ecx = *theParticleFileName, *theParticleDef)  //esp -= 4
@@ -213,7 +213,7 @@ bool TodParticleLoadADef(TodParticleDefinition* theParticleDef, const char* theP
 	}
 }
 
-void TodParticleLoadDefinitions(ParticleParams* theParticleParamArray, int theParticleParamArraySize)
+void TodParticleLoadDefinitions(const ParticleParams* theParticleParamArray, int theParticleParamArraySize)
 {
 	TodHesitationBracket aHesitiation("TodParticleLoadDefinitions");
 	TOD_ASSERT(!gParticleParamArray && !gParticleDefArray);
@@ -226,7 +226,7 @@ void TodParticleLoadDefinitions(ParticleParams* theParticleParamArray, int thePa
 
 	for (int i = 0; i < gParticleParamArraySize; i++)
 	{
-		ParticleParams& aParticleParams = gParticleParamArray[i];
+		const ParticleParams& aParticleParams = gParticleParamArray[i];
 		TOD_ASSERT(aParticleParams.mParticleEffect == i);
 		if (!TodParticleLoadADef(&gParticleDefArray[i], aParticleParams.mParticleFileName))
 		{
@@ -714,11 +714,13 @@ void TodParticleEmitter::UpdateSpawning()
 
 void TodParticleEmitter::DeleteNonCrossFading()
 {
-	for (TodListNode<ParticleID>* aNode = mParticleList.mHead; aNode != nullptr; aNode = aNode->mNext)
+	for (TodListNode<ParticleID>* aNode = mParticleList.mHead; aNode != nullptr; )
 	{
+		TodListNode<ParticleID>* aNext = aNode->mNext;
 		TodParticle* aParticle = mParticleSystem->mParticleHolder->mParticles.DataArrayGet(static_cast<unsigned int>(aNode->mValue));
 		if (aParticle->mCrossFadeDuration <= 0)  // 当粒子不处于交叉混合状态，则删除该粒子
 			DeleteParticle(aParticle);
+		aNode = aNext;
 	}
 }
 
@@ -829,11 +831,13 @@ void TodParticleEmitter::Update()
 	mSystemTimeValue = mSystemAge / static_cast<float>(mSystemDuration - 1);
 	for (int i = 0; i < mEmitterDef->mSystemFields.count; i++)
 		UpdateSystemField(&mEmitterDef->mSystemFields.Fields[i], mSystemTimeValue, i);  // 更新发射器受到每个系统场的作用
-	for (TodListNode<ParticleID>* aNode = mParticleList.mHead; aNode != nullptr; aNode = aNode->mNext)
+	for (TodListNode<ParticleID>* aNode = mParticleList.mHead; aNode != nullptr; )
 	{
+		TodListNode<ParticleID>* aNext = aNode->mNext;
 		TodParticle* aParticle = mParticleSystem->mParticleHolder->mParticles.DataArrayGet(static_cast<unsigned int>(aNode->mValue));
 		if (!UpdateParticle(aParticle))  // 更新发射器中的每个粒子
 			DeleteParticle(aParticle);
+		aNode = aNext;
 	}
 	UpdateSpawning();  // 更新粒子发射
 

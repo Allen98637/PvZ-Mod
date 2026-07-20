@@ -52,8 +52,7 @@ public:
     LawnApp*                mApp;
 
 public:
-    //ReanimatorCache() { ReanimatorCacheInitialize(); }
-    //~ReanimatorCache() { ReanimatorCacheDispose(); }
+    ~ReanimatorCache();
 
     void                    ReanimatorCacheInitialize();
     void                    ReanimatorCacheDispose();

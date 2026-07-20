@@ -269,17 +269,17 @@ void GameButton::Update()
 	}
 }
 
-void GameButton::SetLabel(const std::string& theLabel)
+void GameButton::SetLabel(std::string_view theLabel)
 {
 	mLabel = TodStringTranslate(theLabel);
 }
 
-void NewLawnButton::SetLabel(const std::string& theLabel)
+void NewLawnButton::SetLabel(std::string_view theLabel)
 {
 	mLabel = TodStringTranslate(theLabel);
 }
 
-void LawnStoneButton::SetLabel(const std::string& theLabel)
+void LawnStoneButton::SetLabel(std::string_view theLabel)
 {
 	mLabel = TodStringTranslate(theLabel);
 }
@@ -293,7 +293,7 @@ void LawnStoneButton::Draw(Graphics* g)
 	DrawStoneButton(g, 0, 0, mWidth, mHeight, isDown, mIsOver, mLabel);
 }
 
-LawnStoneButton* MakeButton(int theId, ButtonListener* theListener, const std::string& theText)
+LawnStoneButton* MakeButton(int theId, ButtonListener* theListener, std::string_view theText)
 {
 	LawnStoneButton* aButton = new LawnStoneButton(nullptr, theId, theListener);
 	aButton->SetLabel(theText);
@@ -402,7 +402,7 @@ bool NewLawnButton::IsPointVisible(int x, int y)
 }
 
 // GOTY @Patoke: 0x44B810
-NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, const std::string& theText, _Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown)
+NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, std::string_view theText, _Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown)
 {
 	NewLawnButton* aButton = new NewLawnButton(nullptr, theId, theListener);
 	aButton->SetFont(theFont == nullptr ? Sexy::FONT_BRIANNETOD12 : theFont);

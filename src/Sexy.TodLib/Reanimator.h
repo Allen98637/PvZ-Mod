@@ -109,17 +109,17 @@ public:
     int32_t                         mReanimParamFlags;
 };
 extern unsigned int gReanimationParamArraySize;
-extern ReanimationParams* gReanimationParamArray;
+extern const ReanimationParams* gReanimationParamArray;
 
 inline void                         ReanimationFillInMissingData(float& thePrev, float& theValue);
 inline void                         ReanimationFillInMissingData(void*& thePrev, void*& theValue);
 bool                                ReanimationLoadDefinition(const std::string& theFileName, ReanimatorDefinition* theDefinition);
 void                                ReanimationFreeDefinition(ReanimatorDefinition* theDefinition);
 void                                ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading);
-void                                ReanimatorLoadDefinitions(ReanimationParams* theReanimationParamArray, int theReanimationParamArraySize);
+void                                ReanimatorLoadDefinitions(const ReanimationParams* theReanimationParamArray, int theReanimationParamArraySize);
 void                                ReanimatorFreeDefinitions();
 
-extern ReanimationParams gLawnReanimationArray[static_cast<int>(ReanimationType::NUM_REANIMS)];
+extern const ReanimationParams gLawnReanimationArray[static_cast<int>(ReanimationType::NUM_REANIMS)];
 
 // ######################################################################################################################################################
 // ############################################################## 以下正式开始动画相关声明 ##############################################################

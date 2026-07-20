@@ -227,7 +227,7 @@ static GLuint shaderCompile(const char *src, uint32_t srcLen, GLenum type)
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLen);
 		char *log = (char*)malloc(logLen);
 		glGetShaderInfoLog(shader, logLen, &logLen, log);
-		printf("Shader error: %s\n%s%s%s\n", log, strings[0], strings[1], strings[2]);
+		Sexy::PrintF("Shader error: %s\n%s%s%s\n", log, strings[0], strings[1], strings[2]);
 		fflush(stdout);
 		free(log);
 		glDeleteShader(shader);
@@ -279,7 +279,8 @@ static void MakeOrthoMatrix(float l, float r, float b, float t, float n, float f
 static void CopyImageToTexture8888(MemoryImage *img, int offx, int offy,
 	int w, int h, int pitch, int dstH, bool padR, bool padB, bool create)
 {
-	uint32_t *dst = new uint32_t[pitch * dstH];
+	std::vector<uint32_t> aDst(pitch * dstH);
+	uint32_t *dst = aDst.data();
 
 	if (img->mColorTable == nullptr)
 	{
@@ -322,13 +323,13 @@ static void CopyImageToTexture8888(MemoryImage *img, int offx, int offy,
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pitch, dstH, 0, GL_RGBA, GL_UNSIGNED_BYTE, dst);
 	else
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pitch, dstH, GL_RGBA, GL_UNSIGNED_BYTE, dst);
-	delete[] dst;
 }
 
 static void CopyImageToTexture4444(MemoryImage *img, int offx, int offy,
 	int w, int h, int pitch, int dstH, bool padR, bool padB, bool create)
 {
-	uint16_t *dst = new uint16_t[pitch * dstH];
+	std::vector<uint16_t> aDst(pitch * dstH);
+	uint16_t *dst = aDst.data();
 
 	auto argbTo4444 = [](uint32_t p) -> uint16_t {
 		return static_cast<uint16_t>(
@@ -377,13 +378,13 @@ static void CopyImageToTexture4444(MemoryImage *img, int offx, int offy,
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pitch, dstH, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, dst);
 	else
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pitch, dstH, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, dst);
-	delete[] dst;
 }
 
 static void CopyImageToTexture565(MemoryImage *img, int offx, int offy,
 	int w, int h, int pitch, int dstH, bool padR, bool padB, bool create)
 {
-	uint16_t *dst = new uint16_t[pitch * dstH];
+	std::vector<uint16_t> aDst(pitch * dstH);
+	uint16_t *dst = aDst.data();
 
 	auto argbTo565 = [](uint32_t p) -> uint16_t {
 		return static_cast<uint16_t>(
@@ -431,13 +432,13 @@ static void CopyImageToTexture565(MemoryImage *img, int offx, int offy,
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pitch, dstH, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, dst);
 	else
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pitch, dstH, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, dst);
-	delete[] dst;
 }
 
 static void CopyImageToTexturePalette8(MemoryImage *img, int offx, int offy,
 	int w, int h, int pitch, int dstH, bool padR, bool padB, bool create)
 {
-	uint32_t *dst = new uint32_t[pitch * dstH];
+	std::vector<uint32_t> aDst(pitch * dstH);
+	uint32_t *dst = aDst.data();
 	uint8_t  *srcRow = (uint8_t*)img->mColorIndices + offy * img->GetWidth() + offx;
 	uint32_t *dstRow = dst;
 	uint32_t *pal = (uint32_t*)img->mColorTable;
@@ -463,7 +464,6 @@ static void CopyImageToTexturePalette8(MemoryImage *img, int offx, int offy,
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pitch, dstH, 0, GL_RGBA, GL_UNSIGNED_BYTE, dst);
 	else
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pitch, dstH, GL_RGBA, GL_UNSIGNED_BYTE, dst);
-	delete[] dst;
 }
 
 static void CopyImageToTexture(MemoryImage *img, int offx, int offy,

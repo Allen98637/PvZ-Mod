@@ -182,6 +182,7 @@ static KeyCode SDLKeyToKeyCode(SDL_Keycode theSDLKey)
 		case SDLK_TAB:          return KEYCODE_TAB;
 		case SDLK_CLEAR:        return KEYCODE_CLEAR;
 		case SDLK_RETURN:       return KEYCODE_RETURN;
+		case SDLK_AC_BACK:
 		case SDLK_ESCAPE:       return KEYCODE_ESCAPE;
 		case SDLK_SPACE:        return KEYCODE_SPACE;
 		case SDLK_DELETE:       return KEYCODE_DELETE;
@@ -482,6 +483,16 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 			case SDL_KEYDOWN:
 			{
 				mLastUserInputTick = mLastTimerTime;
+
+				if (mAllowAltEnter &&
+					event.key.repeat == 0 &&
+					(event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER) &&
+					(event.key.keysym.mod & KMOD_ALT))
+				{
+					SwitchScreenMode(!mIsWindowed);
+					break;
+				}
+
 				mWidgetManager->KeyDown(SDLKeyToKeyCode(event.key.keysym.sym));
 
 				char aSynthesizedChar = 0;

@@ -90,6 +90,7 @@ public:
 public:
 	Image();
 	Image(const Image& theImage);
+	Image& operator=(const Image& theImage) = delete;
 	virtual ~Image();
 
 	int						GetWidth();

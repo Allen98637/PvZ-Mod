@@ -36,98 +36,98 @@
 #include <SDL.h>
 
 ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
-	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1,              0,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  0,  "[SURVIVAL_DAY_NORMAL]" },
-	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_2,              1,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  1,  "[SURVIVAL_NIGHT_NORMAL]" },
-	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_3,              2,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  2,  "[SURVIVAL_POOL_NORMAL]" },
-	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_4,              3,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  3,  "[SURVIVAL_FOG_NORMAL]" },
-	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_5,              4,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  4,  "[SURVIVAL_ROOF_NORMAL]" },
-	{ GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_1,                5,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    1,  0,  "[SURVIVAL_DAY_HARD]" },
-	{ GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_2,                6,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    1,  1,  "[SURVIVAL_NIGHT_HARD]" },
-	{ GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_3,                7,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    1,  2,  "[SURVIVAL_POOL_HARD]" },
-	{ GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_4,                8,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    1,  3,  "[SURVIVAL_FOG_HARD]" },
-	{ GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_5,                9,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    1,  4,  "[SURVIVAL_ROOF_HARD]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  0,  "[SURVIVAL_DAY_ENDLESS]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_2,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  1,  "[SURVIVAL_NIGHT_ENDLESS]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  2,  "[SURVIVAL_POOL_ENDLESS]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_4,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  3,  "[SURVIVAL_FOG_ENDLESS]" },
-	{ GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL,    2,  4,  "[SURVIVAL_ROOF_ENDLESS]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS,               0,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   0,  0,  "[WAR_AND_PEAS]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING,            6,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   0,  1,  "[WALL_NUT_BOWLING]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SLOT_MACHINE,               2,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   0,  2,  "[SLOT_MACHINE]" },
-	{ GameMode::GAMEMODE_CHALLENGE_RAINING_SEEDS,              3,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   0,  3,  "[ITS_RAINING_SEEDS]" },
-	{ GameMode::GAMEMODE_CHALLENGE_BEGHOULED,                  1,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   0,  4,  "[BEGHOULED]" },
-	{ GameMode::GAMEMODE_CHALLENGE_INVISIGHOUL,                8,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   1,  0,  "[INVISIGHOUL]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SEEING_STARS,               5,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   1,  1,  "[SEEING_STARS]" },
-	{ GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM,               7,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   1,  2,  "[ZOMBIQUARIUM]" },
-	{ GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST,            20,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   1,  3,  "[BEGHOULED_TWIST]" },
-	{ GameMode::GAMEMODE_CHALLENGE_LITTLE_TROUBLE,             12,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   1,  4,  "[LITTLE_TROUBLE]" },
-	{ GameMode::GAMEMODE_CHALLENGE_PORTAL_COMBAT,              15,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   2,  0,  "[PORTAL_COMBAT]" },
-	{ GameMode::GAMEMODE_CHALLENGE_COLUMN,                     4,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   2,  1,  "[COLUMN_AS_YOU_SEE_EM]" },
-	{ GameMode::GAMEMODE_CHALLENGE_BOBSLED_BONANZA,            17,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   2,  2,  "[BOBSLED_BONANZA]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SPEED,                      18,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   2,  3,  "[ZOMBIES_ON_SPEED]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE,             16,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   2,  4,  "[WHACK_A_ZOMBIE]" },
-	{ GameMode::GAMEMODE_CHALLENGE_LAST_STAND,                 21,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   3,  0,  "[LAST_STAND]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2,             0,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   3,  1,  "[WAR_AND_PEAS_2]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2,          6,   ChallengePage::CHALLENGE_PAGE_CHALLENGE,   3,  2,  "[WALL_NUT_BOWLING_EXTREME]" },
-	{ GameMode::GAMEMODE_CHALLENGE_POGO_PARTY,                 14,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   3,  3,  "[POGO_PARTY]" },
-	{ GameMode::GAMEMODE_CHALLENGE_FINAL_BOSS,                 19,  ChallengePage::CHALLENGE_PAGE_CHALLENGE,   3,  4,  "[FINAL_BOSS]" },
-	{ GameMode::GAMEMODE_CHALLENGE_ART_CHALLENGE_WALLNUT,      0,   ChallengePage::CHALLENGE_PAGE_LIMBO,       0,  0,  "[ART_CHALLENGE_WALL_NUT]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SUNNY_DAY,                  1,   ChallengePage::CHALLENGE_PAGE_LIMBO,       0,  1,  "[SUNNY_DAY]" },
-	{ GameMode::GAMEMODE_CHALLENGE_RESODDED,                   2,   ChallengePage::CHALLENGE_PAGE_LIMBO,       0,  2,  "[UNSODDED]" },
-	{ GameMode::GAMEMODE_CHALLENGE_BIG_TIME,                   3,   ChallengePage::CHALLENGE_PAGE_LIMBO,       0,  3,  "[BIG_TIME]" },
-	{ GameMode::GAMEMODE_CHALLENGE_ART_CHALLENGE_SUNFLOWER,    4,   ChallengePage::CHALLENGE_PAGE_LIMBO,       0,  4,  "[ART_CHALLENGE_SUNFLOWER]" },
-	{ GameMode::GAMEMODE_CHALLENGE_AIR_RAID,                   5,   ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  0,  "[AIR_RAID]" },
-	{ GameMode::GAMEMODE_CHALLENGE_ICE,                        6,   ChallengePage::CHALLENGE_PAGE_NONE,        1,  1,  "[ICE_LEVEL]" },
-	{ GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN,                 7,   ChallengePage::CHALLENGE_PAGE_NONE,        1,  2,  "[ZEN_GARDEN]" },
-	{ GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY,               8,   ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  1,  "[HIGH_GRAVITY]" },
-	{ GameMode::GAMEMODE_CHALLENGE_GRAVE_DANGER,               11,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  2,  "[GRAVE_DANGER]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SHOVEL,                     10,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  3,  "[CAN_YOU_DIG_IT]" },
-	{ GameMode::GAMEMODE_CHALLENGE_STORMY_NIGHT,               13,  ChallengePage::CHALLENGE_PAGE_LIMBO,       1,  4,  "[DARK_STORMY_NIGHT]" },
-	{ GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ,               9,   ChallengePage::CHALLENGE_PAGE_LIMBO,       2,  0,  "[BUNGEE_BLITZ]" },
-	{ GameMode::GAMEMODE_CHALLENGE_SQUIRREL,                   10,  ChallengePage::CHALLENGE_PAGE_NONE,        2,  1,  "Squirrel" },
-	{ GameMode::GAMEMODE_TREE_OF_WISDOM,                       10,  ChallengePage::CHALLENGE_PAGE_NONE,        2,  4,  "Tree of Wisdom" }, // @Patoke: replaced for english
-	{ GameMode::GAMEMODE_SCARY_POTTER_1,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  0,  "[SCARY_POTTER_1]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_2,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  1,  "[SCARY_POTTER_2]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_3,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  2,  "[SCARY_POTTER_3]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_4,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  3,  "[SCARY_POTTER_4]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_5,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      0,  4,  "[SCARY_POTTER_5]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_6,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      1,  0,  "[SCARY_POTTER_6]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_7,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      1,  1,  "[SCARY_POTTER_7]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_8,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      1,  2,  "[SCARY_POTTER_8]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_9,                       10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      1,  3,  "[SCARY_POTTER_9]" },
-	{ GameMode::GAMEMODE_SCARY_POTTER_ENDLESS,                 10,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      1,  4,  "[SCARY_POTTER_ENDLESS]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_1,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      2,  0,  "[I_ZOMBIE_1]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_2,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      2,  1,  "[I_ZOMBIE_2]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_3,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      2,  2,  "[I_ZOMBIE_3]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_4,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      2,  3,  "[I_ZOMBIE_4]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_5,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      2,  4,  "[I_ZOMBIE_5]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_6,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  0,  "[I_ZOMBIE_6]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_7,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  1,  "[I_ZOMBIE_7]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_8,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  2,  "[I_ZOMBIE_8]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_9,                    11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  3,  "[I_ZOMBIE_9]" },
-	{ GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS,              11,  ChallengePage::CHALLENGE_PAGE_PUZZLE,      3,  4,  "[I_ZOMBIE_ENDLESS]" },
-	{ GameMode::GAMEMODE_UPSELL,                               10,  ChallengePage::CHALLENGE_PAGE_NONE,        3,  2,  "Upsell" },
-	{ GameMode::GAMEMODE_INTRO,                                10,  ChallengePage::CHALLENGE_PAGE_NONE,       2,  3,  "Intro" },
-	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3,          6,   ChallengePage::CHALLENGE_PAGE_LIMBO,   	   2,  1,  "[WALL_NUT_BOWLING_EXTREME]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2,           16,  ChallengePage::CHALLENGE_PAGE_LIMBO,   	   2,  2,  "[WHACK_A_ZOMBIE_EXTREME]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_1,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  0,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_2,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  1,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_3,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  2,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_4,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  3,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_5,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    0,  4,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_6,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  0,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_7,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  1,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_8,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  2,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_9,             10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  3,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_10,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    1,  4,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_11,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  0,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_12,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  1,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_13,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  2,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_14,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  3,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_15,            10,  ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,    2,  4,  "[SURVIVAL_CUSTOM]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  3,  "[WAR_AND_PEAS_3]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4,             0,   ChallengePage::CHALLENGE_PAGE_LIMBO,   2,  4,  "[WAR_AND_PEAS_4]" },
-	{ GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4,          6,   ChallengePage::CHALLENGE_PAGE_LIMBO,   	   3,  0,  "[WALL_NUT_BOWLING_BOSS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1,             .mChallengeIconIndex = 0,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 0,  .mCol = 0,  .mChallengeName = "[SURVIVAL_DAY_NORMAL]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_2,             .mChallengeIconIndex = 1,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 0,  .mCol = 1,  .mChallengeName = "[SURVIVAL_NIGHT_NORMAL]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_3,             .mChallengeIconIndex = 2,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 0,  .mCol = 2,  .mChallengeName = "[SURVIVAL_POOL_NORMAL]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_4,             .mChallengeIconIndex = 3,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 0,  .mCol = 3,  .mChallengeName = "[SURVIVAL_FOG_NORMAL]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_5,             .mChallengeIconIndex = 4,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 0,  .mCol = 4,  .mChallengeName = "[SURVIVAL_ROOF_NORMAL]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_1,               .mChallengeIconIndex = 5,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 1,  .mCol = 0,  .mChallengeName = "[SURVIVAL_DAY_HARD]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_2,               .mChallengeIconIndex = 6,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 1,  .mCol = 1,  .mChallengeName = "[SURVIVAL_NIGHT_HARD]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_3,               .mChallengeIconIndex = 7,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 1,  .mCol = 2,  .mChallengeName = "[SURVIVAL_POOL_HARD]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_4,               .mChallengeIconIndex = 8,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 1,  .mCol = 3,  .mChallengeName = "[SURVIVAL_FOG_HARD]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_5,               .mChallengeIconIndex = 9,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 1,  .mCol = 4,  .mChallengeName = "[SURVIVAL_ROOF_HARD]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 2,  .mCol = 0,  .mChallengeName = "[SURVIVAL_DAY_ENDLESS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_2,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 2,  .mCol = 1,  .mChallengeName = "[SURVIVAL_NIGHT_ENDLESS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 2,  .mCol = 2,  .mChallengeName = "[SURVIVAL_POOL_ENDLESS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_4,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 2,  .mCol = 3,  .mChallengeName = "[SURVIVAL_FOG_ENDLESS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 2,  .mCol = 4,  .mChallengeName = "[SURVIVAL_ROOF_ENDLESS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS,              .mChallengeIconIndex = 0,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 0,  .mCol = 0,  .mChallengeName = "[WAR_AND_PEAS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING,           .mChallengeIconIndex = 6,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 0,  .mCol = 1,  .mChallengeName = "[WALL_NUT_BOWLING]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SLOT_MACHINE,              .mChallengeIconIndex = 2,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 0,  .mCol = 2,  .mChallengeName = "[SLOT_MACHINE]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_RAINING_SEEDS,             .mChallengeIconIndex = 3,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 0,  .mCol = 3,  .mChallengeName = "[ITS_RAINING_SEEDS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_BEGHOULED,                 .mChallengeIconIndex = 1,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 0,  .mCol = 4,  .mChallengeName = "[BEGHOULED]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_INVISIGHOUL,               .mChallengeIconIndex = 8,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 1,  .mCol = 0,  .mChallengeName = "[INVISIGHOUL]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SEEING_STARS,              .mChallengeIconIndex = 5,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 1,  .mCol = 1,  .mChallengeName = "[SEEING_STARS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM,              .mChallengeIconIndex = 7,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 1,  .mCol = 2,  .mChallengeName = "[ZOMBIQUARIUM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST,           .mChallengeIconIndex = 20,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 1,  .mCol = 3,  .mChallengeName = "[BEGHOULED_TWIST]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_LITTLE_TROUBLE,            .mChallengeIconIndex = 12,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 1,  .mCol = 4,  .mChallengeName = "[LITTLE_TROUBLE]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_PORTAL_COMBAT,             .mChallengeIconIndex = 15,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 2,  .mCol = 0,  .mChallengeName = "[PORTAL_COMBAT]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_COLUMN,                    .mChallengeIconIndex = 4,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 2,  .mCol = 1,  .mChallengeName = "[COLUMN_AS_YOU_SEE_EM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_BOBSLED_BONANZA,           .mChallengeIconIndex = 17,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 2,  .mCol = 2,  .mChallengeName = "[BOBSLED_BONANZA]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SPEED,                     .mChallengeIconIndex = 18,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 2,  .mCol = 3,  .mChallengeName = "[ZOMBIES_ON_SPEED]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE,            .mChallengeIconIndex = 16,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 2,  .mCol = 4,  .mChallengeName = "[WHACK_A_ZOMBIE]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_LAST_STAND,                .mChallengeIconIndex = 21,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 3,  .mCol = 0,  .mChallengeName = "[LAST_STAND]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2,            .mChallengeIconIndex = 0,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 3,  .mCol = 1,  .mChallengeName = "[WAR_AND_PEAS_2]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2,         .mChallengeIconIndex = 6,   .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 3,  .mCol = 2,  .mChallengeName = "[WALL_NUT_BOWLING_EXTREME]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_POGO_PARTY,                .mChallengeIconIndex = 14,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 3,  .mCol = 3,  .mChallengeName = "[POGO_PARTY]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_FINAL_BOSS,                .mChallengeIconIndex = 19,  .mPage = ChallengePage::CHALLENGE_PAGE_CHALLENGE,   .mRow = 3,  .mCol = 4,  .mChallengeName = "[FINAL_BOSS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_ART_CHALLENGE_WALLNUT,     .mChallengeIconIndex = 0,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 0,  .mCol = 0,  .mChallengeName = "[ART_CHALLENGE_WALL_NUT]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SUNNY_DAY,                 .mChallengeIconIndex = 1,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 0,  .mCol = 1,  .mChallengeName = "[SUNNY_DAY]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_RESODDED,                  .mChallengeIconIndex = 2,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 0,  .mCol = 2,  .mChallengeName = "[UNSODDED]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_BIG_TIME,                  .mChallengeIconIndex = 3,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 0,  .mCol = 3,  .mChallengeName = "[BIG_TIME]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_ART_CHALLENGE_SUNFLOWER,   .mChallengeIconIndex = 4,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 0,  .mCol = 4,  .mChallengeName = "[ART_CHALLENGE_SUNFLOWER]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_AIR_RAID,                  .mChallengeIconIndex = 5,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 1,  .mCol = 0,  .mChallengeName = "[AIR_RAID]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_ICE,                       .mChallengeIconIndex = 6,   .mPage = ChallengePage::CHALLENGE_PAGE_NONE,        .mRow = 1,  .mCol = 1,  .mChallengeName = "[ICE_LEVEL]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN,                .mChallengeIconIndex = 7,   .mPage = ChallengePage::CHALLENGE_PAGE_NONE,        .mRow = 1,  .mCol = 2,  .mChallengeName = "[ZEN_GARDEN]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY,              .mChallengeIconIndex = 8,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 1,  .mCol = 1,  .mChallengeName = "[HIGH_GRAVITY]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_GRAVE_DANGER,              .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 1,  .mCol = 2,  .mChallengeName = "[GRAVE_DANGER]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SHOVEL,                    .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 1,  .mCol = 3,  .mChallengeName = "[CAN_YOU_DIG_IT]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_STORMY_NIGHT,              .mChallengeIconIndex = 13,  .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 1,  .mCol = 4,  .mChallengeName = "[DARK_STORMY_NIGHT]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ,              .mChallengeIconIndex = 9,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 2,  .mCol = 0,  .mChallengeName = "[BUNGEE_BLITZ]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SQUIRREL,                  .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_NONE,        .mRow = 2,  .mCol = 1,  .mChallengeName = "Squirrel" },
+	{ .mChallengeMode = GameMode::GAMEMODE_TREE_OF_WISDOM,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_NONE,        .mRow = 2,  .mCol = 4,  .mChallengeName = "Tree of Wisdom" }, // @Patoke: replaced for english
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_1,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 0,  .mCol = 0,  .mChallengeName = "[SCARY_POTTER_1]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_2,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 0,  .mCol = 1,  .mChallengeName = "[SCARY_POTTER_2]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_3,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 0,  .mCol = 2,  .mChallengeName = "[SCARY_POTTER_3]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_4,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 0,  .mCol = 3,  .mChallengeName = "[SCARY_POTTER_4]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_5,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 0,  .mCol = 4,  .mChallengeName = "[SCARY_POTTER_5]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_6,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 1,  .mCol = 0,  .mChallengeName = "[SCARY_POTTER_6]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_7,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 1,  .mCol = 1,  .mChallengeName = "[SCARY_POTTER_7]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_8,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 1,  .mCol = 2,  .mChallengeName = "[SCARY_POTTER_8]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_9,                      .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 1,  .mCol = 3,  .mChallengeName = "[SCARY_POTTER_9]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SCARY_POTTER_ENDLESS,                .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 1,  .mCol = 4,  .mChallengeName = "[SCARY_POTTER_ENDLESS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_1,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 2,  .mCol = 0,  .mChallengeName = "[I_ZOMBIE_1]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_2,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 2,  .mCol = 1,  .mChallengeName = "[I_ZOMBIE_2]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_3,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 2,  .mCol = 2,  .mChallengeName = "[I_ZOMBIE_3]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_4,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 2,  .mCol = 3,  .mChallengeName = "[I_ZOMBIE_4]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_5,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 2,  .mCol = 4,  .mChallengeName = "[I_ZOMBIE_5]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_6,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 3,  .mCol = 0,  .mChallengeName = "[I_ZOMBIE_6]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_7,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 3,  .mCol = 1,  .mChallengeName = "[I_ZOMBIE_7]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_8,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 3,  .mCol = 2,  .mChallengeName = "[I_ZOMBIE_8]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_9,                   .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 3,  .mCol = 3,  .mChallengeName = "[I_ZOMBIE_9]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS,             .mChallengeIconIndex = 11,  .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE,      .mRow = 3,  .mCol = 4,  .mChallengeName = "[I_ZOMBIE_ENDLESS]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_UPSELL,                              .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_NONE,        .mRow = 3,  .mCol = 2,  .mChallengeName = "Upsell" },
+	{ .mChallengeMode = GameMode::GAMEMODE_INTRO,                               .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_NONE,        .mRow = 2,  .mCol = 3,  .mChallengeName = "Intro" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_3,         .mChallengeIconIndex = 6,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,   	.mRow = 2,  .mCol = 1,  .mChallengeName = "[WALL_NUT_BOWLING_EXTREME]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE_2,          .mChallengeIconIndex = 16,  .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,   	.mRow = 2,  .mCol = 2,  .mChallengeName = "[WHACK_A_ZOMBIE_EXTREME]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_1,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 0,  .mCol = 0,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_2,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 0,  .mCol = 1,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_3,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 0,  .mCol = 2,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_4,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 0,  .mCol = 3,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_5,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 0,  .mCol = 4,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_6,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 1,  .mCol = 0,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_7,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 1,  .mCol = 1,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_8,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 1,  .mCol = 2,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_9,             .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 1,  .mCol = 3,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_10,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 1,  .mCol = 4,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_11,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 2,  .mCol = 0,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_12,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 2,  .mCol = 1,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_13,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 2,  .mCol = 2,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_14,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 2,  .mCol = 3,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_CUSTOM_STAGE_15,            .mChallengeIconIndex = 10,  .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL_2,  .mRow = 2,  .mCol = 4,  .mChallengeName = "[SURVIVAL_CUSTOM]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_3,            .mChallengeIconIndex = 0,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 2,  .mCol = 3,  .mChallengeName = "[WAR_AND_PEAS_3]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_4,            .mChallengeIconIndex = 0,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,       .mRow = 2,  .mCol = 4,  .mChallengeName = "[WAR_AND_PEAS_4]" },
+	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_4,         .mChallengeIconIndex = 6,   .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO,   	.mRow = 3,  .mCol = 0,  .mChallengeName = "[WALL_NUT_BOWLING_BOSS]" },
 };
 
 // GOTY @Patoke: 0x430810
@@ -187,7 +187,7 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	
 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
 	{
-		ChallengeDefinition& aChlDef = GetChallengeDefinition(aChallengeMode);
+		const ChallengeDefinition& aChlDef = GetChallengeDefinition(aChallengeMode);
 		ButtonWidget* aChallengeButton = new ButtonWidget(ChallengeScreen::ChallengeScreen_Mode + aChallengeMode, this);
 		mChallengeButtons[aChallengeMode] = aChallengeButton;
 		aChallengeButton->mDoFinger = true;
@@ -248,11 +248,11 @@ ChallengeScreen::~ChallengeScreen()
 	delete mToolTip;
 }
 
-ChallengeDefinition& GetChallengeDefinition(int theChallengeMode)
+const ChallengeDefinition& GetChallengeDefinition(int theChallengeMode)
 {
 	TOD_ASSERT(theChallengeMode >= 0 && theChallengeMode < NUM_CHALLENGE_MODES);
 
-	ChallengeDefinition& aDef = gChallengeDefs[theChallengeMode];
+	const ChallengeDefinition& aDef = gChallengeDefs[theChallengeMode];
 	(void)aDef; // Unused in Release mode
 	//TOD_ASSERT(aDef.mChallengeMode == theChallengeMode + GAMEMODE_SURVIVAL_NORMAL_STAGE_1);
 
@@ -276,7 +276,7 @@ void ChallengeScreen::SetUnlockChallengeIndex(ChallengePage thePage, bool theIsI
 	mUnlockChallengeIndex = 0;
 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
 	{
-		ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
+		const ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
 		if (aDef.mPage == thePage)
 		{
 			if (thePage != CHALLENGE_PAGE_PUZZLE || (!theIsIZombie && IsScaryPotterLevel(aDef.mChallengeMode)) || (theIsIZombie && IsIZombieLevel(aDef.mChallengeMode)))
@@ -292,7 +292,7 @@ void ChallengeScreen::SetUnlockChallengeIndex(ChallengePage thePage, bool theIsI
 
 int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 {
-	ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
+	const ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
 	if (mApp->mGameMode == GAMEMODE_UPSELL && mApp->mGameScene == SCENE_LEVEL_INTRO)
 	{
 		return aDef.mChallengeMode == GAMEMODE_CHALLENGE_FINAL_BOSS ? 1 : 0;
@@ -319,7 +319,7 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 		if (IsScaryPotterLevel(aDef.mChallengeMode))
 		{
 			int aLevelsCompleted = 0;
-			for (ChallengeDefinition& aSPDef : gChallengeDefs)
+			for (const ChallengeDefinition& aSPDef : gChallengeDefs)
 			{
 				if (IsScaryPotterLevel(aSPDef.mChallengeMode) && mApp->HasBeatenChallenge(aSPDef.mChallengeMode))
 				{
@@ -339,7 +339,7 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 		else if (IsIZombieLevel(aDef.mChallengeMode))
 		{
 			int aLevelsCompleted = 0;
-			for (ChallengeDefinition& aIZDef : gChallengeDefs)
+			for (const ChallengeDefinition& aIZDef : gChallengeDefs)
 			{
 				if (IsIZombieLevel(aIZDef.mChallengeMode) && mApp->HasBeatenChallenge(aIZDef.mChallengeMode))
 				{
@@ -441,7 +441,7 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 	ButtonWidget* aChallengeButton = mChallengeButtons[theChallengeIndex];
 	if (aChallengeButton->mVisible)
 	{
-		ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
+		const ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
 		int aPosX = aChallengeButton->mX;
 		int aPosY = aChallengeButton->mY;
 		if (aChallengeButton->mIsDown)
@@ -500,36 +500,72 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 				aName = "?";
 			}
 
-			int aNameLen = aName.size();
-			int aAutoWrapNum = mApp->GetInteger("CHALLENGE_SCREEN_BUTTON_AUTO_WRAP_NUM", 13);
-			if (aNameLen < aAutoWrapNum)
+			// std::string::size() counts bytes; use the UTF-8 code-point count for the wrap decision.
+			int aNameCharLen = 0;
+			for (size_t aOffset = 0; ; )
+			{
+				char32_t aChar = 0;
+				if (!UTF8DecodeNext(aName, aOffset, aChar))
+					break;
+				aNameCharLen++;
+			}
+
+			const int aAutoWrapNum = mApp->GetInteger("CHALLENGE_SCREEN_BUTTON_AUTO_WRAP_NUM", 13);
+			if (aNameCharLen < aAutoWrapNum)
 			{
 				TodDrawString(g, aName, aPosX + 52, aPosY + 96, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 			}
 			else
 			{
-				// 先尝试在名称字符串的后半段取空格以将字符串分隔为两行，若后半段中无空格则在整个字符串中寻找空格
-				int aHalfPos = (mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameLen / 2 - 1);
-				const char* aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
-				if (aSpacedChar == nullptr)
+				// Split at a space in the second half, else any space; if none, the whole name stays on one line.
+				const int aHalfPosChar = (mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameCharLen / 2 - 1);
+				size_t aSplitBytePos = std::string::npos;
+				size_t aFallbackSpacePos = std::string::npos;
 				{
-					aSpacedChar = strchr(aName.c_str(), ' ');
+					size_t aOffset = 0;
+					char32_t aChar = 0;
+					int aCharIdx = 0;
+					while (true)
+					{
+						const size_t aCharStart = aOffset;
+						if (!UTF8DecodeNext(aName, aOffset, aChar))
+							break;
+						if (aChar == U' ')
+						{
+							if (aCharIdx >= aHalfPosChar)
+							{
+								aSplitBytePos = aCharStart;
+								break;
+							}
+							if (aFallbackSpacePos == std::string::npos)
+								aFallbackSpacePos = aCharStart;
+						}
+						aCharIdx++;
+					}
+					if (aSplitBytePos == std::string::npos)
+						aSplitBytePos = aFallbackSpacePos;
 				}
 
-				// 分别计算取得两行文本的长度
-				int aLine1Len = aNameLen;
-				int aLine2Len = 0;
-				if (aSpacedChar != nullptr)
+				int aLine1Len;
+				int aLine2Len;
+				if (aSplitBytePos != std::string::npos)
 				{
-					aLine1Len = aSpacedChar - aName.c_str();
-					aLine2Len = aNameLen - aLine1Len - 1;
+					aLine1Len = aSplitBytePos;
+					aLine2Len = aName.size() - aSplitBytePos;
+					if (aName[aSplitBytePos] == ' ')
+						aLine2Len--;
+				}
+				else
+				{
+					aLine1Len = aName.size();
+					aLine2Len = 0;
 				}
 
-				// 分别绘制两行文本字符串
-				TodDrawString(g, aName.substr(0, aLine1Len), aPosX + 52, aPosY + 88, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
+				TodDrawString(g, std::string_view(aName).substr(0, aLine1Len), aPosX + 52, aPosY + 88, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 				if (aLine2Len > 0)
 				{
-					TodDrawString(g, aName.substr(aLine1Len + 1, aLine2Len), aPosX + 52, aPosY + 102, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
+					const int aLine2Offset = (aName[aSplitBytePos] == ' ') ? aSplitBytePos + 1 : aSplitBytePos;
+					TodDrawString(g, std::string_view(aName).substr(aLine2Offset, aLine2Len), aPosX + 52, aPosY + 102, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 				}
 			}
 
@@ -596,7 +632,7 @@ void ChallengeScreen::Draw(Graphics* g)
 	if (aTrophiesTotal > 0)
 	{
 		std::string aTrophyString = StrFormat("%d/%d", aTrophiesGot, aTrophiesTotal);
-		TodDrawString(g, aTrophyString, 739, 73, Sexy::FONT_DWARVENTODCRAFT12, Color(255, 240, 0), DS_ALIGN_CENTER);
+		TodDrawString(g, aTrophyString, 739, 73, Sexy::FONT_DWARVENTODCRAFT15, Color(255, 240, 0), DS_ALIGN_CENTER);
 	}
 	TodDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718, 26, 0.5f, 0.5f);
 
@@ -698,6 +734,14 @@ void ChallengeScreen::ButtonDepress(int theId)
 	}
 }
 
+void ChallengeScreen::KeyDown(KeyCode theKey)
+{
+	if (theKey == KeyCode::KEYCODE_ESCAPE)
+	{
+		ButtonDepress(ChallengeScreen::ChallengeScreen_Back);
+	}
+}
+
 void ChallengeScreen::UpdateToolTip()
 {
 	if (!mApp->mWidgetManager->mMouseIn || !mApp->mActive)
@@ -708,7 +752,7 @@ void ChallengeScreen::UpdateToolTip()
 
 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
 	{
-		ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
+		const ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
 		ButtonWidget* aChallengeButton = mChallengeButtons[aChallengeMode];
 		if (aChallengeButton->mVisible && aChallengeButton->mDisabled &&
 			aChallengeButton->Contains(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY) &&

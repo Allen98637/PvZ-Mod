@@ -41,7 +41,7 @@
 
 Rect aBackButtonRect = { 120, 35, 130, 80 };
 
-AchievementItem gAchievementList[MAX_ACHIEVEMENTS] = {
+constinit const AchievementItem gAchievementList[MAX_ACHIEVEMENTS] = {
 	{ "Home Lawn Security", "Complete Adventure Mode." },
 	{ "Nobel Peas Prize", "Get the golden sunflower trophy." },
 	{ "Better Off Dead", "Get to a streak of 10 in I, Zombie Endless" },
@@ -50,7 +50,7 @@ AchievementItem gAchievementList[MAX_ACHIEVEMENTS] = {
 	{ "Explodonator", "Take out 10 full-sized zombies with a single Cherry Bomb." },
 	{ "Morticulturalist", "Collect all 49 plants (including plants from Crazy Dave's shop)." },
 	{ "Don't Pea in the Pool", "Complete a daytime pool level without using pea shooters of any kind." },
-	{ "Roll Some Heads", "Bowl over 5 zombies with the same wall-nut." },
+	{ "Roll Some Heads", "Bowl over 5 zombies with a single Wall-Nut." },
 	{ "Grounded", "Defeat a normal roof level without using any catapult plants." },
 	{ "Zombologist", "Discover the Yeti zombie." },
 	{ "Penny Pincher", "Pick up 30 coins in a row on a single level without letting any disappear." },
@@ -192,6 +192,10 @@ void AchievementsWidget::KeyDown(KeyCode theKey) {
 		mScrollValue = mDefaultScrollValue;
 		mScrollDirection = -1;
 	}
+	else if (theKey == KEYCODE_ESCAPE) {
+		mApp->mGameSelector->SlideTo(0, 0);
+		mApp->mGameSelector->mWidgetManager->SetFocus(mApp->mGameSelector);
+	}
 }
 
 // GOTY @Patoke: 0x4017F0
@@ -277,8 +281,8 @@ void ReportAchievement::AchievementInitForPlayer(LawnApp* theApp) {
 	}
 
 	bool aGiveAchievement = true;
-	for (int i = STORE_ITEM_PLANT_GATLINGPEA; i <= STORE_ITEM_PLANT_IMITATER; i++) {
-		if (theApp->HasSeedType(SeedType(i)))
+	for (int aSeedType = SeedType::SEED_GATLINGPEA; aSeedType <= SeedType::SEED_IMITATER; aSeedType++) {
+		if (!theApp->HasSeedType(SeedType(aSeedType)))
 			aGiveAchievement = false;
 	}
 

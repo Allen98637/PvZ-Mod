@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5...4.0)
+cmake_minimum_required(VERSION 3.12...4.0)
 
 project(pvz-mod LANGUAGES C CXX ASM)
 
@@ -30,7 +30,7 @@ if(MSVC)
 	endif()
 endif()
 
-file(GLOB SOURCES
+file(GLOB SOURCES CONFIGURE_DEPENDS
 	src/*.cpp
 	src/SexyAppFramework/*.cpp
 	src/SexyAppFramework/graphics/*.cpp

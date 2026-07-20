@@ -69,18 +69,18 @@ public:
 	
 public:
 	AlmanacDialog(LawnApp* theApp);
-	virtual ~AlmanacDialog();
+	~AlmanacDialog() override;
 
 	void						ClearPlantsAndZombies();
-	virtual void				RemovedFromManager(WidgetManager* theWidgetManager);
+	void						RemovedFromManager(WidgetManager* theWidgetManager) override;
 	void						SetupPlant();
 	void						SetupZombie();
 	void						SetPage(AlmanacPage thePage);
-	virtual void				Update();
+	void						Update() override;
 	void						DrawIndex(Graphics* g);
 	void						DrawPlants(Graphics* g);
 	void						DrawZombies(Graphics* g);
-	virtual void				Draw(Graphics* g);
+	void						Draw(Graphics* g) override;
 	void						GetSeedPosition(SeedType theSeedType, int& x, int& y);
 	SeedType					SeedHitTest(int x, int y);
 	/*inline*/ bool				ZombieHasSilhouette(ZombieType theZombieType);
@@ -88,9 +88,10 @@ public:
 	bool						ZombieHasDescription(ZombieType theZombieType);
 	void						GetZombiePosition(int number, int& x, int& y);
 	ZombieType					ZombieHitTest(int x, int y);
-	virtual void				MouseUp(int x, int y, int theClickCount);
-	virtual void				MouseDown(int x, int y, int theClickCount);
-    void            			MouseWheel(int theDelta);
+	void						MouseUp(int x, int y, int theClickCount) override;
+	void						MouseDown(int x, int y, int theClickCount) override;
+    void            			MouseWheel(int theDelta) override;
+	void						KeyDown(KeyCode theKey) override;
 //	virtual void				KeyChar(char theChar);
 
 	static ZombieType			GetZombieType(int theIndex);

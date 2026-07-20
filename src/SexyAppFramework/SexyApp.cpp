@@ -88,12 +88,12 @@ void SexyApp::HandleCmdLineParam(const std::string& theParamName, const std::str
 			"Build Date: " + mBuildDate + "\n" +
 			CLI_LICENSE_SUMMARY;
 
-		printf("%s\n", aVersionString.c_str());
+		Sexy::PrintF("%s\n", aVersionString.c_str());
 		DoExit(0);
 	}
 	else if (theParamName == "-license" || theParamName == "-copyright")
 	{
-		printf("%s", CLI_LICENSE_NOTICE);
+		Sexy::PrintF("%s", CLI_LICENSE_NOTICE);
 		DoExit(0);
 	}
 	else
@@ -131,9 +131,9 @@ void SexyApp::InitPropertiesHook()
 
 void SexyApp::Init()
 {
-	printf("Product: %s\n", mProdName.c_str());
-	printf("BuildNum: %d\n", mBuildNum);
-	printf("BuildDate: %s\n", mBuildDate.c_str());
+	Sexy::PrintF("Product: %s\n", mProdName.c_str());
+	Sexy::PrintF("BuildNum: %d\n", mBuildNum);
+	Sexy::PrintF("BuildDate: %s\n", mBuildDate.c_str());
 
 	SexyAppBase::Init();
 }

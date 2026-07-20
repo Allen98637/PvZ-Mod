@@ -51,7 +51,7 @@ int main() {
 	fclose(fp);
 
 	char *ptr = b_ptr + 8;
-	int aPos;
+	int aPos = 0;
 
 	PakDef defs[4096];
 	int idx = 0;

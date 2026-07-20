@@ -61,9 +61,7 @@ ListWidget::ListWidget(int theId, _Font *theFont, ListListener *theListListener)
 	mDoFingerWhenHilited = true;
 }
 	
-ListWidget::~ListWidget() 
-{
-}
+ListWidget::~ListWidget() = default;
 
 void ListWidget::RemovedFromManager(WidgetManager *theManager)
 {
@@ -95,8 +93,8 @@ std::string ListWidget::GetSortKey(int theIdx)
 void ListWidget::Sort(bool ascending) 
 {
 	int aCount = mLines.size();
-	int* aMap = new int[aCount];
-	std::string* aKeys = new std::string[aCount];
+	std::vector<int> aMap(aCount);
+	std::vector<std::string> aKeys(aCount);
 
 	int i;
 	for (i = 0; i < aCount; i++) 
@@ -127,8 +125,8 @@ void ListWidget::Sort(bool ascending)
 
 	while (aListWidget != nullptr) 
 	{
-		SexyStringVector aNewLines;
-		ColorVector aNewLineColors;
+		std::vector<std::string> aNewLines;
+		std::vector<Color> aNewLineColors;
 			
 		for (int i = 0; i < aCount; i++)
 		{
@@ -143,9 +141,6 @@ void ListWidget::Sort(bool ascending)
 						
 		aListWidget = aListWidget->mChild;
 	}
-
-	delete[] aMap;
-	delete[] aKeys;
 }
 	
 std::string ListWidget::GetStringAt(int theIdx)
