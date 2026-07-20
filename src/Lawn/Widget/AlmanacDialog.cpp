@@ -767,14 +767,3 @@ void AlmanacDialog::KeyDown(KeyCode theKey)
 
 	LawnDialog::KeyDown(theKey);
 }
-
-void AlmanacInitForPlayer()
-{
-	for (int i = 0; i < ZombieType::NUM_ZOMBIE_TYPES; i++)
-		gZombieDefeated[i] = false;
-}
-
-void AlmanacPlayerDefeatedZombie(ZombieType theZombieType)
-{
-	gZombieDefeated[theZombieType] = true;
-}

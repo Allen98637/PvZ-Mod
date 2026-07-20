@@ -25,6 +25,7 @@
 #include <cstdint>
 #include "GameObject.h"
 #include "Projectile.h"
+#include "Plant.h"
 #include "../GameConstants.h"
 
 #define MAX_ZOMBIE_FOLLOWERS 4

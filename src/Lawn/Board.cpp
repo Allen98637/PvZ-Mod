@@ -1471,7 +1471,7 @@ void Board::InitLevel()
 	}
 	else
 	{
-		mSunMoney = 20000;
+		mSunMoney = 50;
 	}
 
 	// 初始化行选择数组

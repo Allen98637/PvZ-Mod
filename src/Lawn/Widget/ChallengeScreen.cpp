@@ -35,7 +35,7 @@
 #include "widget/WidgetManager.h"
 #include <SDL.h>
 
-ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
+constinit const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1,             .mChallengeIconIndex = 0,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 0,  .mCol = 0,  .mChallengeName = "[SURVIVAL_DAY_NORMAL]" },
 	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_2,             .mChallengeIconIndex = 1,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 0,  .mCol = 1,  .mChallengeName = "[SURVIVAL_NIGHT_NORMAL]" },
 	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_3,             .mChallengeIconIndex = 2,   .mPage = ChallengePage::CHALLENGE_PAGE_SURVIVAL,    .mRow = 0,  .mCol = 2,  .mChallengeName = "[SURVIVAL_POOL_NORMAL]" },
