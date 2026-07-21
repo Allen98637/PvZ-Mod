@@ -78,7 +78,7 @@ public:
     void                        ButtonDepress(int theId) override;
     void                        KeyDown(KeyCode theKey) override;
     void                        UpdateToolTip();
-    void                        MouseDown(int x, int y, int theClickCount) override;
+    //void                        MouseDown(int x, int y, int theClickCount) override;
 //  virtual void                KeyChar(char theChar);
 
     /*inline*/ bool             IsScaryPotterLevel(GameMode theGameMode);

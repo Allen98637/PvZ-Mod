@@ -32,7 +32,7 @@ TodParticleDefinition* gParticleDefArray;   // [0x6A9F0C]
 int gParticleParamArraySize;				// [0x6A9F10]
 const ParticleParams* gParticleParamArray;		// [0x6A9F14]
 
-ParticleParams gLawnParticleArray[ParticleEffect::NUM_PARTICLES] = {
+constinit const ParticleParams gLawnParticleArray[ParticleEffect::NUM_PARTICLES] = {
 	{ .mParticleEffect = ParticleEffect::PARTICLE_MELONSPLASH, .mParticleFileName = "particles/MelonImpact.xml" },
 	{ .mParticleEffect = ParticleEffect::PARTICLE_WINTERMELON, .mParticleFileName = "particles/WinterMelonImpact.xml" },
 	{ .mParticleEffect = ParticleEffect::PARTICLE_FUMECLOUD, .mParticleFileName = "particles/FumeCloud.xml" },

@@ -37,7 +37,7 @@ ReanimatorDefinition* gReanimatorDefArray;
 unsigned int gReanimationParamArraySize;
 const ReanimationParams* gReanimationParamArray;
 
-ReanimationParams gLawnReanimationArray[ReanimationType::NUM_REANIMS] = {
+constinit const ReanimationParams gLawnReanimationArray[ReanimationType::NUM_REANIMS] = {
 	{ .mReanimationType = ReanimationType::REANIM_LOADBAR_SPROUT,             .mReanimFileName = "reanim/LoadBar_sprout.reanim",                    .mReanimParamFlags = 1 },
 	{ .mReanimationType = ReanimationType::REANIM_LOADBAR_ZOMBIEHEAD,         .mReanimFileName = "reanim/LoadBar_Zombiehead.reanim",                .mReanimParamFlags = 1 },
 	{ .mReanimationType = ReanimationType::REANIM_SODROLL,                    .mReanimFileName = "reanim/SodRoll.reanim",                           .mReanimParamFlags = 0 },

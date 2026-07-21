@@ -40,7 +40,7 @@
 
 #include <climits>
 
-ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES] = {
+constinit const ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES] = {
     { .mZombieType = ZOMBIE_NORMAL,            .mReanimationType = REANIM_ZOMBIE,              .mZombieValue = 1,      .mStartingLevel = 1,      .mFirstAllowedWave = 1,      .mPickWeight = 4000,   .mZombieName = "ZOMBIE" },
     { .mZombieType = ZOMBIE_FLAG,              .mReanimationType = REANIM_ZOMBIE,              .mZombieValue = 1,      .mStartingLevel = 1,      .mFirstAllowedWave = 1,      .mPickWeight = 0,      .mZombieName = "FLAG_ZOMBIE" },
     { .mZombieType = ZOMBIE_TRAFFIC_CONE,      .mReanimationType = REANIM_ZOMBIE,              .mZombieValue = 2,      .mStartingLevel = 3,      .mFirstAllowedWave = 1,      .mPickWeight = 4000,   .mZombieName = "CONEHEAD_ZOMBIE" },
